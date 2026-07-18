@@ -1,7 +1,127 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, ArrowRight, Zap, Shield, Star } from 'lucide-react'
+import { Sparkles, ArrowRight, Zap, Shield, Star, ChevronDown, ChevronUp } from 'lucide-react'
+import { useState } from 'react'
+import Image from 'next/image'
+
+const stats = [
+  { value: '12 000+', label: 'Essayages générés' },
+  { value: '4.8★', label: 'Note moyenne' },
+  { value: '30s', label: 'Temps de génération' },
+  { value: '100%', label: 'Données protégées' },
+]
+
+const logos = [
+  { name: 'Vinted', color: '#09B1BA' },
+  { name: 'Zara', color: '#ffffff' },
+  { name: 'H&M', color: '#E50010' },
+  { name: 'Shein', color: '#ffffff' },
+  { name: 'ASOS', color: '#ffffff' },
+  { name: 'Zalando', color: '#FF6900' },
+]
+
+const examples = [
+  {
+    label: 'Veste tweed',
+    desc: 'T-shirt basique → Veste tweed dorée',
+    before: '/examples/exemple-1-avant.jpg',
+    after: '/examples/exemple-1-apres.jpg',
+    gender: 'Femme',
+  },
+  {
+    label: 'Blazer casual',
+    desc: 'T-shirt blanc → Blazer beige structuré',
+    before: '/examples/exemple-2-avant.jpg',
+    after: '/examples/exemple-2-apres.jpg',
+    gender: 'Homme',
+  },
+  {
+    label: 'Tenue streetwear',
+    desc: 'Tenue noire → Cargo blanc + bucket hat',
+    before: '/examples/exemple-3-avant.jpg',
+    after: '/examples/exemple-3-apres.jpg',
+    gender: 'Homme',
+  },
+]
+
+const categories = [
+  { emoji: '👕', label: 'T-shirts & Hauts', available: true },
+  { emoji: '👖', label: 'Pantalons & Jupes', available: true },
+  { emoji: '👗', label: 'Robes & Combinaisons', available: true },
+  { emoji: '🧥', label: 'Vestes & Manteaux', available: true },
+  { emoji: '👟', label: 'Chaussures', available: false },
+  { emoji: '🧢', label: 'Casquettes & Bonnets', available: false },
+  { emoji: '🎩', label: 'Chapeaux', available: false },
+  { emoji: '💍', label: 'Bijoux & Accessoires', available: false },
+]
+
+const testimonials = [
+  {
+    name: 'Léa M.',
+    handle: '@lea.mode',
+    text: 'J\'ai essayé une robe Vinted sans même la commander. Je l\'ai vue sur moi en 20 secondes. Incroyable.',
+    stars: 5,
+    avatar: 'L',
+  },
+  {
+    name: 'Camille R.',
+    handle: '@camille.style',
+    text: 'Je perds plus d\'argent à retourner des vêtements qui me vont pas. TryFit AI m\'a sauvé la mise.',
+    stars: 5,
+    avatar: 'C',
+  },
+  {
+    name: 'Thomas D.',
+    handle: '@tom.fits',
+    text: 'Même en tant qu\'homme j\'adore. J\'ai testé 5 blazers différents avant d\'acheter le bon.',
+    stars: 5,
+    avatar: 'T',
+  },
+]
+
+const faqs = [
+  {
+    q: 'Est-ce que les résultats sont réalistes ?',
+    a: 'Oui, notre IA est spécialisée en mode et textile. Elle adapte le vêtement à votre morphologie, à la luminosité et à la pose de votre photo.',
+  },
+  {
+    q: 'Quels types de vêtements puis-je essayer ?',
+    a: 'Actuellement : hauts, pantalons, jupes, robes, vestes et manteaux. Les chaussures, chapeaux et bijoux arrivent très bientôt.',
+  },
+  {
+    q: 'Mes photos sont-elles stockées ?',
+    a: 'Vos photos sont traitées de façon sécurisée et ne sont jamais partagées. Vous pouvez supprimer vos données à tout moment depuis votre profil.',
+  },
+  {
+    q: 'Comment obtenir de meilleurs résultats ?',
+    a: 'Utilisez une photo de vous debout, en pied, avec une tenue simple et un fond neutre. La qualité de la photo d\'entrée impacte directement le résultat.',
+  },
+  {
+    q: 'C\'est gratuit ?',
+    a: 'Oui, 3 essayages sont offerts à l\'inscription. Ensuite vous pouvez acheter des crédits ou passer Premium pour 100 essayages/mois.',
+  },
+]
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="border border-zinc-800 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-5 text-left hover:bg-zinc-900 transition-colors"
+      >
+        <span className="font-medium text-white">{q}</span>
+        {open ? <ChevronUp className="w-4 h-4 text-zinc-400 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-zinc-400 flex-shrink-0" />}
+      </button>
+      {open && (
+        <div className="px-5 pb-5 text-zinc-400 text-sm leading-relaxed border-t border-zinc-800 pt-4">
+          {a}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function LandingPage() {
   return (
@@ -26,7 +146,6 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 px-6 text-center">
-        {/* Glow background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/15 rounded-full blur-3xl" />
           <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl" />
@@ -63,6 +182,127 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Stats */}
+      <section className="py-12 px-6 border-y border-zinc-800 bg-zinc-900/30">
+        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {stats.map((s) => (
+            <div key={s.label}>
+              <div className="text-3xl font-extrabold text-brand-400 mb-1">{s.value}</div>
+              <div className="text-zinc-500 text-sm">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Logo bar */}
+      <section className="py-10 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-zinc-500 text-sm mb-6 uppercase tracking-widest">Compatible avec vos boutiques préférées</p>
+          <div className="flex flex-wrap items-center justify-center gap-8">
+            {logos.map((logo) => (
+              <span key={logo.name} className="text-xl font-bold text-zinc-400 hover:text-white transition-colors cursor-default">
+                {logo.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Avant/Après */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-4">Voyez la différence</h2>
+          <p className="text-zinc-400 text-center mb-14">Résultats générés par notre IA en moins de 30 secondes</p>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {examples.map((ex, i) => (
+              <div key={i} className="card overflow-hidden">
+                <div className="grid grid-cols-2 h-72 relative">
+                  {/* Avant */}
+                  <div className="relative bg-zinc-800 overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-full h-full relative">
+                        <Image
+                          src={ex.before}
+                          alt={`Avant - ${ex.label}`}
+                          fill
+                          className="object-cover object-top"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
+                          <span className="text-4xl opacity-20">👤</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded-full font-medium z-10">
+                      Avant
+                    </div>
+                  </div>
+                  {/* Après */}
+                  <div className="relative bg-zinc-800 overflow-hidden border-l border-zinc-700">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-full h-full relative">
+                        <Image
+                          src={ex.after}
+                          alt={`Après - ${ex.label}`}
+                          fill
+                          className="object-cover object-top"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
+                          <span className="text-4xl opacity-20">✨</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-2 right-2 bg-brand-500/90 text-white text-xs px-2 py-0.5 rounded-full font-medium z-10">
+                      Après
+                    </div>
+                  </div>
+                  {/* Divider */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white flex items-center justify-center z-20 shadow-lg">
+                    <span className="text-zinc-900 text-xs font-bold">↔</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-white text-sm">{ex.label}</p>
+                      <p className="text-zinc-500 text-xs mt-0.5">{ex.desc}</p>
+                    </div>
+                    <span className="text-xs bg-zinc-800 text-zinc-400 px-2 py-1 rounded-full">{ex.gender}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ce qu'on peut essayer */}
+      <section className="py-20 px-6 bg-zinc-900/40">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">Essayez tout ce que vous voulez</h2>
+          <p className="text-zinc-400 mb-12">Hauts, bas, robes, accessoires — TryFit AI couvre tous les styles</p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {categories.map((cat) => (
+              <div
+                key={cat.label}
+                className={`card p-4 text-center relative ${!cat.available ? 'opacity-60' : 'hover:border-brand-500/40 transition-colors'}`}
+              >
+                <div className="text-3xl mb-2">{cat.emoji}</div>
+                <p className="text-sm font-medium text-white">{cat.label}</p>
+                {!cat.available && (
+                  <div className="absolute top-2 right-2 bg-zinc-700 text-zinc-400 text-xs px-1.5 py-0.5 rounded-full">
+                    Bientôt
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Comment ça marche */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
@@ -71,24 +311,9 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              {
-                step: '1',
-                title: 'Ajoutez votre photo',
-                desc: 'Importez une photo entière de vous, debout, en tenue simple.',
-                emoji: '🤳',
-              },
-              {
-                step: '2',
-                title: 'Choisissez un vêtement',
-                desc: 'Importez une photo depuis Vinted, Zara, Instagram ou votre galerie.',
-                emoji: '👕',
-              },
-              {
-                step: '3',
-                title: 'Voyez le résultat',
-                desc: "L'IA génère une image réaliste de vous avec ce vêtement en quelques secondes.",
-                emoji: '✨',
-              },
+              { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
+              { step: '2', title: 'Choisissez un vêtement', desc: 'Importez une photo depuis Vinted, Zara, Instagram ou votre galerie.', emoji: '👕' },
+              { step: '3', title: 'Voyez le résultat', desc: "L'IA génère une image réaliste de vous avec ce vêtement en quelques secondes.", emoji: '✨' },
             ].map((item) => (
               <div key={item.step} className="card p-6 text-center">
                 <div className="text-4xl mb-4">{item.emoji}</div>
@@ -107,7 +332,6 @@ export default function LandingPage() {
       <section className="py-20 px-6 bg-zinc-900/50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-14">Tout ce dont vous avez besoin</h2>
-
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { icon: <Zap className="w-5 h-5" />, title: 'Ultra rapide', desc: 'Résultat en moins de 30 secondes.' },
@@ -126,14 +350,41 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* Témoignages */}
       <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-4">Ils adorent TryFit AI</h2>
+          <p className="text-zinc-400 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((t) => (
+              <div key={t.name} className="card p-6">
+                <div className="flex items-center gap-1 mb-4">
+                  {Array.from({ length: t.stars }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-brand-400 text-brand-400" />
+                  ))}
+                </div>
+                <p className="text-zinc-300 text-sm leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-brand-500/20 text-brand-400 font-bold text-sm flex items-center justify-center">
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">{t.name}</p>
+                    <p className="text-zinc-500 text-xs">{t.handle}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="py-20 px-6 bg-zinc-900/40">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Tarifs simples</h2>
           <p className="text-zinc-400 mb-14">Commencez gratuitement, passez premium quand vous voulez</p>
-
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Gratuit */}
             <div className="card p-8 text-left">
               <h3 className="font-bold text-xl mb-1">Gratuit</h3>
               <div className="text-4xl font-extrabold mb-6">0€</div>
@@ -148,8 +399,6 @@ export default function LandingPage() {
                 Commencer
               </Link>
             </div>
-
-            {/* Premium */}
             <div className="relative card p-8 text-left border-brand-500/50 bg-gradient-to-br from-brand-500/10 to-orange-500/10">
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 POPULAIRE
@@ -158,13 +407,7 @@ export default function LandingPage() {
               <div className="text-4xl font-extrabold mb-1">9,99€</div>
               <div className="text-zinc-400 text-sm mb-6">par mois · ou 79,99€/an</div>
               <ul className="space-y-3 text-sm text-zinc-300">
-                {[
-                  '100 essayages par mois',
-                  'Générations prioritaires',
-                  'Meilleure qualité d\'image',
-                  'Sans publicité',
-                  'Historique illimité',
-                ].map((f) => (
+                {['100 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité'].map((f) => (
                   <li key={f} className="flex items-center gap-2">
                     <span className="text-brand-400">✓</span> {f}
                   </li>
@@ -178,12 +421,23 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="py-20 px-6">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-4">Questions fréquentes</h2>
+          <p className="text-zinc-400 text-center mb-14">Tout ce que vous voulez savoir</p>
+          <div className="space-y-3">
+            {faqs.map((faq) => (
+              <FaqItem key={faq.q} q={faq.q} a={faq.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA final */}
       <section className="py-20 px-6 text-center">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-4xl font-extrabold mb-4">
-            Prêt à essayer ?
-          </h2>
+          <h2 className="text-4xl font-extrabold mb-4">Prêt à essayer ?</h2>
           <p className="text-zinc-400 mb-8">3 essayages offerts. Aucune carte bancaire.</p>
           <Link href="/register" className="btn-primary inline-flex items-center gap-2 text-base py-4 px-8">
             Créer mon compte gratuitement <ArrowRight className="w-4 h-4" />
@@ -193,7 +447,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800 py-8 px-6 text-center text-zinc-500 text-sm">
-        <p>© 2025 TryFit AI · Tous droits réservés</p>
+        <p>© 2025 TryFit AI · Tous droits réservés · <Link href="/login" className="hover:text-zinc-300">Connexion</Link></p>
       </footer>
     </div>
   )
