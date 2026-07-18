@@ -26,25 +26,25 @@ export default async function DashboardPage() {
     <div className="p-6 max-w-4xl mx-auto animate-fade-in">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Bonjour, {firstName} 👋</h1>
-        <p className="text-zinc-400 mt-1">Prêt à essayer de nouveaux looks ?</p>
+        <h1 className="text-2xl font-bold text-zinc-900">Bonjour, {firstName} 👋</h1>
+        <p className="text-zinc-500 mt-1">Prêt à essayer de nouveaux looks ?</p>
       </div>
 
       {/* Crédits */}
-      <div className={`card p-5 mb-6 flex items-center justify-between ${profile?.is_premium ? 'border-brand-500/40 bg-brand-500/5' : ''}`}>
+      <div className={`card p-5 mb-6 flex items-center justify-between ${profile?.is_premium ? 'border-brand-500/30 bg-brand-500/5' : ''}`}>
         <div className="flex items-center gap-3">
           {profile?.is_premium ? (
-            <div className="w-10 h-10 rounded-xl bg-brand-500/20 flex items-center justify-center">
-              <Crown className="w-5 h-5 text-brand-400" />
+            <div className="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center">
+              <Crown className="w-5 h-5 text-brand-500" />
             </div>
           ) : (
-            <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center">
-              <Zap className="w-5 h-5 text-zinc-400" />
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center">
+              <Zap className="w-5 h-5 text-zinc-500" />
             </div>
           )}
           <div>
-            <p className="text-sm text-zinc-400">{profile?.is_premium ? 'Compte Premium' : 'Compte Gratuit'}</p>
-            <p className="font-bold text-white">
+            <p className="text-sm text-zinc-500">{profile?.is_premium ? 'Compte Premium' : 'Compte Gratuit'}</p>
+            <p className="font-bold text-zinc-900">
               {profile?.credits ?? 0} crédit{(profile?.credits ?? 0) > 1 ? 's' : ''} restant{(profile?.credits ?? 0) > 1 ? 's' : ''}
             </p>
           </div>
@@ -59,15 +59,15 @@ export default async function DashboardPage() {
       {/* CTA principal */}
       <Link
         href="/try-on"
-        className="block card p-8 mb-8 border-dashed border-2 border-zinc-700 hover:border-brand-500/50 transition-all group text-center"
+        className="block card p-8 mb-8 border-dashed border-2 border-zinc-300 hover:border-brand-500/50 transition-all group text-center"
       >
         <div className="w-14 h-14 rounded-2xl gradient-brand flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
           <Sparkles className="w-7 h-7 text-white" />
         </div>
-        <h2 className="text-xl font-bold text-white mb-2">Nouvel essayage</h2>
-        <p className="text-zinc-400 text-sm mb-4">Importez votre photo et celle d'un vêtement</p>
+        <h2 className="text-xl font-bold text-zinc-900 mb-2">Nouvel essayage</h2>
+        <p className="text-zinc-500 text-sm mb-4">Importez votre photo et celle d&apos;un vêtement</p>
         <span className="btn-primary inline-flex items-center gap-2 text-sm">
-          C'est parti <ArrowRight className="w-4 h-4" />
+          C&apos;est parti <ArrowRight className="w-4 h-4" />
         </span>
       </Link>
 
@@ -75,8 +75,8 @@ export default async function DashboardPage() {
       {recentGenerations && recentGenerations.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-white">Récents</h2>
-            <Link href="/history" className="text-brand-400 text-sm hover:text-brand-300">
+            <h2 className="font-bold text-zinc-900">Récents</h2>
+            <Link href="/history" className="text-brand-500 text-sm hover:text-brand-600">
               Voir tout →
             </Link>
           </div>
@@ -91,7 +91,7 @@ export default async function DashboardPage() {
                     className="w-full h-full object-cover"
                   />
                 )}
-                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                   <p className="text-white text-xs font-medium capitalize">{gen.garment_type}</p>
                 </div>
               </div>

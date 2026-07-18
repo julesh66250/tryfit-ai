@@ -59,26 +59,26 @@ export default function HistoryPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto animate-fade-in">
-      <Toaster position="top-center" toastOptions={{ style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' } }} />
+      <Toaster position="top-center" />
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Historique</h1>
-        <p className="text-zinc-400 mt-1">{generations.length} essayage{generations.length > 1 ? 's' : ''}</p>
+        <h1 className="text-2xl font-bold text-zinc-900">Historique</h1>
+        <p className="text-zinc-500 mt-1">{generations.length} essayage{generations.length > 1 ? 's' : ''}</p>
       </div>
 
       {loading && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="card aspect-[3/4] animate-pulse bg-zinc-800" />
+            <div key={i} className="card aspect-[3/4] animate-pulse bg-zinc-100" />
           ))}
         </div>
       )}
 
       {!loading && generations.length === 0 && (
         <div className="text-center py-20">
-          <Clock className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-          <p className="text-zinc-400 font-medium">Aucun essayage pour l'instant</p>
-          <p className="text-zinc-600 text-sm mb-6">Vos futures générations apparaîtront ici</p>
+          <Clock className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
+          <p className="text-zinc-700 font-medium">Aucun essayage pour l&apos;instant</p>
+          <p className="text-zinc-400 text-sm mb-6">Vos futures générations apparaîtront ici</p>
           <Link href="/try-on" className="btn-primary inline-flex">Faire mon premier essayage</Link>
         </div>
       )}
@@ -98,14 +98,14 @@ export default function HistoryPage() {
                   />
                 </div>
               ) : (
-                <div className="aspect-[3/4] bg-zinc-800 flex items-center justify-center">
+                <div className="aspect-[3/4] bg-zinc-100 flex items-center justify-center">
                   {gen.status === 'processing' || gen.status === 'pending' ? (
                     <div className="text-center">
                       <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                      <p className="text-zinc-500 text-xs">En cours...</p>
+                      <p className="text-zinc-400 text-xs">En cours...</p>
                     </div>
                   ) : (
-                    <p className="text-zinc-600 text-sm">Échec</p>
+                    <p className="text-zinc-400 text-sm">Échec</p>
                   )}
                 </div>
               )}
@@ -122,11 +122,11 @@ export default function HistoryPage() {
                 </div>
                 <div>
                   <p className="text-white text-xs font-medium">{garmentLabel[gen.garment_type] ?? gen.garment_type}</p>
-                  <p className="text-zinc-400 text-xs">{formatDate(gen.created_at)}</p>
+                  <p className="text-zinc-300 text-xs">{formatDate(gen.created_at)}</p>
                   {gen.result_image_url && (
                     <button
                       onClick={() => handleDownload(gen.result_image_url!)}
-                      className="mt-2 flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300"
+                      className="mt-2 flex items-center gap-1 text-xs text-brand-300 hover:text-brand-200"
                     >
                       <Download className="w-3 h-3" /> Télécharger
                     </button>

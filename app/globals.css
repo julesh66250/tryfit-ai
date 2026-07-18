@@ -5,22 +5,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-  }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-  }
-
   * {
-    @apply border-zinc-200 dark:border-zinc-800;
+    @apply border-zinc-200;
   }
 
   body {
-    @apply bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50;
+    @apply bg-white text-zinc-900;
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
@@ -32,15 +22,15 @@
   }
 
   .gradient-brand-text {
-    @apply bg-gradient-to-r from-brand-400 to-orange-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-brand-500 to-orange-400 bg-clip-text text-transparent;
   }
 
   .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+    @apply bg-white/80 backdrop-blur-md border border-zinc-200;
   }
 
   .card {
-    @apply bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl;
+    @apply bg-white border border-zinc-200 rounded-2xl shadow-sm;
   }
 
   .btn-primary {
@@ -48,6 +38,24 @@
   }
 
   .btn-secondary {
-    @apply bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-semibold px-6 py-3 rounded-xl transition-all duration-200 active:scale-95;
+    @apply bg-zinc-100 hover:bg-zinc-200 text-zinc-900 font-semibold px-6 py-3 rounded-xl transition-all duration-200 active:scale-95;
   }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }

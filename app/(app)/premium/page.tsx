@@ -1,5 +1,4 @@
 import { Crown, Zap, Check } from 'lucide-react'
-import Link from 'next/link'
 
 const plans = [
   {
@@ -40,8 +39,8 @@ export default function PremiumPage() {
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-brand mb-4">
           <Crown className="w-7 h-7 text-white" />
         </div>
-        <h1 className="text-3xl font-extrabold text-white mb-2">Passez Premium</h1>
-        <p className="text-zinc-400">Plus d'essayages, meilleure qualité, zéro limite</p>
+        <h1 className="text-3xl font-extrabold text-zinc-900 mb-2">Passez Premium</h1>
+        <p className="text-zinc-500">Plus d&apos;essayages, meilleure qualité, zéro limite</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-4 mb-8">
@@ -49,7 +48,7 @@ export default function PremiumPage() {
           <div
             key={plan.id}
             className={`card p-6 relative flex flex-col ${plan.highlighted
-              ? 'border-brand-500/60 bg-gradient-to-b from-brand-500/10 to-orange-500/5'
+              ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5'
               : ''
             }`}
           >
@@ -60,9 +59,9 @@ export default function PremiumPage() {
             )}
 
             <div className="mb-4">
-              <h3 className="font-bold text-white text-lg">{plan.name}</h3>
+              <h3 className="font-bold text-zinc-900 text-lg">{plan.name}</h3>
               <div className="flex items-end gap-1 mt-1">
-                <span className="text-3xl font-extrabold text-white">{plan.price}</span>
+                <span className="text-3xl font-extrabold text-zinc-900">{plan.price}</span>
                 {plan.period && <span className="text-zinc-400 text-sm mb-1">{plan.period}</span>}
               </div>
               <p className="text-zinc-500 text-xs mt-1">{plan.desc}</p>
@@ -70,8 +69,8 @@ export default function PremiumPage() {
 
             <ul className="space-y-2 mb-6 flex-1">
               {plan.features.map((f) => (
-                <li key={f} className="flex items-center gap-2 text-sm text-zinc-300">
-                  <Check className="w-4 h-4 text-brand-400 flex-shrink-0" />
+                <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
+                  <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
                   {f}
                 </li>
               ))}
@@ -87,24 +86,24 @@ export default function PremiumPage() {
       {/* Pack crédits */}
       <div className="card p-5">
         <div className="flex items-center gap-3 mb-3">
-          <Zap className="w-5 h-5 text-brand-400" />
-          <h2 className="font-semibold text-white">Pack de crédits supplémentaires</h2>
+          <Zap className="w-5 h-5 text-brand-500" />
+          <h2 className="font-semibold text-zinc-900">Pack de crédits supplémentaires</h2>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-zinc-800 rounded-xl p-4 text-center">
-            <p className="font-bold text-white">10 crédits</p>
-            <p className="text-brand-400 font-semibold">4,99€</p>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-center">
+            <p className="font-bold text-zinc-900">10 crédits</p>
+            <p className="text-brand-500 font-semibold">4,99€</p>
             <button className="btn-secondary w-full mt-3 text-sm py-2">Acheter</button>
           </div>
-          <div className="bg-zinc-800 rounded-xl p-4 text-center">
-            <p className="font-bold text-white">50 crédits</p>
-            <p className="text-brand-400 font-semibold">14,99€</p>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-center">
+            <p className="font-bold text-zinc-900">50 crédits</p>
+            <p className="text-brand-500 font-semibold">14,99€</p>
             <button className="btn-primary w-full mt-3 text-sm py-2">Acheter</button>
           </div>
         </div>
       </div>
 
-      <p className="text-center text-zinc-600 text-xs mt-6">
+      <p className="text-center text-zinc-400 text-xs mt-6">
         Paiement sécurisé · Annulation à tout moment · TVA incluse
       </p>
     </div>
