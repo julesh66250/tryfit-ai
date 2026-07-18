@@ -42,6 +42,12 @@ const testimonials = [
   { name: 'Jade', location: 'Marseille', text: 'J\'achète beaucoup sur Shein et j\'avais toujours peur que ça rende pas bien sur moi. Maintenant je sais avant d\'acheter.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/12.jpg' },
   { name: 'Lucas', location: 'Nantes', text: 'Super pratique pour comparer plusieurs looks rapidement. Je l\'utilise avant chaque achat maintenant.', stars: 5, avatar: 'https://randomuser.me/api/portraits/men/75.jpg' },
   { name: 'Emma', location: 'Lille', text: 'L\'IA est vraiment précise. La robe que j\'ai essayée virtuellement ressemble exactement à ce que j\'ai reçu.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/90.jpg' },
+  { name: 'Chloé', location: 'Toulouse', text: 'J\'ai testé une robe de soirée avant de la louer. La qualité du rendu m\'a bluffée, on voyait même les reflets du tissu.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/55.jpg' },
+  { name: 'Raphaël', location: 'Strasbourg', text: 'Je fais souvent des achats impulsifs que je regrette. Depuis TryFit AI j\'achète moins mais mieux.', stars: 5, avatar: 'https://randomuser.me/api/portraits/men/41.jpg' },
+  { name: 'Léonie', location: 'Rennes', text: 'Parfait pour tester les tenues de mariage ou d\'événement sans débourser avant d\'être sûre.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/33.jpg' },
+  { name: 'Antoine', location: 'Nice', text: 'J\'utilise ça pour mes achats sur ASOS. Fini les retours à la chaîne, j\'économise du temps et de l\'argent.', stars: 5, avatar: 'https://randomuser.me/api/portraits/men/60.jpg' },
+  { name: 'Zoé', location: 'Montpellier', text: 'Incroyable la précision. La veste que j\'avais essayée virtuellement était exactement comme en vrai une fois reçue.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/22.jpg' },
+  { name: 'Théo', location: 'Lyon', text: 'Je recommande à tous mes potes. On s\'amuse à tester des styles fous et du coup on achète vraiment ce qu\'on aime.', stars: 5, avatar: 'https://randomuser.me/api/portraits/men/18.jpg' },
 ]
 
 const faqs = [
@@ -88,6 +94,9 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 }
 
 export default function LandingPage() {
+  const [showAllReviews, setShowAllReviews] = useState(false)
+  const visibleTestimonials = showAllReviews ? testimonials : testimonials.slice(0, 6)
+
   return (
     <div className="min-h-screen bg-white text-zinc-900 overflow-hidden">
       {/* Header */}
@@ -145,18 +154,21 @@ export default function LandingPage() {
 
           <p className="text-zinc-400 text-sm">1 essayage offert · Aucune carte bancaire requise</p>
 
-          {/* Preview images — affichage pleine largeur */}
-          <div className="mt-14 grid grid-cols-3 gap-4 max-w-3xl mx-auto">
+          {/* Preview images — format paysage pour voir l'avant/après complet */}
+          <div className="mt-14 flex flex-col gap-4 max-w-3xl mx-auto">
             {examples.map((ex, i) => (
-              <div key={i} className="relative rounded-2xl overflow-hidden shadow-2xl bg-zinc-100 group" style={{ aspectRatio: '2/3' }}>
+              <div key={i} className="relative rounded-2xl overflow-hidden shadow-xl bg-zinc-100 group" style={{ aspectRatio: '4/3' }}>
                 <Image
                   src={ex.image}
                   alt={ex.label}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover group-hover:scale-102 transition-transform duration-500"
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                  <p className="text-white text-xs font-semibold">{ex.label}</p>
+                <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  Avant → Après
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                  <p className="text-white text-sm font-semibold">{ex.label}</p>
                   <p className="text-white/70 text-xs">{ex.desc}</p>
                 </div>
               </div>
@@ -246,8 +258,8 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
           <p className="text-zinc-500 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
           <div className="grid md:grid-cols-3 gap-5">
-            {testimonials.map((t) => (
-              <div key={t.name} className="card p-5">
+            {visibleTestimonials.map((t) => (
+              <div key={t.name + t.location} className="card p-5">
                 <div className="flex items-center gap-1 mb-3">
                   {Array.from({ length: t.stars }).map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-brand-500 text-brand-500" />
@@ -268,6 +280,17 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+
+          {!showAllReviews && (
+            <div className="text-center mt-8">
+              <button
+                onClick={() => setShowAllReviews(true)}
+                className="btn-secondary inline-flex items-center gap-2"
+              >
+                Afficher plus d&apos;avis <ChevronDown className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
