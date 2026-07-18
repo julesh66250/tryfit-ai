@@ -118,75 +118,53 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative pt-28 pb-20 px-6 bg-white overflow-hidden">
-        {/* Blobs orange — fond lumineux comme le thème sombre mais en blanc */}
-        <div className="absolute -top-32 -right-32 w-[700px] h-[700px] bg-orange-400/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 -left-40 w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/3 w-[400px] h-[400px] bg-orange-300/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="pt-32 pb-16 px-6 bg-white">
+        <div className="max-w-3xl mx-auto text-center">
 
-        <div className="relative max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
-
-            {/* Gauche : texte centré */}
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 rounded-full px-4 py-1.5 text-sm text-brand-600 mb-6 font-medium">
-                <Sparkles className="w-3.5 h-3.5" />
-                Essayage virtuel par IA · Résultat en 30 secondes
-              </div>
-
-              <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-zinc-900">
-                Essayez les vêtements
-                <br />
-                <span className="gradient-brand-text">sans les porter</span>
-              </h1>
-
-              <p className="text-lg text-zinc-500 mb-10">
-                Importez votre photo et celle d&apos;un vêtement — notre IA génère en secondes
-                une image réaliste pour voir si le style vous convient.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-                <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-4 px-8 shadow-lg shadow-brand-500/30">
-                  Essayer gratuitement
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link href="/login" className="bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-900 font-semibold flex items-center justify-center gap-2 text-base py-4 px-8 rounded-xl transition-all shadow-sm">
-                  J&apos;ai déjà un compte
-                </Link>
-              </div>
-
-              <p className="text-zinc-400 text-sm">1 essayage offert · Aucune carte bancaire requise</p>
-            </div>
-
-            {/* Droite : photos en éventail */}
-            <div className="relative h-72 hidden lg:block">
-              {/* Photo gauche — inclinée en arrière */}
-              <div className="absolute top-8 left-0 w-64 -rotate-6 z-10 rounded-2xl overflow-hidden shadow-xl" style={{ aspectRatio: '4/3' }}>
-                <Image src="/examples/exemple-1.png" alt="Avant après 1" fill className="object-cover" />
-                <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-2 py-0.5 rounded-full">Avant → Après</div>
-              </div>
-              {/* Photo centre — au premier plan */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 z-30 rounded-2xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/3' }}>
-                <Image src="/examples/exemple-2.png" alt="Avant après 2" fill className="object-cover" />
-                <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-2 py-0.5 rounded-full">Avant → Après</div>
-              </div>
-              {/* Photo droite — inclinée en arrière */}
-              <div className="absolute top-8 right-0 w-64 rotate-6 z-10 rounded-2xl overflow-hidden shadow-xl" style={{ aspectRatio: '4/3' }}>
-                <Image src="/examples/exemple-3.png" alt="Avant après 3" fill className="object-cover" />
-                <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-2 py-0.5 rounded-full">Avant → Après</div>
-              </div>
-            </div>
-
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-zinc-100 rounded-full px-4 py-1.5 text-sm text-zinc-600 mb-8 font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-brand-500" />
+            Essayage virtuel par IA · Résultat en 30 secondes
           </div>
 
-          {/* Mobile : une seule photo */}
-          <div className="lg:hidden mt-10">
-            <div className="relative rounded-2xl overflow-hidden shadow-xl max-w-sm mx-auto" style={{ aspectRatio: '4/3' }}>
-              <Image src="/examples/exemple-1.png" alt="Avant après" fill className="object-cover" />
-              <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1 rounded-full">Avant → Après</div>
-            </div>
+          {/* Titre */}
+          <h1 className="text-6xl md:text-7xl font-extrabold mb-6 leading-[1.08] tracking-tight text-zinc-900">
+            Essayez les vêtements<br />
+            <span className="text-brand-500">sans les porter</span>
+          </h1>
+
+          {/* Sous-titre */}
+          <p className="text-xl text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed">
+            Importez votre photo et celle d&apos;un vêtement — l&apos;IA génère en 30 secondes
+            une image réaliste de vous avec ce vêtement.
+          </p>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
+            <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-3.5 px-7">
+              Essayer gratuitement
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link href="/login" className="flex items-center justify-center gap-2 text-base py-3.5 px-7 rounded-xl border border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 transition-all font-medium">
+              J&apos;ai déjà un compte
+            </Link>
           </div>
+          <p className="text-zinc-400 text-sm">1 essayage offert · Sans carte bancaire</p>
         </div>
+
+        {/* Photos — 3 cartes côte à côte */}
+        <div className="max-w-5xl mx-auto mt-16 grid grid-cols-3 gap-4">
+          {examples.map((ex, i) => (
+            <div key={i} className={`relative rounded-2xl overflow-hidden bg-zinc-100 ${i === 1 ? '-mt-4' : 'mt-4'}`} style={{ aspectRatio: '4/3' }}>
+              <Image src={ex.image} alt={ex.label} fill className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              <div className="absolute bottom-3 left-3">
+                <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">Avant → Après</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-zinc-400 text-sm mt-5">✦ Résultats générés par IA en moins de 30 secondes</p>
       </section>
 
       {/* Stats */}
