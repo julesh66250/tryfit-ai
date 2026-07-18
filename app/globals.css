@@ -28,11 +28,11 @@
 
 @layer utilities {
   .gradient-brand {
-    @apply bg-gradient-to-r from-brand-500 to-purple-500;
+    @apply bg-gradient-to-r from-brand-500 to-brand-400;
   }
 
   .gradient-brand-text {
-    @apply bg-gradient-to-r from-brand-400 to-purple-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-brand-400 to-orange-400 bg-clip-text text-transparent;
   }
 
   .glass {

@@ -28,8 +28,8 @@ export default function LandingPage() {
       <section className="relative pt-32 pb-20 px-6 text-center">
         {/* Glow background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/15 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl" />
         </div>
 
         <div className="relative max-w-4xl mx-auto animate-fade-in">
@@ -150,7 +150,7 @@ export default function LandingPage() {
             </div>
 
             {/* Premium */}
-            <div className="relative card p-8 text-left border-brand-500/50 bg-gradient-to-br from-brand-500/10 to-purple-500/10">
+            <div className="relative card p-8 text-left border-brand-500/50 bg-gradient-to-br from-brand-500/10 to-orange-500/10">
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 POPULAIRE
               </div>

@@ -49,7 +49,7 @@ export default function PremiumPage() {
           <div
             key={plan.id}
             className={`card p-6 relative flex flex-col ${plan.highlighted
-              ? 'border-brand-500/60 bg-gradient-to-b from-brand-500/10 to-transparent'
+              ? 'border-brand-500/60 bg-gradient-to-b from-brand-500/10 to-orange-500/5'
               : ''
             }`}
           >
