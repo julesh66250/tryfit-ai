@@ -51,25 +51,25 @@ const categories = [
 
 const testimonials = [
   {
-    name: 'Léa M.',
-    handle: '@lea.mode',
-    text: 'J\'ai essayé une robe Vinted sans même la commander. Je l\'ai vue sur moi en 20 secondes. Incroyable.',
+    name: 'Sarah',
+    handle: 'Paris 🇫🇷',
+    text: 'J\'avais un doute sur une veste Vinted à 60€. Je l\'ai essayée en 30 secondes et j\'ai commandé direct. Aucun regret.',
     stars: 5,
-    avatar: 'L',
+    avatar: 'S',
   },
   {
-    name: 'Camille R.',
-    handle: '@camille.style',
-    text: 'Je perds plus d\'argent à retourner des vêtements qui me vont pas. TryFit AI m\'a sauvé la mise.',
+    name: 'Ines',
+    handle: 'Lyon 🇫🇷',
+    text: 'Je fais du shopping en ligne depuis des années et je retournais toujours la moitié. Depuis que j\'utilise ça, zéro retour.',
     stars: 5,
-    avatar: 'C',
+    avatar: 'I',
   },
   {
-    name: 'Thomas D.',
-    handle: '@tom.fits',
-    text: 'Même en tant qu\'homme j\'adore. J\'ai testé 5 blazers différents avant d\'acheter le bon.',
+    name: 'Mathieu',
+    handle: 'Bordeaux 🇫🇷',
+    text: 'Franchement je pensais que ce serait nul mais le résultat est bluffant. J\'ai testé 4 manteaux avant d\'en choisir un.',
     stars: 5,
-    avatar: 'T',
+    avatar: 'M',
   },
 ]
 
