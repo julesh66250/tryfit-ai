@@ -127,8 +127,8 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
 
-            {/* Gauche : texte */}
-            <div>
+            {/* Gauche : texte centré */}
+            <div className="text-center">
               <div className="inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 rounded-full px-4 py-1.5 text-sm text-brand-600 mb-6 font-medium">
                 <Sparkles className="w-3.5 h-3.5" />
                 Essayage virtuel par IA · Résultat en 30 secondes
@@ -140,12 +140,12 @@ export default function LandingPage() {
                 <span className="gradient-brand-text">sans les porter</span>
               </h1>
 
-              <p className="text-lg text-zinc-500 max-w-lg mb-10">
+              <p className="text-lg text-zinc-500 mb-10">
                 Importez votre photo et celle d&apos;un vêtement — notre IA génère en secondes
                 une image réaliste pour voir si le style vous convient.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
                 <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-4 px-8 shadow-lg shadow-brand-500/30">
                   Essayer gratuitement
                   <ArrowRight className="w-4 h-4" />
