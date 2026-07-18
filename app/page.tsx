@@ -118,12 +118,11 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative pt-28 pb-16 px-6 text-center overflow-hidden">
-        {/* Fond orange dégradé */}
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-50 via-brand-500/5 to-white pointer-events-none" />
-        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-br from-brand-500/15 via-orange-400/10 to-transparent pointer-events-none" />
-        <div className="absolute top-10 left-1/4 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-10 right-1/4 w-72 h-72 bg-orange-400/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative pt-28 pb-24 px-6 text-center overflow-hidden">
+        {/* Fond orange — fondu très progressif jusqu'au bas incluant les photos */}
+        <div className="absolute inset-0 bg-gradient-to-b from-orange-100/80 via-orange-50/40 via-60% to-white pointer-events-none" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-orange-300/8 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white border border-brand-500/20 shadow-sm rounded-full px-4 py-1.5 text-sm text-brand-600 mb-6 font-medium">
@@ -281,29 +280,39 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {!showAllReviews && (
-            <div className="text-center mt-8">
+          <div className="text-center mt-8">
+            {!showAllReviews ? (
               <button
                 onClick={() => setShowAllReviews(true)}
                 className="btn-secondary inline-flex items-center gap-2"
               >
                 Afficher plus d&apos;avis <ChevronDown className="w-4 h-4" />
               </button>
-            </div>
-          )}
+            ) : (
+              <button
+                onClick={() => setShowAllReviews(false)}
+                className="btn-secondary inline-flex items-center gap-2"
+              >
+                Afficher moins <ChevronUp className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Pricing */}
       <section className="py-20 px-6 bg-zinc-50">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
-          <p className="text-zinc-500 mb-14">Commencez gratuitement, passez premium quand vous voulez</p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="card p-8 text-left">
+          <p className="text-zinc-500 mb-14">Commencez gratuitement, passez au plan qui vous convient</p>
+          <div className="grid md:grid-cols-3 gap-6">
+
+            {/* Gratuit */}
+            <div className="card p-8 text-left flex flex-col">
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
-              <div className="text-4xl font-extrabold mb-6 text-zinc-900">0€</div>
-              <ul className="space-y-3 text-sm text-zinc-600">
+              <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
+              <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
+              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
                 {['1 essayage offert', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
                   <li key={f} className="flex items-center gap-2">
                     <span className="text-brand-500 font-bold">✓</span> {f}
@@ -314,15 +323,17 @@ export default function LandingPage() {
                 Commencer
               </Link>
             </div>
-            <div className="relative card p-8 text-left border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg">
+
+            {/* Starter */}
+            <div className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg">
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 POPULAIRE
               </div>
-              <h3 className="font-bold text-xl mb-1 text-zinc-900">Premium</h3>
-              <div className="text-4xl font-extrabold mb-1 text-zinc-900">9,99€</div>
-              <div className="text-zinc-400 text-sm mb-6">par mois · ou 79,99€/an</div>
-              <ul className="space-y-3 text-sm text-zinc-600">
-                {['100 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité'].map((f) => (
+              <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
+              <div className="text-4xl font-extrabold mb-1 text-zinc-900">12,99€</div>
+              <div className="text-zinc-400 text-sm mb-6">par mois · ou 99,99€/an</div>
+              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
+                {['50 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité'].map((f) => (
                   <li key={f} className="flex items-center gap-2">
                     <span className="text-brand-500 font-bold">✓</span> {f}
                   </li>
@@ -332,6 +343,24 @@ export default function LandingPage() {
                 Commencer <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
+
+            {/* Pro */}
+            <div className="card p-8 text-left flex flex-col">
+              <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
+              <div className="text-4xl font-extrabold mb-1 text-zinc-900">19,99€</div>
+              <div className="text-zinc-400 text-sm mb-6">par mois · ou 149,99€/an</div>
+              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
+                {['100 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité', 'Support prioritaire'].map((f) => (
+                  <li key={f} className="flex items-center gap-2">
+                    <span className="text-brand-500 font-bold">✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/register" className="btn-secondary w-full mt-8 flex items-center justify-center">
+                Commencer
+              </Link>
+            </div>
+
           </div>
         </div>
       </section>
