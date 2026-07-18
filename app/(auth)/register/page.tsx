@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Sparkles, Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -9,6 +9,8 @@ import toast, { Toaster } from 'react-hot-toast'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const plan = searchParams.get('plan') // 'starter' | 'pro' | null
   const supabase = createClient()
 
   const [fullName, setFullName] = useState('')
@@ -42,7 +44,13 @@ export default function RegisterPage() {
     }
 
     toast.success('Compte créé ! Redirection...')
-    setTimeout(() => router.push('/dashboard'), 1000)
+    setTimeout(() => {
+      if (plan === 'starter' || plan === 'pro') {
+        router.push(`/checkout?plan=${plan}`)
+      } else {
+        router.push('/dashboard')
+      }
+    }, 1000)
   }
 
   return (
@@ -59,7 +67,11 @@ export default function RegisterPage() {
             <span className="font-bold text-xl text-zinc-900">TryFit AI</span>
           </Link>
           <h1 className="text-2xl font-bold text-zinc-900">Créer votre compte</h1>
-          <p className="text-zinc-500 mt-1">3 essayages offerts · Sans carte bancaire</p>
+          <p className="text-zinc-500 mt-1">
+            {plan === 'starter' ? 'Plan Starter · 12,99€/mois après inscription' :
+             plan === 'pro' ? 'Plan Pro · 19,99€/mois après inscription' :
+             '1 essayage offert · Sans carte bancaire'}
+          </p>
         </div>
 
         {/* Form */}

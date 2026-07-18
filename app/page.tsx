@@ -339,7 +339,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/register" className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
+              <Link href="/register?plan=starter" className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
                 Commencer <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -347,7 +347,10 @@ export default function LandingPage() {
             {/* Pro */}
             <div className="card p-8 text-left flex flex-col">
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
-              <div className="text-4xl font-extrabold mb-1 text-zinc-900">19,99€</div>
+              <div className="flex items-center gap-3 mb-1">
+                <span className="text-4xl font-extrabold text-zinc-900">19,99€</span>
+                <span className="text-xl text-zinc-300 line-through font-medium">25,98€</span>
+              </div>
               <div className="text-zinc-400 text-sm mb-6">par mois · ou 149,99€/an</div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
                 {['100 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité', 'Support prioritaire'].map((f) => (
@@ -356,7 +359,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/register" className="btn-secondary w-full mt-8 flex items-center justify-center">
+              <Link href="/register?plan=pro" className="btn-secondary w-full mt-8 flex items-center justify-center">
                 Commencer
               </Link>
             </div>
