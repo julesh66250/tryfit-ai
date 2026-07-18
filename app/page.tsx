@@ -95,6 +95,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export default function LandingPage() {
   const [showAllReviews, setShowAllReviews] = useState(false)
+  const [hoveredPhoto, setHoveredPhoto] = useState<number | null>(null)
   const visibleTestimonials = showAllReviews ? testimonials : testimonials.slice(0, 6)
 
   return (
@@ -152,19 +153,43 @@ export default function LandingPage() {
           <p className="text-zinc-400 text-sm">1 essayage offert · Sans carte bancaire</p>
         </div>
 
-        {/* Photos — 3 cartes côte à côte */}
-        <div className="max-w-5xl mx-auto mt-16 grid grid-cols-3 gap-4">
-          {examples.map((ex, i) => (
-            <div key={i} className={`relative rounded-2xl overflow-hidden bg-zinc-100 ${i === 1 ? '-mt-4' : 'mt-4'}`} style={{ aspectRatio: '4/3' }}>
-              <Image src={ex.image} alt={ex.label} fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <div className="absolute bottom-3 left-3">
-                <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">Avant → Après</span>
+        {/* Photos — éventail interactif */}
+        <div className="max-w-4xl mx-auto mt-16 flex justify-center items-end pb-10">
+          {examples.map((ex, i) => {
+            const isHovered = hoveredPhoto === i
+            const rotations = [-8, 0, 8]
+            const zIndexes = [10, 20, 10]
+            return (
+              <div
+                key={i}
+                className="relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer"
+                style={{
+                  width: '288px',
+                  aspectRatio: '4/3',
+                  marginRight: i === 0 ? '-64px' : 0,
+                  marginLeft: i === 2 ? '-64px' : 0,
+                  transform: `rotate(${isHovered ? 0 : rotations[i]}deg)${isHovered ? ' translateY(-20px) scale(1.06)' : ''}`,
+                  zIndex: isHovered ? 40 : zIndexes[i],
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease, z-index 0s',
+                  boxShadow: isHovered
+                    ? '0 30px 60px rgba(0,0,0,0.22)'
+                    : '0 8px 24px rgba(0,0,0,0.12)',
+                }}
+                onMouseEnter={() => setHoveredPhoto(i)}
+                onMouseLeave={() => setHoveredPhoto(null)}
+              >
+                <Image src={ex.image} alt={ex.label} fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute bottom-3 left-3">
+                  <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                    Avant → Après
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
-        <p className="text-center text-zinc-400 text-sm mt-5">✦ Résultats générés par IA en moins de 30 secondes</p>
+        <p className="text-center text-zinc-400 text-sm mt-2">✦ Résultats générés par IA en moins de 30 secondes</p>
       </section>
 
       {/* Stats */}
