@@ -18,59 +18,30 @@ const examples = [
   {
     label: 'Veste tweed',
     desc: 'T-shirt basique → Veste tweed dorée',
-    before: '/examples/exemple-1-avant.jpg',
-    after: '/examples/exemple-1-apres.jpg',
+    image: '/examples/exemple-1.png',
     gender: 'Femme',
   },
   {
     label: 'Blazer casual',
     desc: 'T-shirt blanc → Blazer beige structuré',
-    before: '/examples/exemple-2-avant.jpg',
-    after: '/examples/exemple-2-apres.jpg',
+    image: '/examples/exemple-2.png',
     gender: 'Homme',
   },
   {
     label: 'Tenue streetwear',
     desc: 'Tenue noire → Cargo blanc + bucket hat',
-    before: '/examples/exemple-3-avant.jpg',
-    after: '/examples/exemple-3-apres.jpg',
+    image: '/examples/exemple-3.png',
     gender: 'Homme',
   },
 ]
 
-const categories = [
-  { emoji: '👕', label: 'T-shirts & Hauts', available: true },
-  { emoji: '👖', label: 'Pantalons & Jupes', available: true },
-  { emoji: '👗', label: 'Robes & Combinaisons', available: true },
-  { emoji: '🧥', label: 'Vestes & Manteaux', available: true },
-  { emoji: '👟', label: 'Chaussures', available: true },
-  { emoji: '🧢', label: 'Casquettes & Bonnets', available: true },
-  { emoji: '🎩', label: 'Chapeaux', available: true },
-  { emoji: '💍', label: 'Bijoux & Accessoires', available: true },
-]
-
 const testimonials = [
-  {
-    name: 'Sarah',
-    handle: 'Paris 🇫🇷',
-    text: 'J\'avais un doute sur une veste Vinted à 60€. Je l\'ai essayée en 30 secondes et j\'ai commandé direct. Aucun regret.',
-    stars: 5,
-    avatar: 'S',
-  },
-  {
-    name: 'Ines',
-    handle: 'Lyon 🇫🇷',
-    text: 'Je fais du shopping en ligne depuis des années et je retournais toujours la moitié. Depuis que j\'utilise ça, zéro retour.',
-    stars: 5,
-    avatar: 'I',
-  },
-  {
-    name: 'Mathieu',
-    handle: 'Bordeaux 🇫🇷',
-    text: 'Franchement je pensais que ce serait nul mais le résultat est bluffant. J\'ai testé 4 manteaux avant d\'en choisir un.',
-    stars: 5,
-    avatar: 'M',
-  },
+  { name: 'Sarah', location: 'Paris', text: 'J\'avais un doute sur une veste Vinted à 60€. Je l\'ai essayée en 30 secondes et j\'ai commandé direct. Aucun regret.', stars: 5, color: 'bg-pink-400' },
+  { name: 'Inès', location: 'Lyon', text: 'Je fais du shopping en ligne depuis des années et je retournais toujours la moitié. Depuis que j\'utilise ça, zéro retour.', stars: 5, color: 'bg-purple-400' },
+  { name: 'Mathieu', location: 'Bordeaux', text: 'Franchement je pensais que ce serait nul mais le résultat est bluffant. J\'ai testé 4 manteaux avant d\'en choisir un.', stars: 5, color: 'bg-blue-400' },
+  { name: 'Jade', location: 'Marseille', text: 'J\'achète beaucoup sur Shein et j\'avais toujours peur que ça rende pas bien sur moi. Maintenant je sais avant d\'acheter.', stars: 5, color: 'bg-emerald-400' },
+  { name: 'Lucas', location: 'Nantes', text: 'Super pratique pour comparer plusieurs looks rapidement. Je l\'utilise avant chaque achat maintenant.', stars: 5, color: 'bg-orange-400' },
+  { name: 'Emma', location: 'Lille', text: 'L\'IA est vraiment précise. La robe que j\'ai essayée virtuellement ressemble exactement à ce que j\'ai reçu.', stars: 5, color: 'bg-rose-400' },
 ]
 
 const faqs = [
@@ -80,7 +51,7 @@ const faqs = [
   },
   {
     q: 'Quels types de vêtements puis-je essayer ?',
-    a: 'Actuellement : hauts, pantalons, jupes, robes, vestes et manteaux. Les chaussures, chapeaux et bijoux arrivent très bientôt.',
+    a: 'Tous les types : hauts, pantalons, jupes, robes, vestes, manteaux, chaussures, chapeaux, casquettes et bijoux.',
   },
   {
     q: 'Mes photos sont-elles stockées ?',
@@ -92,7 +63,7 @@ const faqs = [
   },
   {
     q: 'C\'est gratuit ?',
-    a: 'Oui, 3 essayages sont offerts à l\'inscription. Ensuite vous pouvez acheter des crédits ou passer Premium pour 100 essayages/mois.',
+    a: '1 essayage est offert à l\'inscription pour tester. Ensuite vous pouvez acheter des crédits ou passer Premium pour 100 essayages/mois.',
   },
 ]
 
@@ -120,7 +91,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-zinc-900 overflow-hidden">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-200">
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-100">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg gradient-brand flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
@@ -138,16 +109,15 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20 px-6 text-center">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/8 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-orange-400/6 rounded-full blur-3xl" />
-        </div>
+      <section className="relative pt-28 pb-16 px-6 text-center overflow-hidden">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-500/6 via-orange-50/40 to-white pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative max-w-4xl mx-auto animate-fade-in">
-          <div className="inline-flex items-center gap-2 bg-brand-500/8 border border-brand-500/20 rounded-full px-4 py-1.5 text-sm text-brand-500 mb-6">
+        <div className="relative max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 rounded-full px-4 py-1.5 text-sm text-brand-600 mb-6 font-medium">
             <Sparkles className="w-3.5 h-3.5" />
-            Propulsé par l&apos;IA
+            Essayage virtuel par IA · Résultat en 30 secondes
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-zinc-900">
@@ -156,13 +126,13 @@ export default function LandingPage() {
             <span className="gradient-brand-text">sans les porter</span>
           </h1>
 
-          <p className="text-xl text-zinc-500 max-w-2xl mx-auto mb-10">
+          <p className="text-xl text-zinc-500 max-w-xl mx-auto mb-10">
             Importez votre photo et celle d&apos;un vêtement — notre IA génère en secondes
             une image réaliste pour voir si le style vous convient.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-4 px-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+            <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-4 px-8 shadow-lg shadow-brand-500/25">
               Essayer gratuitement
               <ArrowRight className="w-4 h-4" />
             </Link>
@@ -171,12 +141,30 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <p className="text-zinc-400 text-sm mt-4">3 essayages offerts · Aucune carte bancaire requise</p>
+          <p className="text-zinc-400 text-sm">1 essayage offert · Aucune carte bancaire requise</p>
+
+          {/* Preview images */}
+          <div className="mt-14 grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+            {examples.map((ex, i) => (
+              <div key={i} className="relative rounded-2xl overflow-hidden shadow-xl aspect-[3/4] bg-zinc-100 group">
+                <Image
+                  src={ex.image}
+                  alt={ex.label}
+                  fill
+                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                  <p className="text-white text-xs font-medium">{ex.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-zinc-400 text-xs mt-4">Résultats générés par notre IA ✨</p>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="py-12 px-6 border-y border-zinc-100 bg-zinc-50">
+      <section className="py-12 px-6 border-y border-zinc-100 bg-white">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {stats.map((s) => (
             <div key={s.label}>
@@ -188,9 +176,9 @@ export default function LandingPage() {
       </section>
 
       {/* Logo bar */}
-      <section className="py-10 px-6">
+      <section className="py-10 px-6 bg-zinc-50">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-zinc-400 text-sm mb-6 uppercase tracking-widest">Compatible avec vos boutiques préférées</p>
+          <p className="text-zinc-400 text-xs mb-6 uppercase tracking-widest font-medium">Compatible avec vos boutiques préférées</p>
           <div className="flex flex-wrap items-center justify-center gap-8">
             {logos.map((logo) => (
               <span key={logo} className="text-xl font-bold text-zinc-300 hover:text-zinc-500 transition-colors cursor-default">
@@ -201,95 +189,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Avant/Après */}
-      <section className="py-20 px-6 bg-zinc-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Voyez la différence</h2>
-          <p className="text-zinc-500 text-center mb-14">Résultats générés par notre IA en moins de 30 secondes</p>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {examples.map((ex, i) => (
-              <div key={i} className="card overflow-hidden">
-                <div className="grid grid-cols-2 h-72 relative">
-                  <div className="relative bg-zinc-100 overflow-hidden">
-                    <div className="w-full h-full relative">
-                      <Image
-                        src={ex.before}
-                        alt={`Avant - ${ex.label}`}
-                        fill
-                        className="object-cover object-top"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-4xl opacity-20">👤</span>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-0.5 rounded-full font-medium z-10">
-                      Avant
-                    </div>
-                  </div>
-                  <div className="relative bg-zinc-100 overflow-hidden border-l border-zinc-200">
-                    <div className="w-full h-full relative">
-                      <Image
-                        src={ex.after}
-                        alt={`Après - ${ex.label}`}
-                        fill
-                        className="object-cover object-top"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-4xl opacity-20">✨</span>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-2 right-2 bg-brand-500/90 text-white text-xs px-2 py-0.5 rounded-full font-medium z-10">
-                      Après
-                    </div>
-                  </div>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border border-zinc-200 flex items-center justify-center z-20 shadow">
-                    <span className="text-zinc-400 text-xs font-bold">↔</span>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-zinc-900 text-sm">{ex.label}</p>
-                      <p className="text-zinc-400 text-xs mt-0.5">{ex.desc}</p>
-                    </div>
-                    <span className="text-xs bg-zinc-100 text-zinc-500 px-2 py-1 rounded-full">{ex.gender}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Catégories */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4 text-zinc-900">Essayez tout ce que vous voulez</h2>
-          <p className="text-zinc-500 mb-12">Hauts, bas, robes, accessoires — TryFit AI couvre tous les styles</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map((cat) => (
-              <div
-                key={cat.label}
-                className={`card p-4 text-center relative ${!cat.available ? 'opacity-50' : 'hover:border-brand-500/40 hover:shadow-md transition-all'}`}
-              >
-                <div className="text-3xl mb-2">{cat.emoji}</div>
-                <p className="text-sm font-medium text-zinc-700">{cat.label}</p>
-                {!cat.available && (
-                  <div className="absolute top-2 right-2 bg-zinc-100 text-zinc-400 text-xs px-1.5 py-0.5 rounded-full">
-                    Bientôt
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Comment ça marche */}
-      <section className="py-20 px-6 bg-zinc-50">
+      <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Comment ça marche ?</h2>
           <p className="text-zinc-500 text-center mb-14">3 étapes, moins de 30 secondes</p>
@@ -299,13 +200,15 @@ export default function LandingPage() {
               { step: '2', title: 'Choisissez un vêtement', desc: 'Importez une photo depuis Vinted, Zara, Instagram ou votre galerie.', emoji: '👕' },
               { step: '3', title: 'Voyez le résultat', desc: "L'IA génère une image réaliste de vous avec ce vêtement en quelques secondes.", emoji: '✨' },
             ].map((item) => (
-              <div key={item.step} className="card p-6 text-center">
-                <div className="text-4xl mb-4">{item.emoji}</div>
-                <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-500/10 text-brand-500 text-sm font-bold mb-3">
-                  {item.step}
+              <div key={item.step} className="relative">
+                <div className="card p-6 text-center h-full">
+                  <div className="text-4xl mb-4">{item.emoji}</div>
+                  <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-500 text-white text-sm font-bold mb-3">
+                    {item.step}
+                  </div>
+                  <h3 className="font-semibold text-lg mb-2 text-zinc-900">{item.title}</h3>
+                  <p className="text-zinc-500 text-sm">{item.desc}</p>
                 </div>
-                <h3 className="font-semibold text-lg mb-2 text-zinc-900">{item.title}</h3>
-                <p className="text-zinc-500 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -313,7 +216,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-zinc-50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-14 text-zinc-900">Tout ce dont vous avez besoin</h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -335,26 +238,26 @@ export default function LandingPage() {
       </section>
 
       {/* Témoignages */}
-      <section className="py-20 px-6 bg-zinc-50">
+      <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
           <p className="text-zinc-500 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-5">
             {testimonials.map((t) => (
-              <div key={t.name} className="card p-6">
-                <div className="flex items-center gap-1 mb-4">
+              <div key={t.name} className="card p-5">
+                <div className="flex items-center gap-1 mb-3">
                   {Array.from({ length: t.stars }).map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-brand-500 text-brand-500" />
                   ))}
                 </div>
                 <p className="text-zinc-600 text-sm leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-brand-500/10 text-brand-500 font-bold text-sm flex items-center justify-center">
-                    {t.avatar}
+                  <div className={`w-9 h-9 rounded-full ${t.color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+                    {t.name[0]}
                   </div>
                   <div>
-                    <p className="text-zinc-900 text-sm font-medium">{t.name}</p>
-                    <p className="text-zinc-400 text-xs">{t.handle}</p>
+                    <p className="text-zinc-900 text-sm font-semibold">{t.name}</p>
+                    <p className="text-zinc-400 text-xs">{t.location} 🇫🇷</p>
                   </div>
                 </div>
               </div>
@@ -364,7 +267,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-zinc-50">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
           <p className="text-zinc-500 mb-14">Commencez gratuitement, passez premium quand vous voulez</p>
@@ -373,9 +276,9 @@ export default function LandingPage() {
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
               <div className="text-4xl font-extrabold mb-6 text-zinc-900">0€</div>
               <ul className="space-y-3 text-sm text-zinc-600">
-                {['3 essayages offerts', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
+                {['1 essayage offert', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
                   <li key={f} className="flex items-center gap-2">
-                    <span className="text-brand-500">✓</span> {f}
+                    <span className="text-brand-500 font-bold">✓</span> {f}
                   </li>
                 ))}
               </ul>
@@ -383,7 +286,7 @@ export default function LandingPage() {
                 Commencer
               </Link>
             </div>
-            <div className="relative card p-8 text-left border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5">
+            <div className="relative card p-8 text-left border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg">
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 POPULAIRE
               </div>
@@ -393,11 +296,11 @@ export default function LandingPage() {
               <ul className="space-y-3 text-sm text-zinc-600">
                 {['100 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité'].map((f) => (
                   <li key={f} className="flex items-center gap-2">
-                    <span className="text-brand-500">✓</span> {f}
+                    <span className="text-brand-500 font-bold">✓</span> {f}
                   </li>
                 ))}
               </ul>
-              <Link href="/register" className="btn-primary w-full mt-8 flex items-center justify-center gap-2">
+              <Link href="/register" className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
                 Commencer <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -406,7 +309,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 px-6 bg-zinc-50">
+      <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Questions fréquentes</h2>
           <p className="text-zinc-500 text-center mb-14">Tout ce que vous voulez savoir</p>
@@ -419,18 +322,18 @@ export default function LandingPage() {
       </section>
 
       {/* CTA final */}
-      <section className="py-20 px-6 text-center">
+      <section className="py-20 px-6 text-center bg-gradient-to-b from-white to-brand-500/5">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-4xl font-extrabold mb-4 text-zinc-900">Prêt à essayer ?</h2>
-          <p className="text-zinc-500 mb-8">3 essayages offerts. Aucune carte bancaire.</p>
-          <Link href="/register" className="btn-primary inline-flex items-center gap-2 text-base py-4 px-8">
+          <p className="text-zinc-500 mb-8">1 essayage offert. Aucune carte bancaire.</p>
+          <Link href="/register" className="btn-primary inline-flex items-center gap-2 text-base py-4 px-8 shadow-lg shadow-brand-500/25">
             Créer mon compte gratuitement <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 py-8 px-6 text-center text-zinc-400 text-sm">
+      <footer className="border-t border-zinc-100 py-8 px-6 text-center text-zinc-400 text-sm">
         <p>© 2025 TryFit AI · Tous droits réservés · <Link href="/login" className="hover:text-zinc-600">Connexion</Link></p>
       </footer>
     </div>
