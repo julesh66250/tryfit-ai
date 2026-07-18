@@ -119,8 +119,11 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-100/70 via-orange-50/40 to-white pointer-events-none" />
+      <section className="pt-32 pb-16 px-6 relative overflow-hidden bg-white">
+        {/* Blob haut-droite */}
+        <div className="absolute -top-24 -right-24 w-[480px] h-[480px] bg-orange-300/35 rounded-full blur-3xl pointer-events-none" />
+        {/* Blob bas-gauche */}
+        <div className="absolute -bottom-24 -left-24 w-[400px] h-[400px] bg-orange-200/35 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-3xl mx-auto text-center">
 
           {/* Badge */}
@@ -130,13 +133,13 @@ export default function LandingPage() {
           </div>
 
           {/* Titre */}
-          <h1 className="text-6xl md:text-7xl font-extrabold mb-6 leading-[1.08] tracking-tight text-zinc-900">
+          <h1 className="text-6xl md:text-7xl font-extrabold mb-6 leading-[1.08] tracking-tight text-zinc-950">
             Essayez les vêtements<br />
             <span className="text-brand-500">sans les porter</span>
           </h1>
 
           {/* Sous-titre */}
-          <p className="text-xl text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="text-xl text-zinc-600 max-w-xl mx-auto mb-10 leading-relaxed">
             Importez votre photo et celle d&apos;un vêtement — l&apos;IA génère en 30 secondes
             une image réaliste de vous avec ce vêtement.
           </p>
