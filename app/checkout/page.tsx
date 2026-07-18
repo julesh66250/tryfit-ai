@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Sparkles, Lock, Crown } from 'lucide-react'
@@ -10,18 +11,16 @@ const plans = {
     price: '12,99€',
     period: '/mois',
     essayages: 50,
-    yearly: '99,99€/an',
   },
   pro: {
     name: 'Pro',
     price: '19,99€',
     period: '/mois',
     essayages: 100,
-    yearly: '149,99€/an',
   },
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams()
   const planKey = searchParams.get('plan') as 'starter' | 'pro' | null
   const plan = planKey ? plans[planKey] : null
@@ -93,5 +92,17 @@ export default function CheckoutPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   )
 }

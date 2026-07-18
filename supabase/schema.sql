@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   email TEXT,
   full_name TEXT,
   avatar_url TEXT,
-  credits INTEGER DEFAULT 3 NOT NULL,
+  credits INTEGER DEFAULT 1 NOT NULL,
   is_premium BOOLEAN DEFAULT FALSE NOT NULL,
   premium_expires_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
@@ -94,9 +94,9 @@ BEGIN
     NEW.raw_user_meta_data->>'full_name'
   );
 
-  -- Donner 3 crédits gratuits à l'inscription
+  -- Donner 1 crédit gratuit à l'inscription
   INSERT INTO public.credit_transactions (user_id, amount, type, description)
-  VALUES (NEW.id, 3, 'free_signup', 'Crédits offerts à l''inscription');
+  VALUES (NEW.id, 1, 'free_signup', 'Crédit offert à l''inscription');
 
   RETURN NEW;
 END;

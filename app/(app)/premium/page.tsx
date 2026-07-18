@@ -1,8 +1,10 @@
+import Link from 'next/link'
 import { Crown, Zap, Check } from 'lucide-react'
 
 const plans = [
   {
     id: 'starter_monthly',
+    checkoutPlan: 'starter',
     name: 'Starter',
     price: '12,99€',
     period: '/mois',
@@ -13,6 +15,7 @@ const plans = [
   },
   {
     id: 'pro_monthly',
+    checkoutPlan: 'pro',
     name: 'Pro',
     price: '19,99€',
     period: '/mois',
@@ -23,6 +26,7 @@ const plans = [
   },
   {
     id: 'pro_yearly',
+    checkoutPlan: 'pro',
     name: 'Pro Annuel',
     price: '149,99€',
     period: '/an',
@@ -77,9 +81,12 @@ export default function PremiumPage() {
               ))}
             </ul>
 
-            <button className={plan.highlighted ? 'btn-primary w-full' : 'btn-secondary w-full'}>
+            <Link
+              href={`/checkout?plan=${plan.checkoutPlan}`}
+              className={plan.highlighted ? 'btn-primary w-full text-center' : 'btn-secondary w-full text-center'}
+            >
               Choisir ce plan
-            </button>
+            </Link>
           </div>
         ))}
       </div>
