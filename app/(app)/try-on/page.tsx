@@ -297,21 +297,26 @@ export default function TryOnPage() {
               {GARMENT_CATEGORIES.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => cat.available && setGarmentCategory(cat.id as GarmentCategory)}
-                  disabled={!cat.available}
+                  onClick={() => {
+                    if (cat.available) {
+                      setGarmentCategory(cat.id as GarmentCategory)
+                    } else {
+                      toast('Bientôt disponible 🚀', { icon: '⏳' })
+                    }
+                  }}
                   className={cn(
                     'p-3 rounded-xl text-sm font-medium transition-all text-center relative',
                     garmentCategory === cat.id
                       ? 'bg-brand-500 text-white'
                       : cat.available
                         ? 'bg-zinc-50 border border-zinc-200 text-zinc-600 hover:border-brand-500/40 hover:bg-brand-500/5'
-                        : 'bg-zinc-50 border border-zinc-100 text-zinc-300 cursor-not-allowed'
+                        : 'bg-zinc-50 border border-zinc-200 text-zinc-400 hover:bg-zinc-100'
                   )}
                 >
                   <div className="text-xl mb-1">{cat.emoji}</div>
                   {cat.label}
                   {!cat.available && (
-                    <span className="absolute top-1 right-1 text-xs">🔜</span>
+                    <span className="absolute top-1.5 right-1.5 text-xs bg-zinc-200 text-zinc-500 px-1 rounded-full leading-4">Soon</span>
                   )}
                 </button>
               ))}

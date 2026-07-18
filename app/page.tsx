@@ -43,10 +43,10 @@ const categories = [
   { emoji: '👖', label: 'Pantalons & Jupes', available: true },
   { emoji: '👗', label: 'Robes & Combinaisons', available: true },
   { emoji: '🧥', label: 'Vestes & Manteaux', available: true },
-  { emoji: '👟', label: 'Chaussures', available: false },
-  { emoji: '🧢', label: 'Casquettes & Bonnets', available: false },
-  { emoji: '🎩', label: 'Chapeaux', available: false },
-  { emoji: '💍', label: 'Bijoux & Accessoires', available: false },
+  { emoji: '👟', label: 'Chaussures', available: true },
+  { emoji: '🧢', label: 'Casquettes & Bonnets', available: true },
+  { emoji: '🎩', label: 'Chapeaux', available: true },
+  { emoji: '💍', label: 'Bijoux & Accessoires', available: true },
 ]
 
 const testimonials = [
