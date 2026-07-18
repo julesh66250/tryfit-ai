@@ -36,12 +36,12 @@ const examples = [
 ]
 
 const testimonials = [
-  { name: 'Sarah', location: 'Paris', text: 'J\'avais un doute sur une veste Vinted à 60€. Je l\'ai essayée en 30 secondes et j\'ai commandé direct. Aucun regret.', stars: 5, color: 'bg-pink-400' },
-  { name: 'Inès', location: 'Lyon', text: 'Je fais du shopping en ligne depuis des années et je retournais toujours la moitié. Depuis que j\'utilise ça, zéro retour.', stars: 5, color: 'bg-purple-400' },
-  { name: 'Mathieu', location: 'Bordeaux', text: 'Franchement je pensais que ce serait nul mais le résultat est bluffant. J\'ai testé 4 manteaux avant d\'en choisir un.', stars: 5, color: 'bg-blue-400' },
-  { name: 'Jade', location: 'Marseille', text: 'J\'achète beaucoup sur Shein et j\'avais toujours peur que ça rende pas bien sur moi. Maintenant je sais avant d\'acheter.', stars: 5, color: 'bg-emerald-400' },
-  { name: 'Lucas', location: 'Nantes', text: 'Super pratique pour comparer plusieurs looks rapidement. Je l\'utilise avant chaque achat maintenant.', stars: 5, color: 'bg-orange-400' },
-  { name: 'Emma', location: 'Lille', text: 'L\'IA est vraiment précise. La robe que j\'ai essayée virtuellement ressemble exactement à ce que j\'ai reçu.', stars: 5, color: 'bg-rose-400' },
+  { name: 'Sarah', location: 'Paris', text: 'J\'avais un doute sur une veste Vinted à 60€. Je l\'ai essayée en 30 secondes et j\'ai commandé direct. Aucun regret.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
+  { name: 'Inès', location: 'Lyon', text: 'Je fais du shopping en ligne depuis des années et je retournais toujours la moitié. Depuis que j\'utilise ça, zéro retour.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
+  { name: 'Mathieu', location: 'Bordeaux', text: 'Franchement je pensais que ce serait nul mais le résultat est bluffant. J\'ai testé 4 manteaux avant d\'en choisir un.', stars: 5, avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+  { name: 'Jade', location: 'Marseille', text: 'J\'achète beaucoup sur Shein et j\'avais toujours peur que ça rende pas bien sur moi. Maintenant je sais avant d\'acheter.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/12.jpg' },
+  { name: 'Lucas', location: 'Nantes', text: 'Super pratique pour comparer plusieurs looks rapidement. Je l\'utilise avant chaque achat maintenant.', stars: 5, avatar: 'https://randomuser.me/api/portraits/men/75.jpg' },
+  { name: 'Emma', location: 'Lille', text: 'L\'IA est vraiment précise. La robe que j\'ai essayée virtuellement ressemble exactement à ce que j\'ai reçu.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/90.jpg' },
 ]
 
 const faqs = [
@@ -110,12 +110,14 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative pt-28 pb-16 px-6 text-center overflow-hidden">
-        {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-500/6 via-orange-50/40 to-white pointer-events-none" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Fond orange dégradé */}
+        <div className="absolute inset-0 bg-gradient-to-b from-orange-50 via-brand-500/5 to-white pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-br from-brand-500/15 via-orange-400/10 to-transparent pointer-events-none" />
+        <div className="absolute top-10 left-1/4 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-10 right-1/4 w-72 h-72 bg-orange-400/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 rounded-full px-4 py-1.5 text-sm text-brand-600 mb-6 font-medium">
+          <div className="inline-flex items-center gap-2 bg-white border border-brand-500/20 shadow-sm rounded-full px-4 py-1.5 text-sm text-brand-600 mb-6 font-medium">
             <Sparkles className="w-3.5 h-3.5" />
             Essayage virtuel par IA · Résultat en 30 secondes
           </div>
@@ -132,34 +134,35 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-            <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-4 px-8 shadow-lg shadow-brand-500/25">
+            <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-4 px-8 shadow-lg shadow-brand-500/30">
               Essayer gratuitement
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/login" className="btn-secondary flex items-center justify-center gap-2 text-base py-4 px-8">
+            <Link href="/login" className="bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-900 font-semibold flex items-center justify-center gap-2 text-base py-4 px-8 rounded-xl transition-all shadow-sm">
               J&apos;ai déjà un compte
             </Link>
           </div>
 
           <p className="text-zinc-400 text-sm">1 essayage offert · Aucune carte bancaire requise</p>
 
-          {/* Preview images */}
-          <div className="mt-14 grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+          {/* Preview images — affichage pleine largeur */}
+          <div className="mt-14 grid grid-cols-3 gap-4 max-w-3xl mx-auto">
             {examples.map((ex, i) => (
-              <div key={i} className="relative rounded-2xl overflow-hidden shadow-xl aspect-[3/4] bg-zinc-100 group">
+              <div key={i} className="relative rounded-2xl overflow-hidden shadow-2xl bg-zinc-100 group" style={{ aspectRatio: '2/3' }}>
                 <Image
                   src={ex.image}
                   alt={ex.label}
                   fill
-                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                  <p className="text-white text-xs font-medium">{ex.label}</p>
+                  <p className="text-white text-xs font-semibold">{ex.label}</p>
+                  <p className="text-white/70 text-xs">{ex.desc}</p>
                 </div>
               </div>
             ))}
           </div>
-          <p className="text-zinc-400 text-xs mt-4">Résultats générés par notre IA ✨</p>
+          <p className="text-zinc-400 text-xs mt-4">✨ Résultats générés par notre IA en moins de 30 secondes</p>
         </div>
       </section>
 
@@ -252,9 +255,11 @@ export default function LandingPage() {
                 </div>
                 <p className="text-zinc-600 text-sm leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
                 <div className="flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-full ${t.color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
-                    {t.name[0]}
-                  </div>
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0 border-2 border-zinc-100"
+                  />
                   <div>
                     <p className="text-zinc-900 text-sm font-semibold">{t.name}</p>
                     <p className="text-zinc-400 text-xs">{t.location} 🇫🇷</p>
