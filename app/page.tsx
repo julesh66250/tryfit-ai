@@ -339,7 +339,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/register?plan=starter" className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
+              <Link href="/checkout?plan=starter" className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
                 Commencer <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -359,7 +359,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/register?plan=pro" className="btn-secondary w-full mt-8 flex items-center justify-center">
+              <Link href="/checkout?plan=pro" className="btn-secondary w-full mt-8 flex items-center justify-center">
                 Commencer
               </Link>
             </div>
