@@ -119,7 +119,8 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 bg-white">
+      <section className="pt-32 pb-16 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-orange-100/70 via-orange-50/40 to-white pointer-events-none" />
         <div className="max-w-3xl mx-auto text-center">
 
           {/* Badge */}
