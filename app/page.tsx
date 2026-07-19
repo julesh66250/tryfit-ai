@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, ArrowRight, Zap, Shield, Star, ChevronDown, ChevronUp } from 'lucide-react'
+import { Sparkles, ArrowRight, Star, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import TestimonialsColumns from '@/components/TestimonialsColumns'
@@ -258,27 +258,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-20 px-6 bg-zinc-50">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-14 text-zinc-900">Tout ce dont vous avez besoin</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { icon: <Zap className="w-5 h-5" />, title: 'Ultra rapide', desc: 'Résultat en moins de 30 secondes.' },
-              { icon: <Shield className="w-5 h-5" />, title: 'Vos données protégées', desc: 'Vos photos ne sont jamais partagées.' },
-              { icon: <Star className="w-5 h-5" />, title: 'Qualité réaliste', desc: 'IA spécialisée en mode et textile.' },
-            ].map((f) => (
-              <div key={f.title} className="card p-6">
-                <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center mb-4">
-                  {f.icon}
-                </div>
-                <h3 className="font-semibold mb-1 text-zinc-900">{f.title}</h3>
-                <p className="text-zinc-500 text-sm">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Témoignages */}
       <section className="py-20 px-6">
