@@ -96,6 +96,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export default function LandingPage() {
   const [hoveredPhoto, setHoveredPhoto] = useState<number | null>(null)
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
   const [pricingVisible, setPricingVisible] = useState(false)
   const pricingRef = useRef<HTMLDivElement>(null)
 
@@ -259,100 +260,98 @@ export default function LandingPage() {
       </section>
 
 
+      {/* Pricing */}
+      <section className="py-20 px-6 bg-zinc-50" ref={pricingRef}>
+        <div className="max-w-5xl mx-auto text-center">
+          <div style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 1.2s ease, transform 1.2s ease' }}>
+            <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
+            <p className="text-zinc-500 mb-8">Commencez gratuitement, passez au plan qui vous convient</p>
+
+            {/* Toggle mensuel / annuel */}
+            <div className="inline-flex items-center bg-white border border-zinc-200 rounded-full p-1 mb-12">
+              <button
+                onClick={() => setBilling('monthly')}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${billing === 'monthly' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}
+              >
+                Mensuel
+              </button>
+              <button
+                onClick={() => setBilling('yearly')}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${billing === 'yearly' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}
+              >
+                Annuel
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${billing === 'yearly' ? 'bg-brand-500 text-white' : 'bg-brand-500/10 text-brand-500'}`}>-35%</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+
+            {/* Gratuit */}
+            <div className="card p-8 text-left flex flex-col" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.5s, transform 1.2s ease 0.5s' }}>
+              <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
+              <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
+              <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
+              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
+                {['1 essayage offert', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
+                  <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
+                ))}
+              </ul>
+              <Link href="/register" className="btn-secondary w-full mt-8 flex items-center justify-center">Commencer</Link>
+            </div>
+
+            {/* Starter */}
+            <div className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.9s, transform 1.2s ease 0.9s' }}>
+              <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
+              <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
+              <div className="text-4xl font-extrabold mb-1 text-zinc-900">
+                {billing === 'monthly' ? '12,99€' : '8,33€'}
+              </div>
+              <div className="text-zinc-400 text-sm mb-6">
+                {billing === 'monthly' ? 'par mois' : 'par mois · facturé 99,99€/an'}
+              </div>
+              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
+                {['50 essayages par mois', 'Générations prioritaires', "Meilleure qualité d'image", 'Sans publicité', 'Historique illimité'].map((f) => (
+                  <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
+                ))}
+              </ul>
+              <Link href={`/checkout?plan=starter${billing === 'yearly' ? '-yearly' : ''}`} className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
+                Commencer <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Pro */}
+            <div className="card p-8 text-left flex flex-col" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 1.3s, transform 1.2s ease 1.3s' }}>
+              <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
+              <div className="flex items-center gap-3 mb-1">
+                <span className="text-4xl font-extrabold text-zinc-900">
+                  {billing === 'monthly' ? '19,99€' : '12,49€'}
+                </span>
+                {billing === 'monthly' && <span className="text-xl text-zinc-300 line-through font-medium">25,98€</span>}
+              </div>
+              <div className="text-zinc-400 text-sm mb-6">
+                {billing === 'monthly' ? 'par mois' : 'par mois · facturé 149,99€/an'}
+              </div>
+              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
+                {['100 essayages par mois', 'Générations prioritaires', "Meilleure qualité d'image", 'Sans publicité', 'Historique illimité', 'Support prioritaire'].map((f) => (
+                  <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
+                ))}
+              </ul>
+              <Link href={`/checkout?plan=pro${billing === 'yearly' ? '-yearly' : ''}`} className="btn-secondary w-full mt-8 flex items-center justify-center">
+                Commencer
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* Témoignages */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
           <p className="text-zinc-500 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
           <TestimonialsColumns testimonials={testimonials} />
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-20 px-6 bg-zinc-50" ref={pricingRef}>
-        <div className="max-w-5xl mx-auto text-center">
-          <div
-            style={{
-              opacity: pricingVisible ? 1 : 0,
-              transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)',
-              transition: 'opacity 1.2s ease, transform 1.2s ease',
-            }}
-          >
-            <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
-            <p className="text-zinc-500 mb-14">Commencez gratuitement, passez au plan qui vous convient</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-
-            {/* Gratuit */}
-            <div className="card p-8 text-left flex flex-col" style={{
-              opacity: pricingVisible ? 1 : 0,
-              transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 1.2s ease 0.5s, transform 1.2s ease 0.5s',
-            }}>
-              <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
-              <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
-              <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
-              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['1 essayage offert', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <span className="text-brand-500 font-bold">✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/register" className="btn-secondary w-full mt-8 flex items-center justify-center">
-                Commencer
-              </Link>
-            </div>
-
-            {/* Starter */}
-            <div className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg" style={{
-              opacity: pricingVisible ? 1 : 0,
-              transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 1.2s ease 0.9s, transform 1.2s ease 0.9s',
-            }}>
-              <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                POPULAIRE
-              </div>
-              <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
-              <div className="text-4xl font-extrabold mb-1 text-zinc-900">12,99€</div>
-              <div className="text-zinc-400 text-sm mb-6">par mois · ou 99,99€/an</div>
-              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['50 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité'].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <span className="text-brand-500 font-bold">✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/checkout?plan=starter" className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
-                Commencer <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            {/* Pro */}
-            <div className="card p-8 text-left flex flex-col" style={{
-              opacity: pricingVisible ? 1 : 0,
-              transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 1.2s ease 1.3s, transform 1.2s ease 1.3s',
-            }}>
-              <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
-              <div className="flex items-center gap-3 mb-1">
-                <span className="text-4xl font-extrabold text-zinc-900">19,99€</span>
-                <span className="text-xl text-zinc-300 line-through font-medium">25,98€</span>
-              </div>
-              <div className="text-zinc-400 text-sm mb-6">par mois · ou 149,99€/an</div>
-              <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['100 essayages par mois', 'Générations prioritaires', 'Meilleure qualité d\'image', 'Sans publicité', 'Historique illimité', 'Support prioritaire'].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <span className="text-brand-500 font-bold">✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/checkout?plan=pro" className="btn-secondary w-full mt-8 flex items-center justify-center">
-                Commencer
-              </Link>
-            </div>
-
-          </div>
         </div>
       </section>
 
