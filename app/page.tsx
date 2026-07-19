@@ -110,7 +110,11 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 overflow-hidden">
+    <div className="min-h-screen text-zinc-900 relative" style={{ background: 'linear-gradient(180deg, #fff5f0 0%, #ffffff 25%, #ffffff 75%, #fff5f0 100%)' }}>
+      {/* Blob global haut-droite */}
+      <div className="fixed -top-32 -right-32 w-[600px] h-[600px] bg-orange-300/20 rounded-full blur-3xl pointer-events-none" style={{ zIndex: 0 }} />
+      {/* Blob global bas-gauche */}
+      <div className="fixed -bottom-32 -left-32 w-[500px] h-[500px] bg-orange-200/20 rounded-full blur-3xl pointer-events-none" style={{ zIndex: 0 }} />
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-100">
         <div className="flex items-center gap-2">
@@ -130,11 +134,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 relative overflow-hidden bg-white">
-        {/* Blob haut-droite */}
-        <div className="absolute -top-24 -right-24 w-[480px] h-[480px] bg-orange-300/35 rounded-full blur-3xl pointer-events-none" />
-        {/* Blob bas-gauche */}
-        <div className="absolute -bottom-24 -left-24 w-[400px] h-[400px] bg-orange-200/35 rounded-full blur-3xl pointer-events-none" />
+      <section className="pt-32 pb-16 px-6 relative">
         <div className="max-w-3xl mx-auto text-center">
 
           {/* Badge */}
@@ -208,7 +208,7 @@ export default function LandingPage() {
       </section>
 
       {/* Stats */}
-      <section className="py-12 px-6 border-y border-zinc-100 bg-white">
+      <section className="py-12 px-6 border-y border-zinc-100/60">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {stats.map((s) => (
             <div key={s.label}>
@@ -220,7 +220,7 @@ export default function LandingPage() {
       </section>
 
       {/* Logo bar */}
-      <section className="py-10 px-6 bg-zinc-50">
+      <section className="py-10 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-zinc-400 text-xs mb-6 uppercase tracking-widest font-medium">Compatible avec vos boutiques préférées</p>
           <div className="flex flex-wrap items-center justify-center gap-8">
@@ -261,7 +261,7 @@ export default function LandingPage() {
 
 
       {/* Pricing */}
-      <section className="py-20 px-6 bg-zinc-50" ref={pricingRef}>
+      <section className="py-20 px-6" ref={pricingRef}>
         <div className="max-w-5xl mx-auto text-center">
           <div style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 1.2s ease, transform 1.2s ease' }}>
             <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
@@ -369,7 +369,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA final */}
-      <section className="py-20 px-6 text-center bg-gradient-to-b from-white to-brand-500/5">
+      <section className="py-20 px-6 text-center">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-4xl font-extrabold mb-4 text-zinc-900">Prêt à essayer ?</h2>
           <p className="text-zinc-500 mb-8">1 essayage offert. Aucune carte bancaire.</p>
