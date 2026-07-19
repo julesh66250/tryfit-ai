@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, ArrowRight, Zap, Shield, Star } from 'lucide-react'
+import { Sparkles, ArrowRight, Zap, Shield, Star, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import Image from 'next/image'
 import TestimonialsColumns from '@/components/TestimonialsColumns'
