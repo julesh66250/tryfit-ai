@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Sparkles, ArrowRight, Zap, Shield, Star, ChevronDown, ChevronUp } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import TestimonialsColumns from '@/components/TestimonialsColumns'
 
@@ -96,6 +96,17 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export default function LandingPage() {
   const [hoveredPhoto, setHoveredPhoto] = useState<number | null>(null)
+  const [pricingVisible, setPricingVisible] = useState(false)
+  const pricingRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setPricingVisible(true) },
+      { threshold: 0.1 }
+    )
+    if (pricingRef.current) observer.observe(pricingRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 overflow-hidden">
@@ -279,14 +290,26 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20 px-6 bg-zinc-50">
+      <section className="py-20 px-6 bg-zinc-50" ref={pricingRef}>
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
-          <p className="text-zinc-500 mb-14">Commencez gratuitement, passez au plan qui vous convient</p>
+          <div
+            style={{
+              opacity: pricingVisible ? 1 : 0,
+              transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)',
+              transition: 'opacity 0.6s ease, transform 0.6s ease',
+            }}
+          >
+            <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
+            <p className="text-zinc-500 mb-14">Commencez gratuitement, passez au plan qui vous convient</p>
+          </div>
           <div className="grid md:grid-cols-3 gap-6">
 
             {/* Gratuit */}
-            <div className="card p-8 text-left flex flex-col">
+            <div className="card p-8 text-left flex flex-col" style={{
+              opacity: pricingVisible ? 1 : 0,
+              transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
+              transition: 'opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s',
+            }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
               <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
@@ -303,7 +326,11 @@ export default function LandingPage() {
             </div>
 
             {/* Starter */}
-            <div className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg">
+            <div className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg" style={{
+              opacity: pricingVisible ? 1 : 0,
+              transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
+              transition: 'opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s',
+            }}>
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 POPULAIRE
               </div>
@@ -323,7 +350,11 @@ export default function LandingPage() {
             </div>
 
             {/* Pro */}
-            <div className="card p-8 text-left flex flex-col">
+            <div className="card p-8 text-left flex flex-col" style={{
+              opacity: pricingVisible ? 1 : 0,
+              transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
+              transition: 'opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s',
+            }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
               <div className="flex items-center gap-3 mb-1">
                 <span className="text-4xl font-extrabold text-zinc-900">19,99€</span>
