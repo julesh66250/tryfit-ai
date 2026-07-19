@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, ArrowRight, Zap, Shield, Star, ChevronDown, ChevronUp } from 'lucide-react'
+import { Sparkles, ArrowRight, Zap, Shield, Star } from 'lucide-react'
 import { useState } from 'react'
 import Image from 'next/image'
+import TestimonialsColumns from '@/components/TestimonialsColumns'
 
 const stats = [
   { value: '12 000+', label: 'Essayages générés' },
@@ -94,9 +95,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 }
 
 export default function LandingPage() {
-  const [showAllReviews, setShowAllReviews] = useState(false)
   const [hoveredPhoto, setHoveredPhoto] = useState<number | null>(null)
-  const visibleTestimonials = showAllReviews ? testimonials : testimonials.slice(0, 6)
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 overflow-hidden">
@@ -275,47 +274,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
           <p className="text-zinc-500 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
-          <div className="grid md:grid-cols-3 gap-5">
-            {visibleTestimonials.map((t) => (
-              <div key={t.name + t.location} className="card p-5">
-                <div className="flex items-center gap-1 mb-3">
-                  {Array.from({ length: t.stars }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-brand-500 text-brand-500" />
-                  ))}
-                </div>
-                <p className="text-zinc-600 text-sm leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <img
-                    src={t.avatar}
-                    alt={t.name}
-                    className="w-10 h-10 rounded-full object-cover flex-shrink-0 border-2 border-zinc-100"
-                  />
-                  <div>
-                    <p className="text-zinc-900 text-sm font-semibold">{t.name}</p>
-                    <p className="text-zinc-400 text-xs">{t.location} 🇫🇷</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            {!showAllReviews ? (
-              <button
-                onClick={() => setShowAllReviews(true)}
-                className="btn-secondary inline-flex items-center gap-2"
-              >
-                Afficher plus d&apos;avis <ChevronDown className="w-4 h-4" />
-              </button>
-            ) : (
-              <button
-                onClick={() => setShowAllReviews(false)}
-                className="btn-secondary inline-flex items-center gap-2"
-              >
-                Afficher moins <ChevronUp className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+          <TestimonialsColumns testimonials={testimonials} />
         </div>
       </section>
 
