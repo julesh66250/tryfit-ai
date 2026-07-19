@@ -296,7 +296,7 @@ export default function LandingPage() {
             style={{
               opacity: pricingVisible ? 1 : 0,
               transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)',
-              transition: 'opacity 0.6s ease, transform 0.6s ease',
+              transition: 'opacity 0.9s ease, transform 0.9s ease',
             }}
           >
             <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
@@ -308,7 +308,7 @@ export default function LandingPage() {
             <div className="card p-8 text-left flex flex-col" style={{
               opacity: pricingVisible ? 1 : 0,
               transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s',
+              transition: 'opacity 0.9s ease 0.3s, transform 0.9s ease 0.3s',
             }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
@@ -329,7 +329,7 @@ export default function LandingPage() {
             <div className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg" style={{
               opacity: pricingVisible ? 1 : 0,
               transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s',
+              transition: 'opacity 0.9s ease 0.65s, transform 0.9s ease 0.65s',
             }}>
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 POPULAIRE
@@ -353,7 +353,7 @@ export default function LandingPage() {
             <div className="card p-8 text-left flex flex-col" style={{
               opacity: pricingVisible ? 1 : 0,
               transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s',
+              transition: 'opacity 0.9s ease 1s, transform 0.9s ease 1s',
             }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
               <div className="flex items-center gap-3 mb-1">
