@@ -3,27 +3,45 @@
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, Lock, Crown } from 'lucide-react'
+import { Lock, Crown } from 'lucide-react'
 
 const plans = {
   starter: {
     name: 'Starter',
     price: '12,99€',
     period: '/mois',
-    essayages: 50,
+    credits: 50,
+    billed: null,
   },
   pro: {
     name: 'Pro',
     price: '19,99€',
     period: '/mois',
-    essayages: 100,
+    credits: 100,
+    billed: null,
+  },
+  'starter-yearly': {
+    name: 'Starter Annuel',
+    price: '11,04€',
+    period: '/mois',
+    credits: 50,
+    billed: 'Facturé 132,48€/an · -15%',
+  },
+  'pro-yearly': {
+    name: 'Pro Annuel',
+    price: '16,99€',
+    period: '/mois',
+    credits: 100,
+    billed: 'Facturé 203,88€/an · -15%',
   },
 }
 
+type PlanKey = keyof typeof plans
+
 function CheckoutContent() {
   const searchParams = useSearchParams()
-  const planKey = searchParams.get('plan') as 'starter' | 'pro' | null
-  const plan = planKey ? plans[planKey] : null
+  const planKey = searchParams.get('plan') as PlanKey | null
+  const plan = planKey && plans[planKey] ? plans[planKey] : null
 
   if (!plan) {
     return (
@@ -39,9 +57,8 @@ function CheckoutContent() {
 
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="TryFit AI" className="w-10 h-10 rounded-xl" />
             <span className="font-bold text-xl text-zinc-900">TryFit AI</span>
           </Link>
           <h1 className="text-2xl font-bold text-zinc-900">Finaliser votre abonnement</h1>
@@ -57,7 +74,8 @@ function CheckoutContent() {
               </div>
               <div>
                 <p className="font-bold text-zinc-900">Plan {plan.name}</p>
-                <p className="text-zinc-500 text-sm">{plan.essayages} essayages/mois</p>
+                <p className="text-zinc-500 text-sm">{plan.credits} crédits/mois</p>
+                {plan.billed && <p className="text-brand-500 text-xs font-medium mt-0.5">{plan.billed}</p>}
               </div>
             </div>
             <div className="text-right">

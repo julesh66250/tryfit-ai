@@ -38,15 +38,17 @@ function TestimonialsColumn({
   testimonials,
   duration = 30,
   reverse = false,
+  className = '',
 }: {
   testimonials: Testimonial[]
   duration?: number
   reverse?: boolean
+  className?: string
 }) {
   const doubled = [...testimonials, ...testimonials]
 
   return (
-    <div className="flex flex-col gap-4 overflow-hidden" style={{ height: '480px' }}>
+    <div className={`flex flex-col gap-4 overflow-hidden ${className}`} style={{ height: '480px' }}>
       <div
         className="flex flex-col gap-4"
         style={{
@@ -81,8 +83,8 @@ export default function TestimonialsColumns({ testimonials }: { testimonials: Te
       `}</style>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 overflow-hidden">
         <TestimonialsColumn testimonials={col1} duration={55} />
-        <TestimonialsColumn testimonials={col2} duration={45} reverse />
-        <TestimonialsColumn testimonials={col3} duration={65} />
+        <TestimonialsColumn testimonials={col2} duration={45} reverse className="hidden md:flex" />
+        <TestimonialsColumn testimonials={col3} duration={65} className="hidden md:flex" />
       </div>
     </>
   )
