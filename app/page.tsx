@@ -258,9 +258,14 @@ export default function LandingPage() {
           </div>
 
           {/* Explication crédits */}
-          <p className="text-center text-zinc-500 mt-2">
-            Chaque vêtement ou accessoire essayé coûte <span className="font-semibold text-zinc-900">1 crédit</span>. Composez un outfit complet et tout se génère <span className="font-semibold text-zinc-900">en un seul clic</span>.
-          </p>
+          <div className="card p-5 bg-brand-500/5 border-brand-500/20 flex items-center gap-4 mt-2">
+            <div className="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <p className="text-zinc-500 text-sm text-left">
+              Chaque vêtement ou accessoire essayé coûte <span className="font-semibold text-zinc-900">1 crédit</span>. Composez un outfit complet et tout se génère <span className="font-semibold text-zinc-900">en un seul clic</span>.
+            </p>
+          </div>
         </div>
       </section>
 
