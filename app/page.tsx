@@ -34,6 +34,12 @@ const examples = [
   },
 ]
 
+const STEPS = [
+  { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
+  { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, bijoux, chapeau... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
+  { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces.", emoji: '✨' },
+]
+
 const testimonials = [
   { name: 'Sarah', location: 'Paris', text: 'J\'avais un doute sur une veste Vinted à 60€. Je l\'ai essayée en 30 secondes et j\'ai commandé direct. Aucun regret.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
   { name: 'Inès', location: 'Lyon', text: 'Je fais du shopping en ligne depuis des années et je retournais toujours la moitié. Depuis que j\'utilise ça, zéro retour.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
@@ -92,7 +98,7 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(28px)',
-        transition: `opacity 0.9s ease ${delay}s, transform 0.9s ease ${delay}s`,
+        transition: `opacity 0.55s ease ${delay}s, transform 0.55s ease ${delay}s`,
       }}
     >
       {children}
@@ -126,6 +132,7 @@ export default function LandingPage() {
   const [selectedPlan, setSelectedPlan] = useState<'free' | 'starter' | 'pro'>('starter')
   const [pricingVisible, setPricingVisible] = useState(false)
   const [showSticky, setShowSticky] = useState(false)
+  const [activeStep, setActiveStep] = useState(0)
   const pricingRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -138,9 +145,17 @@ export default function LandingPage() {
   }, [])
 
   useEffect(() => {
-    const onScroll = () => setShowSticky(window.scrollY > 600)
+    const onScroll = () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 500
+      setShowSticky(window.scrollY > 600 && !nearBottom)
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const t = setInterval(() => setActiveStep((s) => (s + 1) % STEPS.length), 3000)
+    return () => clearInterval(t)
   }, [])
 
   return (
@@ -256,13 +271,43 @@ export default function LandingPage() {
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Comment ça marche ?</h2>
             <p className="text-zinc-500 text-center mb-14">3 étapes, moins de 30 secondes</p>
           </Reveal>
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {[
-              { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
-              { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, bijoux, chapeau... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
-              { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces.", emoji: '✨' },
-            ].map((item, i) => (
-              <Reveal key={item.step} delay={i * 0.18} className="relative">
+          {/* Carrousel auto sur mobile */}
+          <div className="md:hidden mb-10">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${activeStep * 100}%)` }}
+              >
+                {STEPS.map((item) => (
+                  <div key={item.step} className="w-full flex-shrink-0 px-1">
+                    <div className="card p-6 text-center h-full">
+                      <div className="text-4xl mb-4">{item.emoji}</div>
+                      <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-500 text-white text-sm font-bold mb-3">
+                        {item.step}
+                      </div>
+                      <h3 className="font-semibold text-lg mb-2 text-zinc-900">{item.title}</h3>
+                      <p className="text-zinc-500 text-sm">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              {STEPS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveStep(i)}
+                  aria-label={`Étape ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${activeStep === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Grille sur desktop */}
+          <div className="hidden md:grid md:grid-cols-3 gap-8 mb-12">
+            {STEPS.map((item, i) => (
+              <Reveal key={item.step} delay={i * 0.12} className="relative">
                 <div className="card p-6 text-center h-full">
                   <div className="text-4xl mb-4">{item.emoji}</div>
                   <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-500 text-white text-sm font-bold mb-3">
@@ -287,7 +332,7 @@ export default function LandingPage() {
           </Reveal>
 
           {/* Catégories supportées */}
-          <Reveal delay={0.15}>
+          <Reveal delay={0.1}>
             <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
               {[
                 { emoji: '👕', label: 'Hauts' },
@@ -319,7 +364,7 @@ export default function LandingPage() {
               { emoji: '⏱️', title: '30 secondes suffisent', desc: 'Contre 30 minutes de cabine d\'essayage. Essayez vos pièces où que vous soyez, en un clic.' },
               { emoji: '💶', title: 'Des économies réelles', desc: 'Moins d\'achats impulsifs regrettés : vous n\'achetez que ce qui vous va vraiment.' },
             ].map((b, i) => (
-              <Reveal key={b.title} delay={i * 0.18}>
+              <Reveal key={b.title} delay={i * 0.12}>
                 <div className="card p-8 text-center h-full">
                   <div className="text-4xl mb-4">{b.emoji}</div>
                   <h3 className="font-semibold text-lg mb-2 text-zinc-900">{b.title}</h3>
@@ -335,7 +380,7 @@ export default function LandingPage() {
       {/* Pricing */}
       <section id="tarifs" className="py-10 px-6" ref={pricingRef}>
         <div className="max-w-5xl mx-auto text-center">
-          <div style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 1.2s ease, transform 1.2s ease' }}>
+          <div style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 0.6s ease, transform 0.6s ease' }}>
             <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
             <p className="text-zinc-500 mb-8">Commencez gratuitement, passez au plan qui vous convient</p>
 
@@ -360,7 +405,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-6">
 
             {/* Gratuit */}
-            <div onClick={() => setSelectedPlan('free')} className={`card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'free' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.5s, transform 1.2s ease 0.5s' }}>
+            <div onClick={() => setSelectedPlan('free')} className={`card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'free' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s' }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
               <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
@@ -373,7 +418,7 @@ export default function LandingPage() {
             </div>
 
             {/* Starter */}
-            <div onClick={() => setSelectedPlan('starter')} className={`relative card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.9s, transform 1.2s ease 0.9s' }}>
+            <div onClick={() => setSelectedPlan('starter')} className={`relative card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s' }}>
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
               <div className="flex items-center gap-3 mb-1">
@@ -396,7 +441,7 @@ export default function LandingPage() {
             </div>
 
             {/* Pro */}
-            <div onClick={() => setSelectedPlan('pro')} className={`card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 1.3s, transform 1.2s ease 1.3s' }}>
+            <div onClick={() => setSelectedPlan('pro')} className={`card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.45s, transform 0.6s ease 0.45s' }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
               <div className="flex items-center gap-3 mb-1">
                 <span className="text-4xl font-extrabold text-zinc-900">
@@ -428,7 +473,7 @@ export default function LandingPage() {
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
             <p className="text-zinc-500 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
           </Reveal>
-          <Reveal delay={0.15}>
+          <Reveal delay={0.1}>
             <TestimonialsColumns testimonials={testimonials} />
           </Reveal>
         </div>
@@ -441,7 +486,7 @@ export default function LandingPage() {
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Questions fréquentes</h2>
             <p className="text-zinc-500 text-center mb-14">Tout ce que vous voulez savoir</p>
           </Reveal>
-          <Reveal delay={0.15}>
+          <Reveal delay={0.1}>
             <div className="space-y-3">
               {faqs.map((faq) => (
                 <FaqItem key={faq.q} q={faq.q} a={faq.a} />
