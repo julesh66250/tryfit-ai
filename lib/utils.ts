@@ -22,7 +22,7 @@ export const GARMENT_CATEGORIES = [
   { id: 'one-pieces', label: 'Robe / Combinaison', emoji: '👗', items: ['Robe', 'Combinaison'], available: true },
   { id: 'shoes', label: 'Chaussures', emoji: '👟', items: ['Sneakers', 'Talons', 'Bottes', 'Mocassins'], available: true },
   { id: 'hats', label: 'Couvre-chef', emoji: '🧢', items: ['Casquette', 'Bonnet', 'Chapeau', 'Bob'], available: true },
-  { id: 'jewelry', label: 'Bijoux & Accessoires', emoji: '💍', items: ['Collier', 'Boucles d\'oreilles', 'Bracelet', 'Montre'], available: true },
+  { id: 'jewelry', label: 'Accessoires', emoji: '👜', items: ['Bijoux', 'Lunettes', 'Sac', 'Montre', 'Écharpe'], available: true },
 ] as const
 
 export type GarmentCategory = 'tops' | 'bottoms' | 'one-pieces' | 'shoes' | 'hats' | 'jewelry'

@@ -57,7 +57,7 @@ export default function HistoryPage() {
     'one-pieces': 'Robe / Combi',
     shoes: 'Chaussures',
     hats: 'Couvre-chef',
-    jewelry: 'Bijoux & Accessoires',
+    jewelry: 'Accessoires',
     outfit: 'Outfit complet',
   }
 

@@ -36,7 +36,7 @@ const examples = [
 
 const STEPS = [
   { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
-  { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, bijoux, chapeau... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
+  { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, sac, lunettes, bijoux... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
   { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces.", emoji: '✨' },
 ]
 
@@ -391,14 +391,16 @@ export default function LandingPage() {
                 { emoji: '👖', label: 'Bas' },
                 { emoji: '👗', label: 'Robes' },
                 { emoji: '👟', label: 'Chaussures' },
-                { emoji: '🧢', label: 'Chapeaux' },
-                { emoji: '💍', label: 'Bijoux' },
+                { emoji: '👜', label: 'Accessoires' },
               ].map((cat) => (
                 <span key={cat.label} className="inline-flex items-center gap-2 bg-white border border-zinc-200 rounded-full px-4 py-2 text-sm font-medium text-zinc-600 shadow-sm hover:border-brand-500/40 hover:text-zinc-900 transition-colors cursor-default">
                   <span>{cat.emoji}</span> {cat.label}
                 </span>
               ))}
             </div>
+            <p className="text-center text-zinc-400 text-sm mt-4">
+              Bijoux, lunettes, sacs, chapeaux, montres... tous vos accessoires s&apos;essaient aussi.
+            </p>
           </Reveal>
         </div>
       </section>
