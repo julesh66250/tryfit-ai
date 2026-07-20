@@ -150,17 +150,17 @@ export default function LandingPage() {
       {/* Blob global bas-gauche */}
       <div className="fixed -bottom-32 -left-32 w-[500px] h-[500px] bg-orange-200/20 rounded-full blur-3xl pointer-events-none" style={{ zIndex: 0 }} />
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-100">
-        <div className="flex items-center gap-2">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-100">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/tryfit-logo.png" alt="TryFit AI" className="w-8 h-8 rounded-lg" />
-          <span className="font-bold text-lg text-zinc-900">TryFit AI</span>
+          <img src="/tryfit-logo.png" alt="TryFit AI" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg" />
+          <span className="font-bold text-base sm:text-lg text-zinc-900 whitespace-nowrap">TryFit AI</span>
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="text-zinc-500 hover:text-zinc-900 text-sm font-medium transition-colors">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link href="/login" className="text-zinc-500 hover:text-zinc-900 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap">
             Connexion
           </Link>
-          <Link href="/register" className="btn-primary text-sm py-2 px-4">
+          <Link href="/register" className="btn-primary text-xs sm:text-sm py-2 px-3 sm:px-4 whitespace-nowrap">
             Commencer gratuitement
           </Link>
         </div>
@@ -202,7 +202,7 @@ export default function LandingPage() {
         </div>
 
         {/* Photos — éventail interactif */}
-        <div className="max-w-4xl mx-auto mt-16 flex justify-center items-end pb-10">
+        <div className="max-w-4xl -mx-4 sm:mx-auto mt-10 sm:mt-16 flex justify-center items-end pb-6 sm:pb-10">
           {examples.map((ex, i) => {
             const isHovered = hoveredPhoto === i
             const rotations = [-8, 0, 8]
@@ -210,12 +210,9 @@ export default function LandingPage() {
             return (
               <div
                 key={i}
-                className="relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer"
+                className={`relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer w-[150px] sm:w-72 ${i === 0 ? '-mr-10 sm:-mr-16' : ''} ${i === 2 ? '-ml-10 sm:-ml-16' : ''}`}
                 style={{
-                  width: '288px',
                   aspectRatio: '4/3',
-                  marginRight: i === 0 ? '-64px' : 0,
-                  marginLeft: i === 2 ? '-64px' : 0,
                   transform: `rotate(${isHovered ? 0 : rotations[i]}deg)${isHovered ? ' translateY(-20px) scale(1.06)' : ''}`,
                   zIndex: isHovered ? 40 : zIndexes[i],
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease, z-index 0s',
@@ -228,8 +225,8 @@ export default function LandingPage() {
               >
                 <Image src={ex.image} alt={ex.label} fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                <div className="absolute bottom-3 left-3">
-                  <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
+                  <span className="text-white text-[10px] sm:text-xs font-semibold bg-white/20 backdrop-blur-sm px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap">
                     Avant → Après
                   </span>
                 </div>
