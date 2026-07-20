@@ -55,6 +55,10 @@ export default function HistoryPage() {
     tops: 'Haut',
     bottoms: 'Bas',
     'one-pieces': 'Robe / Combi',
+    shoes: 'Chaussures',
+    hats: 'Couvre-chef',
+    jewelry: 'Bijoux & Accessoires',
+    outfit: 'Outfit complet',
   }
 
   return (
@@ -76,9 +80,11 @@ export default function HistoryPage() {
 
       {!loading && generations.length === 0 && (
         <div className="text-center py-20">
-          <Clock className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
-          <p className="text-zinc-700 font-medium">Aucun essayage pour l&apos;instant</p>
-          <p className="text-zinc-400 text-sm mb-6">Vos futures générations apparaîtront ici</p>
+          <div className="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center mx-auto mb-4">
+            <Clock className="w-8 h-8 text-brand-500" />
+          </div>
+          <p className="text-zinc-900 font-bold text-lg">Aucun essayage pour l&apos;instant</p>
+          <p className="text-zinc-400 text-sm mb-6 mt-1">Vos looks générés apparaîtront ici</p>
           <Link href="/try-on" className="btn-primary inline-flex">Faire mon premier essayage</Link>
         </div>
       )}

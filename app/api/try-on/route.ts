@@ -50,7 +50,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model_image: personImageUrl,
         garment_image: garmentImageUrl,
-        category: garmentType, // 'tops' | 'bottoms' | 'one-pieces'
+        // FASHN ne connaît que tops/bottoms/one-pieces — le reste passe en 'auto'
+        category: ['tops', 'bottoms', 'one-pieces'].includes(garmentType) ? garmentType : 'auto',
         mode: profile.is_premium ? 'quality' : 'balanced',
       }),
     })

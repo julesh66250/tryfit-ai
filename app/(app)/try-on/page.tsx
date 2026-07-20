@@ -1,15 +1,26 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Upload, Link as LinkIcon, Sparkles, X, Download, Share2, ChevronDown } from 'lucide-react'
+import { Upload, Link as LinkIcon, Sparkles, X, Download, Share2, ChevronDown, Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import toast, { Toaster } from 'react-hot-toast'
 import { cn, GARMENT_CATEGORIES } from '@/lib/utils'
 import type { GarmentCategory } from '@/lib/utils'
 import Image from 'next/image'
+import Link from 'next/link'
 
 type Step = 'upload' | 'generating' | 'result'
+
+type Piece = {
+  id: string
+  file: File | null
+  url: string
+  preview: string
+  category: GarmentCategory
+}
+
+const MAX_PIECES = 6
 
 export default function TryOnPage() {
   const supabase = createClient()
@@ -17,13 +28,24 @@ export default function TryOnPage() {
   const [step, setStep] = useState<Step>('upload')
   const [personImage, setPersonImage] = useState<File | null>(null)
   const [personPreview, setPersonPreview] = useState<string | null>(null)
-  const [garmentImage, setGarmentImage] = useState<File | null>(null)
-  const [garmentPreview, setGarmentPreview] = useState<string | null>(null)
+  const [pieces, setPieces] = useState<Piece[]>([])
   const [garmentUrl, setGarmentUrl] = useState('')
   const [showUrlInput, setShowUrlInput] = useState(false)
-  const [garmentCategory, setGarmentCategory] = useState<GarmentCategory>('tops')
   const [resultUrl, setResultUrl] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
+  const [currentPiece, setCurrentPiece] = useState(0)
+  const [credits, setCredits] = useState<number | null>(null)
+
+  useEffect(() => {
+    const loadCredits = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data } = await supabase.from('profiles').select('credits').eq('id', user.id).single()
+      setCredits(data?.credits ?? 0)
+    }
+    loadCredits()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const onDropPerson = useCallback((files: File[]) => {
     const file = files[0]
@@ -39,72 +61,114 @@ export default function TryOnPage() {
   })
 
   const onDropGarment = useCallback((files: File[]) => {
-    const file = files[0]
-    if (!file) return
-    setGarmentImage(file)
-    setGarmentPreview(URL.createObjectURL(file))
-    setGarmentUrl('')
+    setPieces((prev) => {
+      const room = MAX_PIECES - prev.length
+      if (room <= 0) {
+        toast.error(`Maximum ${MAX_PIECES} pièces`)
+        return prev
+      }
+      const newPieces = files.slice(0, room).map((file) => ({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        file,
+        url: '',
+        preview: URL.createObjectURL(file),
+        category: 'tops' as GarmentCategory,
+      }))
+      return [...prev, ...newPieces]
+    })
   }, [])
 
   const { getRootProps: getGarmentProps, getInputProps: getGarmentInputProps, isDragActive: isGarmentDrag } = useDropzone({
     onDrop: onDropGarment,
     accept: { 'image/*': [] },
-    maxFiles: 1,
   })
+
+  const addUrlPiece = () => {
+    if (!garmentUrl) return
+    if (pieces.length >= MAX_PIECES) {
+      toast.error(`Maximum ${MAX_PIECES} pièces`)
+      return
+    }
+    setPieces((prev) => [...prev, {
+      id: `${Date.now()}-url`,
+      file: null,
+      url: garmentUrl,
+      preview: garmentUrl,
+      category: 'tops',
+    }])
+    setGarmentUrl('')
+    setShowUrlInput(false)
+  }
+
+  const removePiece = (id: string) => {
+    setPieces((prev) => prev.filter((p) => p.id !== id))
+  }
+
+  const setPieceCategory = (id: string, category: GarmentCategory) => {
+    setPieces((prev) => prev.map((p) => (p.id === id ? { ...p, category } : p)))
+  }
+
+  const notEnoughCredits = credits !== null && pieces.length > credits
 
   const handleGenerate = async () => {
     if (!personImage && !personPreview) {
       toast.error('Ajoutez votre photo')
       return
     }
-    if (!garmentImage && !garmentUrl) {
-      toast.error('Ajoutez une photo de vêtement')
+    if (pieces.length === 0) {
+      toast.error('Ajoutez au moins une pièce')
+      return
+    }
+    if (notEnoughCredits) {
+      toast.error('Crédits insuffisants')
       return
     }
 
     setStep('generating')
     setProgress(0)
+    setCurrentPiece(0)
+
+    const total = pieces.length
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { toast.error('Non connecté'); return }
+      if (!user) { toast.error('Non connecté'); setStep('upload'); return }
 
-      const progressInterval = setInterval(() => {
-        setProgress((p) => Math.min(p + Math.random() * 8, 90))
-      }, 800)
-
+      // Upload photo de la personne
       let personUrl = ''
       if (personImage) {
         const ext = personImage.name.split('.').pop()
         const path = `${user.id}/${Date.now()}_person.${ext}`
-        const { data, error } = await supabase.storage
-          .from('person-images')
-          .upload(path, personImage)
+        const { data, error } = await supabase.storage.from('person-images').upload(path, personImage)
         if (error) throw error
         const { data: urlData } = supabase.storage.from('person-images').getPublicUrl(data.path)
         personUrl = urlData.publicUrl
       }
 
-      let garmentStorageUrl = garmentUrl
-      if (garmentImage) {
-        const ext = garmentImage.name.split('.').pop()
-        const path = `${user.id}/${Date.now()}_garment.${ext}`
-        const { data, error } = await supabase.storage
-          .from('garment-images')
-          .upload(path, garmentImage)
-        if (error) throw error
-        const { data: urlData } = supabase.storage.from('garment-images').getPublicUrl(data.path)
-        garmentStorageUrl = urlData.publicUrl
+      // Upload des pièces
+      const pieceUrls: { url: string; category: GarmentCategory }[] = []
+      for (const piece of pieces) {
+        if (piece.file) {
+          const ext = piece.file.name.split('.').pop()
+          const path = `${user.id}/${Date.now()}_garment_${Math.random().toString(36).slice(2, 5)}.${ext}`
+          const { data, error } = await supabase.storage.from('garment-images').upload(path, piece.file)
+          if (error) throw error
+          const { data: urlData } = supabase.storage.from('garment-images').getPublicUrl(data.path)
+          pieceUrls.push({ url: urlData.publicUrl, category: piece.category })
+        } else {
+          pieceUrls.push({ url: piece.url, category: piece.category })
+        }
       }
 
+      // Une seule entrée dans l'historique pour tout l'outfit
       const { data: generation, error: genError } = await supabase
         .from('generations')
         .insert({
           user_id: user.id,
           person_image_url: personUrl,
-          garment_image_url: garmentStorageUrl,
-          garment_source_url: garmentUrl || null,
-          garment_type: garmentCategory,
+          garment_image_url: pieceUrls[0].url,
+          garment_source_url: null,
+          garment_type: total > 1 ? 'outfit' : pieceUrls[0].category,
           status: 'pending',
         })
         .select()
@@ -112,33 +176,58 @@ export default function TryOnPage() {
 
       if (genError || !generation) throw genError
 
-      const res = await fetch('/api/try-on', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          personImageUrl: personUrl,
-          garmentImageUrl: garmentStorageUrl,
-          garmentType: garmentCategory,
-          generationId: generation.id,
-        }),
-      })
+      // Génération pièce par pièce (chaque pièce = 1 crédit), tout en 1 clic
+      let currentModel = personUrl
 
-      clearInterval(progressInterval)
+      for (let i = 0; i < total; i++) {
+        setCurrentPiece(i)
+        const base = (i / total) * 100
+        const target = ((i + 1) / total) * 100 - 5
 
-      if (!res.ok) {
-        const err = await res.json()
-        if (res.status === 402) {
-          toast.error('Plus de crédits — passez Premium ou achetez un pack')
-        } else {
-          toast.error(err.error ?? 'Erreur de génération')
+        const progressInterval = setInterval(() => {
+          setProgress((p) => Math.min(p + Math.random() * (8 / total), target))
+        }, 800)
+        setProgress(Math.max(base, 2))
+
+        const res = await fetch('/api/try-on', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            personImageUrl: currentModel,
+            garmentImageUrl: pieceUrls[i].url,
+            garmentType: pieceUrls[i].category,
+            generationId: generation.id,
+          }),
+        })
+
+        clearInterval(progressInterval)
+
+        if (!res.ok) {
+          const err = await res.json()
+          if (res.status === 402) {
+            toast.error('Plus de crédits — passez Premium ou achetez un pack')
+          } else if (i > 0) {
+            toast.error(`La pièce ${i + 1} a échoué — les ${i} première${i > 1 ? 's' : ''} ont été appliquées`)
+            setResultUrl(currentModel)
+            setProgress(100)
+            setCredits((c) => (c !== null ? c - i : c))
+            setTimeout(() => setStep('result'), 500)
+            return
+          } else {
+            toast.error(err.error ?? 'Erreur de génération')
+          }
+          setStep('upload')
+          return
         }
-        setStep('upload')
-        return
+
+        const { resultUrl: url } = await res.json()
+        currentModel = url
+        setProgress(((i + 1) / total) * 100)
       }
 
-      const { resultUrl: url } = await res.json()
+      setResultUrl(currentModel)
+      setCredits((c) => (c !== null ? c - total : c))
       setProgress(100)
-      setResultUrl(url)
       setTimeout(() => setStep('result'), 500)
 
     } catch (err) {
@@ -152,11 +241,11 @@ export default function TryOnPage() {
     setStep('upload')
     setPersonImage(null)
     setPersonPreview(null)
-    setGarmentImage(null)
-    setGarmentPreview(null)
+    setPieces([])
     setGarmentUrl('')
     setResultUrl(null)
     setProgress(0)
+    setCurrentPiece(0)
   }
 
   const handleDownload = async () => {
@@ -170,7 +259,7 @@ export default function TryOnPage() {
   const handleShare = async () => {
     if (!resultUrl) return
     if (navigator.share) {
-      await navigator.share({ title: 'Mon essayage TryFit AI', url: resultUrl })
+      await navigator.share({ title: 'Mon look TryFit AI', url: resultUrl })
     } else {
       await navigator.clipboard.writeText(resultUrl)
       toast.success('Lien copié !')
@@ -181,9 +270,17 @@ export default function TryOnPage() {
     <div className="p-6 max-w-2xl mx-auto animate-fade-in">
       <Toaster position="top-center" />
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900">Essayage virtuel</h1>
-        <p className="text-zinc-500 mt-1">Importez vos photos et laissez l&apos;IA faire le reste</p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900">Essayage virtuel</h1>
+          <p className="text-zinc-500 mt-1">Une pièce ou un outfit complet, en un seul clic</p>
+        </div>
+        {credits !== null && (
+          <div className="flex items-center gap-1.5 bg-white border border-zinc-200 rounded-full px-3.5 py-1.5 shadow-sm flex-shrink-0">
+            <span className="text-base leading-none">🪙</span>
+            <span className="text-sm font-bold text-zinc-900">{credits}</span>
+          </div>
+        )}
       </div>
 
       {/* ÉTAPE 1: Upload */}
@@ -223,36 +320,74 @@ export default function TryOnPage() {
             )}
           </div>
 
-          {/* Photo du vêtement */}
+          {/* Pièces */}
           <div className="card p-5">
-            <h2 className="font-semibold text-zinc-900 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-brand-500/10 text-brand-500 text-xs flex items-center justify-center font-bold">2</span>
-              Photo du vêtement
-            </h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-semibold text-zinc-900 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-brand-500/10 text-brand-500 text-xs flex items-center justify-center font-bold">2</span>
+                Vos pièces
+              </h2>
+              {pieces.length > 0 && (
+                <span className="text-xs font-semibold bg-brand-500/10 text-brand-500 px-2.5 py-1 rounded-full">
+                  {pieces.length} pièce{pieces.length > 1 ? 's' : ''} = {pieces.length} crédit{pieces.length > 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
 
-            {garmentPreview ? (
-              <div className="relative">
-                <Image src={garmentPreview} alt="Vêtement" width={400} height={400} className="w-full max-h-64 object-cover rounded-xl" />
-                <button
-                  onClick={() => { setGarmentImage(null); setGarmentPreview(null) }}
-                  className="absolute top-2 right-2 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center hover:bg-black/70"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
+            {/* Liste des pièces ajoutées */}
+            {pieces.length > 0 && (
+              <div className="space-y-3 mb-4">
+                {pieces.map((piece, i) => (
+                  <div key={piece.id} className="flex items-center gap-3 bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={piece.preview} alt={`Pièce ${i + 1}`} className="w-14 h-14 rounded-lg object-cover flex-shrink-0 border border-zinc-200" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-zinc-400 mb-1">Pièce {i + 1}</p>
+                      <select
+                        value={piece.category}
+                        onChange={(e) => setPieceCategory(piece.id, e.target.value as GarmentCategory)}
+                        className="w-full bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-sm text-zinc-900 focus:outline-none focus:border-brand-500"
+                      >
+                        {GARMENT_CATEGORIES.map((cat) => (
+                          <option key={cat.id} value={cat.id}>{cat.emoji} {cat.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      onClick={() => removePiece(piece.id)}
+                      className="w-8 h-8 rounded-full bg-zinc-200 hover:bg-red-100 hover:text-red-500 text-zinc-500 flex items-center justify-center flex-shrink-0 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ) : (
+            )}
+
+            {/* Zone d'ajout */}
+            {pieces.length < MAX_PIECES && (
               <div className="space-y-3">
                 <div
                   {...getGarmentProps()}
                   className={cn(
-                    'border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all',
+                    'border-2 border-dashed rounded-xl text-center cursor-pointer transition-all',
+                    pieces.length === 0 ? 'p-8' : 'p-4',
                     isGarmentDrag ? 'border-brand-500 bg-brand-500/5' : 'border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50'
                   )}
                 >
                   <input {...getGarmentInputProps()} />
-                  <Upload className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
-                  <p className="text-zinc-700 font-medium">Photo du vêtement</p>
-                  <p className="text-zinc-400 text-sm mt-1">depuis votre galerie, Vinted, Instagram...</p>
+                  {pieces.length === 0 ? (
+                    <>
+                      <Upload className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
+                      <p className="text-zinc-700 font-medium">Photos de vos vêtements</p>
+                      <p className="text-zinc-400 text-sm mt-1">T-shirt, short, chaussures, bijoux, chapeau...</p>
+                      <p className="text-zinc-300 text-xs mt-3">1 pièce = 1 crédit · Ajoutez-en autant que vous voulez</p>
+                    </>
+                  ) : (
+                    <p className="text-zinc-500 text-sm font-medium flex items-center justify-center gap-2">
+                      <Plus className="w-4 h-4" /> Ajouter une autre pièce
+                    </p>
+                  )}
                 </div>
 
                 <button
@@ -274,11 +409,8 @@ export default function TryOnPage() {
                       className="flex-1 bg-white border border-zinc-200 rounded-xl px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-brand-500 transition-colors"
                     />
                     {garmentUrl && (
-                      <button
-                        onClick={() => setGarmentPreview(garmentUrl)}
-                        className="btn-secondary text-sm py-2 px-4"
-                      >
-                        OK
+                      <button onClick={addUrlPiece} className="btn-secondary text-sm py-2 px-4">
+                        Ajouter
                       </button>
                     )}
                   </div>
@@ -287,50 +419,28 @@ export default function TryOnPage() {
             )}
           </div>
 
-          {/* Catégorie */}
-          <div className="card p-5">
-            <h2 className="font-semibold text-zinc-900 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-brand-500/10 text-brand-500 text-xs flex items-center justify-center font-bold">3</span>
-              Type de vêtement
-            </h2>
-            <div className="grid grid-cols-3 gap-3">
-              {GARMENT_CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => {
-                    if (cat.available) {
-                      setGarmentCategory(cat.id as GarmentCategory)
-                    } else {
-                      toast('Bientôt disponible 🚀', { icon: '⏳' })
-                    }
-                  }}
-                  className={cn(
-                    'p-3 rounded-xl text-sm font-medium transition-all text-center relative',
-                    garmentCategory === cat.id
-                      ? 'bg-brand-500 text-white'
-                      : cat.available
-                        ? 'bg-zinc-50 border border-zinc-200 text-zinc-600 hover:border-brand-500/40 hover:bg-brand-500/5'
-                        : 'bg-zinc-50 border border-zinc-200 text-zinc-400 hover:bg-zinc-100'
-                  )}
-                >
-                  <div className="text-xl mb-1">{cat.emoji}</div>
-                  {cat.label}
-                  {!cat.available && (
-                    <span className="absolute top-1.5 right-1.5 text-xs bg-zinc-200 text-zinc-500 px-1 rounded-full leading-4">Soon</span>
-                  )}
-                </button>
-              ))}
+          {/* Avertissement crédits */}
+          {notEnoughCredits && (
+            <div className="card p-4 border-red-200 bg-red-50 flex items-center justify-between gap-3">
+              <p className="text-sm text-red-600">
+                Il vous faut {pieces.length} crédit{pieces.length > 1 ? 's' : ''}, il vous en reste {credits}.
+              </p>
+              <Link href="/premium" className="btn-primary text-sm py-2 px-4 flex-shrink-0">Recharger</Link>
             </div>
-          </div>
+          )}
 
           {/* Bouton générer */}
           <button
             onClick={handleGenerate}
-            disabled={(!personImage && !personPreview) || (!garmentImage && !garmentPreview && !garmentUrl)}
+            disabled={(!personImage && !personPreview) || pieces.length === 0 || notEnoughCredits}
             className="btn-primary w-full py-4 flex items-center justify-center gap-2 text-base"
           >
             <Sparkles className="w-5 h-5" />
-            Essayer ce vêtement
+            {pieces.length > 1
+              ? `Générer mon look complet (${pieces.length} crédits)`
+              : pieces.length === 1
+                ? 'Essayer cette pièce (1 crédit)'
+                : 'Essayer'}
           </button>
         </div>
       )}
@@ -345,7 +455,11 @@ export default function TryOnPage() {
             </div>
           </div>
           <h2 className="text-xl font-bold text-zinc-900 mb-2">L&apos;IA travaille...</h2>
-          <p className="text-zinc-500 text-sm mb-8">Génération en cours, environ 30 secondes</p>
+          <p className="text-zinc-500 text-sm mb-8">
+            {pieces.length > 1
+              ? `Pièce ${Math.min(currentPiece + 1, pieces.length)} sur ${pieces.length} — environ ${pieces.length * 30}s au total`
+              : 'Génération en cours, environ 30 secondes'}
+          </p>
           <div className="w-64 bg-zinc-100 rounded-full h-2">
             <div
               className="gradient-brand h-2 rounded-full transition-all duration-500"

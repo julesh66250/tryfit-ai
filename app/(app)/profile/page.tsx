@@ -27,26 +27,31 @@ export default async function ProfilePage() {
       <h1 className="text-2xl font-bold text-zinc-900 mb-6">Profil</h1>
 
       {/* Avatar + infos */}
-      <div className="card p-6 mb-4 flex items-center gap-4">
-        <div className="w-16 h-16 rounded-2xl gradient-brand flex items-center justify-center text-2xl font-bold text-white">
-          {profile?.full_name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
-        </div>
-        <div>
-          <p className="font-bold text-zinc-900 text-lg">{profile?.full_name ?? 'Utilisateur'}</p>
-          <p className="text-zinc-500 text-sm">{user.email}</p>
-          <p className="text-zinc-400 text-xs mt-1">
-            Membre depuis {new Date(user.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
-          </p>
+      <div className="card overflow-hidden mb-4">
+        <div className="h-20" style={{ background: 'linear-gradient(135deg, #f97316 0%, #fb923c 60%, #fdba74 100%)' }} />
+        <div className="p-6 pt-0 -mt-8 flex items-end gap-4">
+          <div className="w-16 h-16 rounded-2xl gradient-brand flex items-center justify-center text-2xl font-bold text-white border-4 border-white shadow-md flex-shrink-0">
+            {profile?.full_name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
+          </div>
+          <div className="pb-0.5 min-w-0">
+            <p className="font-bold text-zinc-900 text-lg truncate">{profile?.full_name ?? 'Utilisateur'}</p>
+            <p className="text-zinc-500 text-sm truncate">{user.email}</p>
+            <p className="text-zinc-400 text-xs mt-0.5">
+              Membre depuis {new Date(user.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="card p-4 text-center">
+          <div className="text-xl mb-0.5">🪙</div>
           <p className="text-3xl font-extrabold text-zinc-900">{profile?.credits ?? 0}</p>
           <p className="text-zinc-500 text-sm mt-1">Crédits restants</p>
         </div>
         <div className="card p-4 text-center">
+          <div className="text-xl mb-0.5">✨</div>
           <p className="text-3xl font-extrabold text-zinc-900">{totalGenerations ?? 0}</p>
           <p className="text-zinc-500 text-sm mt-1">Essayages réalisés</p>
         </div>

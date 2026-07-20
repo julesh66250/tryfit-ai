@@ -318,7 +318,7 @@ export default function LandingPage() {
                 {billing === 'monthly' ? '12,99€' : '11,04€'}
               </div>
               <div className="text-zinc-400 text-sm mb-6">
-                {billing === 'monthly' ? 'par mois' : 'par mois · facturé 99,99€/an'}
+                {billing === 'monthly' ? 'par mois' : 'par mois · facturé 132,48€/an'}
               </div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
                 {['50 crédits par mois', 'Outfits complets en 1 clic', 'Générations prioritaires', "Meilleure qualité d'image", 'Historique illimité'].map((f) => (
@@ -340,7 +340,7 @@ export default function LandingPage() {
                 {billing === 'monthly' && <span className="text-xl text-zinc-300 line-through font-medium">25,98€</span>}
               </div>
               <div className="text-zinc-400 text-sm mb-6">
-                {billing === 'monthly' ? 'par mois' : 'par mois · facturé 149,99€/an'}
+                {billing === 'monthly' ? 'par mois' : 'par mois · facturé 203,88€/an'}
               </div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
                 {['100 crédits par mois', 'Outfits complets en 1 clic', 'Générations prioritaires', "Meilleure qualité d'image", 'Historique illimité', 'Support prioritaire'].map((f) => (

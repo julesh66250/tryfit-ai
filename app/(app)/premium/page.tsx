@@ -1,94 +1,121 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import { Crown, Zap, Check } from 'lucide-react'
 
-const plans = [
-  {
-    id: 'starter_monthly',
-    checkoutPlan: 'starter',
-    name: 'Starter',
-    price: '12,99€',
-    period: '/mois',
-    desc: '50 essayages par mois',
-    credits: 50,
-    features: ['50 essayages/mois', 'Qualité supérieure', 'Générations prioritaires', 'Sans publicité', 'Historique illimité'],
-    highlighted: true,
-  },
-  {
-    id: 'pro_monthly',
-    checkoutPlan: 'pro',
-    name: 'Pro',
-    price: '19,99€',
-    period: '/mois',
-    desc: '100 essayages par mois',
-    credits: 100,
-    features: ['100 essayages/mois', 'Qualité supérieure', 'Générations prioritaires', 'Sans publicité', 'Historique illimité', 'Support prioritaire'],
-    highlighted: false,
-  },
-  {
-    id: 'pro_yearly',
-    checkoutPlan: 'pro',
-    name: 'Pro Annuel',
-    price: '149,99€',
-    period: '/an',
-    desc: 'Économisez 90€ par rapport au mensuel',
-    credits: 1200,
-    features: ['100 essayages/mois', 'Qualité supérieure', 'Générations prioritaires', 'Sans publicité', 'Historique illimité', 'Support prioritaire'],
-    highlighted: false,
-  },
-]
-
 export default function PremiumPage() {
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
+  const [selectedPlan, setSelectedPlan] = useState<'starter' | 'pro'>('starter')
+
   return (
     <div className="p-6 max-w-4xl mx-auto animate-fade-in">
-      <div className="text-center mb-10">
+      <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-brand mb-4">
           <Crown className="w-7 h-7 text-white" />
         </div>
         <h1 className="text-3xl font-extrabold text-zinc-900 mb-2">Passez Premium</h1>
-        <p className="text-zinc-500">Plus d&apos;essayages, meilleure qualité, zéro limite</p>
+        <p className="text-zinc-500">Plus de crédits, meilleure qualité, zéro limite</p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4 mb-8">
-        {plans.map((plan) => (
-          <div
-            key={plan.id}
-            className={`card p-6 relative flex flex-col ${plan.highlighted
-              ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5'
-              : ''
-            }`}
+      {/* Toggle Mensuel / Annuel */}
+      <div className="flex justify-center mb-8">
+        <div className="inline-flex items-center bg-white border border-zinc-200 rounded-full p-1 shadow-sm">
+          <button
+            onClick={() => setBilling('monthly')}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${billing === 'monthly' ? 'bg-brand-500 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}
           >
-            {plan.highlighted && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
-                LE PLUS POPULAIRE
-              </div>
-            )}
+            Mensuel
+          </button>
+          <button
+            onClick={() => setBilling('yearly')}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${billing === 'yearly' ? 'bg-brand-500 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}
+          >
+            Annuel
+            <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${billing === 'yearly' ? 'bg-white/20 text-white' : 'bg-brand-500/10 text-brand-500'}`}>-15%</span>
+          </button>
+        </div>
+      </div>
 
-            <div className="mb-4">
-              <h3 className="font-bold text-zinc-900 text-lg">{plan.name}</h3>
-              <div className="flex items-end gap-1 mt-1">
-                <span className="text-3xl font-extrabold text-zinc-900">{plan.price}</span>
-                {plan.period && <span className="text-zinc-400 text-sm mb-1">{plan.period}</span>}
-              </div>
-              <p className="text-zinc-500 text-xs mt-1">{plan.desc}</p>
-            </div>
-
-            <ul className="space-y-2 mb-6 flex-1">
-              {plan.features.map((f) => (
-                <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
-                  <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            <Link
-              href={`/checkout?plan=${plan.checkoutPlan}`}
-              className={plan.highlighted ? 'btn-primary w-full text-center' : 'btn-secondary w-full text-center'}
-            >
-              Choisir ce plan
-            </Link>
+      <div className="grid md:grid-cols-2 gap-4 mb-8">
+        {/* Starter */}
+        <div
+          onClick={() => setSelectedPlan('starter')}
+          className={`card p-6 relative flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`}
+        >
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+            LE PLUS POPULAIRE
           </div>
-        ))}
+
+          <div className="mb-4">
+            <h3 className="font-bold text-zinc-900 text-lg">Starter</h3>
+            <div className="flex items-end gap-1 mt-1">
+              <span className="text-3xl font-extrabold text-zinc-900">{billing === 'monthly' ? '12,99€' : '11,04€'}</span>
+              <span className="text-zinc-400 text-sm mb-1">/mois</span>
+            </div>
+            <p className="text-zinc-500 text-xs mt-1">
+              {billing === 'monthly' ? '50 crédits par mois' : '50 crédits par mois · facturé 132,48€/an'}
+            </p>
+          </div>
+
+          <ul className="space-y-2 mb-6 flex-1">
+            {['50 crédits/mois', 'Outfits complets en 1 clic', 'Qualité supérieure', 'Générations prioritaires', 'Historique illimité'].map((f) => (
+              <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
+                <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <Link
+            href={`/checkout?plan=starter${billing === 'yearly' ? '-yearly' : ''}`}
+            className={`w-full text-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${selectedPlan === 'starter' ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900'}`}
+          >
+            Choisir ce plan
+          </Link>
+        </div>
+
+        {/* Pro */}
+        <div
+          onClick={() => setSelectedPlan('pro')}
+          className={`card p-6 relative flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`}
+        >
+          <div className="mb-4">
+            <h3 className="font-bold text-zinc-900 text-lg">Pro</h3>
+            <div className="flex items-end gap-1 mt-1">
+              <span className="text-3xl font-extrabold text-zinc-900">{billing === 'monthly' ? '19,99€' : '16,99€'}</span>
+              <span className="text-zinc-400 text-sm mb-1">/mois</span>
+            </div>
+            <p className="text-zinc-500 text-xs mt-1">
+              {billing === 'monthly' ? '100 crédits par mois' : '100 crédits par mois · facturé 203,88€/an'}
+            </p>
+          </div>
+
+          <ul className="space-y-2 mb-6 flex-1">
+            {['100 crédits/mois', 'Outfits complets en 1 clic', 'Qualité supérieure', 'Générations prioritaires', 'Historique illimité', 'Support prioritaire'].map((f) => (
+              <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
+                <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <Link
+            href={`/checkout?plan=pro${billing === 'yearly' ? '-yearly' : ''}`}
+            className={`w-full text-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${selectedPlan === 'pro' ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900'}`}
+          >
+            Choisir ce plan
+          </Link>
+        </div>
+      </div>
+
+      {/* Rappel crédit */}
+      <div className="card p-4 mb-8 bg-brand-500/5 border-brand-500/20 flex items-center gap-3">
+        <span className="text-2xl flex-shrink-0">🪙</span>
+        <p className="text-sm text-zinc-600">
+          <span className="font-bold text-zinc-900">1 crédit = 1 vêtement ou accessoire.</span>{' '}
+          Un outfit complet se génère en un seul clic, chaque pièce utilise 1 crédit.
+        </p>
       </div>
 
       {/* Pack crédits */}
