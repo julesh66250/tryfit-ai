@@ -78,12 +78,12 @@ export default async function DashboardPage() {
             <div className="min-w-0">
               <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-1.5">Créer un nouveau look</h2>
               <p className="text-white/80 text-sm mb-5">Une pièce ou un outfit complet — tout se génère en un clic</p>
-              <span className="inline-flex items-center gap-2 bg-white text-brand-500 font-bold text-sm px-5 py-2.5 rounded-xl group-hover:gap-3 transition-all">
+              <span className="inline-flex items-center gap-2 bg-white text-brand-500 font-bold text-sm px-5 py-2.5 rounded-xl animate-cta-gap">
                 C&apos;est parti <ArrowRight className="w-4 h-4" />
               </span>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/tryfit-logo.png" alt="TryFit AI" className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl shadow-lg border-2 border-white/30 flex-shrink-0 group-hover:rotate-6 transition-transform" />
+            <img src="/tryfit-logo.png" alt="TryFit AI" className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl shadow-lg border-2 border-white/30 flex-shrink-0 animate-logo-tilt" />
           </div>
         </Link>
 
