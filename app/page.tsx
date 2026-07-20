@@ -140,6 +140,7 @@ export default function LandingPage() {
   const [showSticky, setShowSticky] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
   const [activeBenefit, setActiveBenefit] = useState(0)
+  const [activePhoto, setActivePhoto] = useState(0)
   const pricingRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -170,6 +171,11 @@ export default function LandingPage() {
     return () => clearInterval(t)
   }, [])
 
+  useEffect(() => {
+    const t = setInterval(() => setActivePhoto((s) => (s + 1) % examples.length), 3000)
+    return () => clearInterval(t)
+  }, [])
+
   return (
     <div className="min-h-screen text-zinc-900 relative" style={{ background: 'linear-gradient(180deg, #fff5f0 0%, #ffffff 25%, #ffffff 75%, #fff5f0 100%)' }}>
       {/* Blob global haut-droite */}
@@ -177,7 +183,7 @@ export default function LandingPage() {
       {/* Blob global bas-gauche */}
       <div className="fixed -bottom-32 -left-32 w-[500px] h-[500px] bg-orange-200/20 rounded-full blur-3xl pointer-events-none" style={{ zIndex: 0 }} />
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-100">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 sm:py-4 hidden md:flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-100">
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/tryfit-logo.png" alt="TryFit AI" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg" />
@@ -194,7 +200,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 relative">
+      <section className="pt-12 md:pt-32 pb-16 px-6 relative">
         <div className="max-w-3xl mx-auto text-center">
 
           {/* Badge */}
@@ -221,15 +227,49 @@ export default function LandingPage() {
               Essayer gratuitement
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/login" className="flex items-center justify-center gap-2 text-base py-3.5 px-7 rounded-xl border border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 transition-all font-medium">
+            <Link href="/login" className="flex items-center justify-center gap-2 text-base py-3.5 px-7 rounded-xl border border-brand-500 text-zinc-700 hover:bg-brand-500/5 hover:text-zinc-900 transition-all font-medium">
               J&apos;ai déjà un compte
             </Link>
           </div>
           <p className="text-zinc-400 text-sm">1 essayage offert · Sans carte bancaire</p>
         </div>
 
-        {/* Photos — éventail interactif */}
-        <div className="max-w-4xl -mx-4 sm:mx-auto mt-10 sm:mt-16 flex justify-center items-end pb-6 sm:pb-10">
+        {/* Photos — carrousel auto sur mobile */}
+        <div className="md:hidden mt-10 pb-4">
+          <div className="overflow-hidden">
+            <div
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${activePhoto * 100}%)` }}
+            >
+              {examples.map((ex) => (
+                <div key={ex.label} className="w-full flex-shrink-0 px-1">
+                  <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{ aspectRatio: '4/3' }}>
+                    <Image src={ex.image} alt={ex.label} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className="absolute bottom-3 left-3">
+                      <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full whitespace-nowrap">
+                        Avant → Après
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-center gap-2 mt-4">
+            {examples.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActivePhoto(i)}
+                aria-label={`Photo ${i + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 ${activePhoto === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Photos — éventail interactif sur desktop */}
+        <div className="max-w-4xl mx-auto mt-16 hidden md:flex justify-center items-end pb-10">
           {examples.map((ex, i) => {
             const isHovered = hoveredPhoto === i
             const rotations = [-8, 0, 8]
@@ -237,7 +277,7 @@ export default function LandingPage() {
             return (
               <div
                 key={i}
-                className={`relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer w-[150px] sm:w-72 ${i === 0 ? '-mr-10 sm:-mr-16' : ''} ${i === 2 ? '-ml-10 sm:-ml-16' : ''}`}
+                className={`relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer w-72 ${i === 0 ? '-mr-16' : ''} ${i === 2 ? '-ml-16' : ''}`}
                 style={{
                   aspectRatio: '4/3',
                   transform: `rotate(${isHovered ? 0 : rotations[i]}deg)${isHovered ? ' translateY(-20px) scale(1.06)' : ''}`,
@@ -252,8 +292,8 @@ export default function LandingPage() {
               >
                 <Image src={ex.image} alt={ex.label} fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
-                  <span className="text-white text-[10px] sm:text-xs font-semibold bg-white/20 backdrop-blur-sm px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap">
+                <div className="absolute bottom-3 left-3">
+                  <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
                     Avant → Après
                   </span>
                 </div>
