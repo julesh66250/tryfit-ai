@@ -97,6 +97,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 export default function LandingPage() {
   const [hoveredPhoto, setHoveredPhoto] = useState<number | null>(null)
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
+  const [selectedPlan, setSelectedPlan] = useState<'free' | 'starter' | 'pro'>('starter')
   const [pricingVisible, setPricingVisible] = useState(false)
   const pricingRef = useRef<HTMLDivElement>(null)
 
@@ -297,7 +298,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-6">
 
             {/* Gratuit */}
-            <div className="card p-8 text-left flex flex-col" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.5s, transform 1.2s ease 0.5s' }}>
+            <div onClick={() => setSelectedPlan('free')} className="card p-8 text-left flex flex-col cursor-pointer" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.5s, transform 1.2s ease 0.5s' }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
               <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
@@ -306,11 +307,11 @@ export default function LandingPage() {
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
-              <Link href="/register" className="btn-primary w-full mt-8 flex items-center justify-center">Commencer</Link>
+              <Link href="/register" className={`w-full mt-8 flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${selectedPlan === 'free' ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900'}`}>Commencer</Link>
             </div>
 
             {/* Starter */}
-            <div className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.9s, transform 1.2s ease 0.9s' }}>
+            <div onClick={() => setSelectedPlan('starter')} className="relative card p-8 text-left flex flex-col border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg cursor-pointer" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.9s, transform 1.2s ease 0.9s' }}>
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">
@@ -324,13 +325,13 @@ export default function LandingPage() {
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
-              <Link href={`/checkout?plan=starter${billing === 'yearly' ? '-yearly' : ''}`} className="btn-primary w-full mt-8 flex items-center justify-center gap-2 shadow-md shadow-brand-500/20">
-                Commencer <ArrowRight className="w-4 h-4" />
+              <Link href={`/checkout?plan=starter${billing === 'yearly' ? '-yearly' : ''}`} className={`w-full mt-8 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${selectedPlan === 'starter' ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900'}`}>
+                Commencer {selectedPlan === 'starter' && <ArrowRight className="w-4 h-4" />}
               </Link>
             </div>
 
             {/* Pro */}
-            <div className="card p-8 text-left flex flex-col" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 1.3s, transform 1.2s ease 1.3s' }}>
+            <div onClick={() => setSelectedPlan('pro')} className="card p-8 text-left flex flex-col cursor-pointer" style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 1.3s, transform 1.2s ease 1.3s' }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
               <div className="flex items-center gap-3 mb-1">
                 <span className="text-4xl font-extrabold text-zinc-900">
@@ -346,7 +347,7 @@ export default function LandingPage() {
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
-              <Link href={`/checkout?plan=pro${billing === 'yearly' ? '-yearly' : ''}`} className="btn-primary w-full mt-8 flex items-center justify-center">
+              <Link href={`/checkout?plan=pro${billing === 'yearly' ? '-yearly' : ''}`} className={`w-full mt-8 flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${selectedPlan === 'pro' ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900'}`}>
                 Commencer
               </Link>
             </div>
