@@ -1,12 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Crown, Zap, Check } from 'lucide-react'
+import { Crown, Zap, Check, Lock } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function PremiumPage() {
+  const supabase = createClient()
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
   const [selectedPlan, setSelectedPlan] = useState<'starter' | 'pro'>('starter')
+  const [isPremium, setIsPremium] = useState(false)
+
+  useEffect(() => {
+    const load = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data } = await supabase.from('profiles').select('is_premium').eq('id', user.id).single()
+      setIsPremium(data?.is_premium ?? false)
+    }
+    load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="p-6 max-w-4xl mx-auto animate-fade-in">
@@ -118,23 +132,31 @@ export default function PremiumPage() {
         </p>
       </div>
 
-      {/* Pack crédits */}
+      {/* Pack crédits — réservé aux abonnés */}
       <div className="card p-5">
         <div className="flex items-center gap-3 mb-3">
           <Zap className="w-5 h-5 text-brand-500" />
           <h2 className="font-semibold text-zinc-900">Pack de crédits supplémentaires</h2>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-center">
+        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-5 flex items-center justify-between gap-4">
+          <div>
             <p className="font-bold text-zinc-900">10 crédits</p>
-            <p className="text-brand-500 font-semibold">4,99€</p>
-            <button className="btn-secondary w-full mt-3 text-sm py-2">Acheter</button>
+            <p className="text-brand-500 font-semibold text-lg">3,99€</p>
+            {!isPremium && (
+              <p className="text-zinc-400 text-xs mt-1 flex items-center gap-1">
+                <Lock className="w-3 h-3" /> Réservé aux abonnés Starter et Pro
+              </p>
+            )}
           </div>
-          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-center">
-            <p className="font-bold text-zinc-900">50 crédits</p>
-            <p className="text-brand-500 font-semibold">14,99€</p>
-            <button className="btn-primary w-full mt-3 text-sm py-2">Acheter</button>
-          </div>
+          <button
+            disabled={!isPremium}
+            className={`text-sm py-2.5 px-6 rounded-xl font-semibold transition-all flex-shrink-0 ${isPremium
+              ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20'
+              : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'
+            }`}
+          >
+            Acheter
+          </button>
         </div>
       </div>
 

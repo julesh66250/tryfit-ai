@@ -119,9 +119,8 @@ export default function LandingPage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-zinc-100">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg gradient-brand flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="TryFit AI" className="w-8 h-8 rounded-lg" />
           <span className="font-bold text-lg text-zinc-900">TryFit AI</span>
         </div>
         <div className="flex items-center gap-3">

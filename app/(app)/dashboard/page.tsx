@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { Sparkles, ArrowRight, Crown, Zap, Clock, Shirt } from 'lucide-react'
+import { ArrowRight, Crown, Zap, Clock, Shirt } from 'lucide-react'
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -74,17 +74,16 @@ export default async function DashboardPage() {
         >
           <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-white/10 group-hover:scale-125 transition-transform duration-500" />
           <div className="absolute -bottom-16 -left-8 w-40 h-40 rounded-full bg-white/10 group-hover:scale-110 transition-transform duration-500" />
-          <div className="relative p-8 flex items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-extrabold text-white mb-1.5">Créer un nouveau look</h2>
+          <div className="relative p-6 sm:p-8 flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-1.5">Créer un nouveau look</h2>
               <p className="text-white/80 text-sm mb-5">Une pièce ou un outfit complet — tout se génère en un clic</p>
               <span className="inline-flex items-center gap-2 bg-white text-brand-500 font-bold text-sm px-5 py-2.5 rounded-xl group-hover:gap-3 transition-all">
                 C&apos;est parti <ArrowRight className="w-4 h-4" />
               </span>
             </div>
-            <div className="hidden sm:flex w-20 h-20 rounded-2xl bg-white/15 backdrop-blur items-center justify-center flex-shrink-0 group-hover:rotate-6 transition-transform">
-              <Sparkles className="w-10 h-10 text-white" />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="TryFit AI" className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl shadow-lg border-2 border-white/30 flex-shrink-0 group-hover:rotate-6 transition-transform" />
           </div>
         </Link>
 
