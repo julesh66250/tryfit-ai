@@ -70,7 +70,7 @@ const faqs = [
   },
   {
     q: 'C\'est gratuit ?',
-    a: '1 essayage est offert à l\'inscription pour tester. Ensuite vous pouvez acheter des crédits ou passer Premium pour 100 essayages/mois.',
+    a: '1 crédit est offert à l\'inscription pour tester. Chaque crédit correspond à 1 vêtement ou accessoire essayé. Pour un outfit complet, chaque pièce utilise 1 crédit — tout se génère en un seul clic.',
   },
 ]
 
@@ -238,11 +238,11 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Comment ça marche ?</h2>
           <p className="text-zinc-500 text-center mb-14">3 étapes, moins de 30 secondes</p>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
-              { step: '2', title: 'Choisissez un vêtement', desc: 'Importez une photo depuis Vinted, Zara, Instagram ou votre galerie.', emoji: '👕' },
-              { step: '3', title: 'Voyez le résultat', desc: "L'IA génère une image réaliste de vous avec ce vêtement en quelques secondes.", emoji: '✨' },
+              { step: '2', title: 'Choisissez vos pièces', desc: 'Ajoutez 1 vêtement ou un outfit complet — t-shirt, short, chaussures, bijoux, chapeau... chaque pièce utilise 1 crédit.', emoji: '👕' },
+              { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces. Un outfit de 5 articles = 5 crédits, en un seul clic.", emoji: '✨' },
             ].map((item) => (
               <div key={item.step} className="relative">
                 <div className="card p-6 text-center h-full">
@@ -255,6 +255,15 @@ export default function LandingPage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Bloc explication crédits */}
+          <div className="card p-6 bg-brand-500/5 border-brand-500/20 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <div className="text-4xl flex-shrink-0">🪙</div>
+            <div>
+              <p className="font-semibold text-zinc-900 mb-1">1 crédit = 1 vêtement ou accessoire essayé</p>
+              <p className="text-zinc-500 text-sm">Essayez une seule pièce ou créez un outfit complet en un clic. Un t-shirt + un short + des chaussures + une casquette + une bague = <span className="font-semibold text-zinc-700">5 crédits, 1 seule génération</span>.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -293,7 +302,7 @@ export default function LandingPage() {
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
               <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['1 essayage offert', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
+                {['1 crédit offert (1 pièce)', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
@@ -311,7 +320,7 @@ export default function LandingPage() {
                 {billing === 'monthly' ? 'par mois' : 'par mois · facturé 99,99€/an'}
               </div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['50 essayages par mois', 'Générations prioritaires', "Meilleure qualité d'image", 'Sans publicité', 'Historique illimité'].map((f) => (
+                {['50 crédits par mois', 'Outfits complets en 1 clic', 'Générations prioritaires', "Meilleure qualité d'image", 'Historique illimité'].map((f) => (
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
@@ -333,7 +342,7 @@ export default function LandingPage() {
                 {billing === 'monthly' ? 'par mois' : 'par mois · facturé 149,99€/an'}
               </div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['100 essayages par mois', 'Générations prioritaires', "Meilleure qualité d'image", 'Sans publicité', 'Historique illimité', 'Support prioritaire'].map((f) => (
+                {['100 crédits par mois', 'Outfits complets en 1 clic', 'Générations prioritaires', "Meilleure qualité d'image", 'Historique illimité', 'Support prioritaire'].map((f) => (
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
