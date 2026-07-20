@@ -27,11 +27,12 @@ export default function AvatarUpload({
       if (!user) return
       const ext = file.name.split('.').pop()
       const path = `${user.id}/avatar_${Date.now()}.${ext}`
+      // Bucket "result-images" : public en lecture, donc l'URL reste valide après rechargement
       const { data, error } = await supabase.storage
-        .from('person-images')
+        .from('result-images')
         .upload(path, file, { upsert: true })
       if (error) throw error
-      const { data: urlData } = supabase.storage.from('person-images').getPublicUrl(data.path)
+      const { data: urlData } = supabase.storage.from('result-images').getPublicUrl(data.path)
       await supabase.from('profiles').update({ avatar_url: urlData.publicUrl }).eq('id', user.id)
       setPreview(URL.createObjectURL(file))
       router.refresh()
