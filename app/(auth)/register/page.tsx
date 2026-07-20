@@ -72,7 +72,7 @@ function RegisterForm() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="TryFit AI" className="w-10 h-10 rounded-xl" />
+            <img src="/tryfit-logo.png" alt="TryFit AI" className="w-10 h-10 rounded-xl" />
             <span className="font-bold text-xl text-zinc-900">TryFit AI</span>
           </Link>
           <h1 className="text-2xl font-bold text-zinc-900">Créer votre compte</h1>

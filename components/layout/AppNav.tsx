@@ -22,7 +22,7 @@ export default function AppNav({ userId }: { userId: string }) {
       <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-zinc-200 flex-col p-4 z-40">
         <Link href="/dashboard" className="flex items-center gap-2 px-2 py-3 mb-6">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="TryFit AI" className="w-8 h-8 rounded-lg" />
+          <img src="/tryfit-logo.png" alt="TryFit AI" className="w-8 h-8 rounded-lg" />
           <span className="font-bold text-zinc-900">TryFit AI</span>
         </Link>
 

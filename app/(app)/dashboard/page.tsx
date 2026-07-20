@@ -83,7 +83,7 @@ export default async function DashboardPage() {
               </span>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="TryFit AI" className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl shadow-lg border-2 border-white/30 flex-shrink-0 group-hover:rotate-6 transition-transform" />
+            <img src="/tryfit-logo.png" alt="TryFit AI" className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl shadow-lg border-2 border-white/30 flex-shrink-0 group-hover:rotate-6 transition-transform" />
           </div>
         </Link>
 
