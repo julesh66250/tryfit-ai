@@ -74,6 +74,34 @@ const faqs = [
   },
 ]
 
+function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.15 }
+    )
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(28px)',
+        transition: `opacity 0.9s ease ${delay}s, transform 0.9s ease ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
   return (
@@ -99,6 +127,7 @@ export default function LandingPage() {
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
   const [selectedPlan, setSelectedPlan] = useState<'free' | 'starter' | 'pro'>('starter')
   const [pricingVisible, setPricingVisible] = useState(false)
+  const [showSticky, setShowSticky] = useState(false)
   const pricingRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -108,6 +137,12 @@ export default function LandingPage() {
     )
     if (pricingRef.current) observer.observe(pricingRef.current)
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => setShowSticky(window.scrollY > 600)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
@@ -210,18 +245,18 @@ export default function LandingPage() {
       {/* Stats */}
       <section className="py-12 px-6 border-y border-zinc-100/60">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {stats.map((s) => (
-            <div key={s.label}>
+          {stats.map((s, i) => (
+            <Reveal key={s.label} delay={i * 0.12}>
               <div className="text-3xl font-extrabold text-brand-500 mb-1">{s.value}</div>
               <div className="text-zinc-500 text-sm">{s.label}</div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* Logo bar */}
       <section className="py-10 px-6">
-        <div className="max-w-4xl mx-auto text-center">
+        <Reveal className="max-w-4xl mx-auto text-center">
           <p className="text-zinc-400 text-xs mb-6 uppercase tracking-widest font-medium">Compatible avec vos boutiques préférées</p>
           <div className="flex flex-wrap items-center justify-center gap-8">
             {logos.map((logo) => (
@@ -230,21 +265,23 @@ export default function LandingPage() {
               </span>
             ))}
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* Comment ça marche */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Comment ça marche ?</h2>
-          <p className="text-zinc-500 text-center mb-14">3 étapes, moins de 30 secondes</p>
+          <Reveal>
+            <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Comment ça marche ?</h2>
+            <p className="text-zinc-500 text-center mb-14">3 étapes, moins de 30 secondes</p>
+          </Reveal>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
               { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, bijoux, chapeau... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
               { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces.", emoji: '✨' },
-            ].map((item) => (
-              <div key={item.step} className="relative">
+            ].map((item, i) => (
+              <Reveal key={item.step} delay={i * 0.18} className="relative">
                 <div className="card p-6 text-center h-full">
                   <div className="text-4xl mb-4">{item.emoji}</div>
                   <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-500 text-white text-sm font-bold mb-3">
@@ -253,24 +290,69 @@ export default function LandingPage() {
                   <h3 className="font-semibold text-lg mb-2 text-zinc-900">{item.title}</h3>
                   <p className="text-zinc-500 text-sm">{item.desc}</p>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
 
           {/* Explication crédits */}
-          <div className="card p-5 bg-brand-500/5 border-brand-500/20 flex items-center gap-4 mt-2">
-            <div className="text-3xl flex-shrink-0">🪙</div>
-            <div className="text-left">
-              <p className="font-bold text-zinc-900 mb-1">1 crédit = 1 vêtement ou accessoire</p>
-              <p className="text-zinc-500 text-sm">Chaque vêtement ou accessoire essayé coûte 1 crédit. Composez un outfit complet et tout se génère en un seul clic.</p>
+          <Reveal>
+            <div className="card p-5 bg-brand-500/5 border-brand-500/20 flex items-center gap-4 mt-2">
+              <div className="text-3xl flex-shrink-0">🪙</div>
+              <div className="text-left">
+                <p className="font-bold text-zinc-900 mb-1">1 crédit = 1 vêtement ou accessoire</p>
+                <p className="text-zinc-500 text-sm">Chaque vêtement ou accessoire essayé coûte 1 crédit. Composez un outfit complet et tout se génère en un seul clic.</p>
+              </div>
             </div>
+          </Reveal>
+
+          {/* Catégories supportées */}
+          <Reveal delay={0.15}>
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+              {[
+                { emoji: '👕', label: 'Hauts' },
+                { emoji: '👖', label: 'Bas' },
+                { emoji: '👗', label: 'Robes' },
+                { emoji: '👟', label: 'Chaussures' },
+                { emoji: '🧢', label: 'Chapeaux' },
+                { emoji: '💍', label: 'Bijoux' },
+              ].map((cat) => (
+                <span key={cat.label} className="inline-flex items-center gap-2 bg-white border border-zinc-200 rounded-full px-4 py-2 text-sm font-medium text-zinc-600 shadow-sm hover:border-brand-500/40 hover:text-zinc-900 transition-colors cursor-default">
+                  <span>{cat.emoji}</span> {cat.label}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Bénéfices */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Pourquoi TryFit AI ?</h2>
+            <p className="text-zinc-500 text-center mb-14">Achetez sûr de vous, sans mauvaise surprise</p>
+          </Reveal>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { emoji: '📦', title: 'Fini les retours', desc: 'Vous voyez le rendu sur vous avant de commander — plus de colis à renvoyer parce que "ça ne me va pas".' },
+              { emoji: '⏱️', title: '30 secondes suffisent', desc: 'Contre 30 minutes de cabine d\'essayage. Testez 5 looks pendant votre pause café.' },
+              { emoji: '💶', title: 'Des économies réelles', desc: 'Moins d\'achats impulsifs regrettés : vous n\'achetez que ce qui vous va vraiment.' },
+            ].map((b, i) => (
+              <Reveal key={b.title} delay={i * 0.18}>
+                <div className="card p-8 text-center h-full">
+                  <div className="text-4xl mb-4">{b.emoji}</div>
+                  <h3 className="font-semibold text-lg mb-2 text-zinc-900">{b.title}</h3>
+                  <p className="text-zinc-500 text-sm leading-relaxed">{b.desc}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
 
       {/* Pricing */}
-      <section className="py-20 px-6" ref={pricingRef}>
+      <section id="tarifs" className="py-20 px-6" ref={pricingRef}>
         <div className="max-w-5xl mx-auto text-center">
           <div style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 1.2s ease, transform 1.2s ease' }}>
             <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
@@ -361,40 +443,91 @@ export default function LandingPage() {
       {/* Témoignages */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
-          <p className="text-zinc-500 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
-          <TestimonialsColumns testimonials={testimonials} />
+          <Reveal>
+            <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
+            <p className="text-zinc-500 text-center mb-14">Plus de 12 000 utilisateurs nous font confiance</p>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <TestimonialsColumns testimonials={testimonials} />
+          </Reveal>
         </div>
       </section>
 
       {/* FAQ */}
       <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Questions fréquentes</h2>
-          <p className="text-zinc-500 text-center mb-14">Tout ce que vous voulez savoir</p>
-          <div className="space-y-3">
-            {faqs.map((faq) => (
-              <FaqItem key={faq.q} q={faq.q} a={faq.a} />
-            ))}
-          </div>
+          <Reveal>
+            <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Questions fréquentes</h2>
+            <p className="text-zinc-500 text-center mb-14">Tout ce que vous voulez savoir</p>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div className="space-y-3">
+              {faqs.map((faq) => (
+                <FaqItem key={faq.q} q={faq.q} a={faq.a} />
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* CTA final */}
       <section className="py-20 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
+        <Reveal className="max-w-2xl mx-auto">
           <h2 className="text-4xl font-extrabold mb-4 text-zinc-900">Prêt à essayer ?</h2>
           <p className="text-zinc-500 mb-8">1 essayage offert. Aucune carte bancaire.</p>
           <Link href="/register" className="btn-primary inline-flex items-center gap-2 text-base py-4 px-8 shadow-lg shadow-brand-500/25">
             Créer mon compte gratuitement <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-100 py-8 px-6 text-center text-zinc-400 text-sm">
-        <p>© 2025 TryFit AI · Tous droits réservés · <Link href="/login" className="hover:text-zinc-600">Connexion</Link></p>
+      <footer className="relative border-t border-zinc-100 pt-14 pb-8 px-6 bg-white/60">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-10 mb-10">
+            {/* Marque */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/tryfit-logo.png" alt="TryFit AI" className="w-8 h-8 rounded-lg" />
+                <span className="font-bold text-lg text-zinc-900">TryFit AI</span>
+              </div>
+              <p className="text-zinc-500 text-sm leading-relaxed">
+                Essayez les vêtements sans les porter. L&apos;IA génère une image réaliste de vous avec vos pièces préférées, en 30 secondes.
+              </p>
+            </div>
+            {/* Produit */}
+            <div>
+              <p className="font-semibold text-zinc-900 text-sm mb-3">Produit</p>
+              <ul className="space-y-2 text-sm text-zinc-500">
+                <li><Link href="/register" className="hover:text-zinc-900 transition-colors">Essayer gratuitement</Link></li>
+                <li><Link href="/login" className="hover:text-zinc-900 transition-colors">Connexion</Link></li>
+                <li><a href="#tarifs" className="hover:text-zinc-900 transition-colors">Tarifs</a></li>
+              </ul>
+            </div>
+            {/* Légal */}
+            <div>
+              <p className="font-semibold text-zinc-900 text-sm mb-3">Légal</p>
+              <ul className="space-y-2 text-sm text-zinc-500">
+                <li><Link href="/legal/mentions-legales" className="hover:text-zinc-900 transition-colors">Mentions légales</Link></li>
+                <li><Link href="/legal/cgu" className="hover:text-zinc-900 transition-colors">Conditions d&apos;utilisation</Link></li>
+                <li><Link href="/legal/confidentialite" className="hover:text-zinc-900 transition-colors">Politique de confidentialité</Link></li>
+                <li><a href="mailto:contact@tryfit.ai" className="hover:text-zinc-900 transition-colors">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-zinc-100 pt-6 text-center text-zinc-400 text-sm">
+            © 2026 TryFit AI · Tous droits réservés
+          </div>
+        </div>
       </footer>
+
+      {/* CTA collant mobile */}
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 p-4 pb-5 bg-gradient-to-t from-white via-white/95 to-transparent transition-transform duration-300 ${showSticky ? 'translate-y-0' : 'translate-y-full'}`}>
+        <Link href="/register" className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 shadow-lg shadow-brand-500/30">
+          Essayer gratuitement <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
     </div>
   )
 }
