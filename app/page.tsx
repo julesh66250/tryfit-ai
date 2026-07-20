@@ -13,8 +13,6 @@ const stats = [
   { value: '100%', label: 'Données protégées' },
 ]
 
-const logos = ['Vinted', 'Zara', 'H&M', 'Shein', 'ASOS', 'Zalando']
-
 const examples = [
   {
     label: 'Veste tweed',
@@ -254,22 +252,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Logo bar */}
-      <section className="py-10 px-6">
-        <Reveal className="max-w-4xl mx-auto text-center">
-          <p className="text-zinc-400 text-xs mb-6 uppercase tracking-widest font-medium">Compatible avec vos boutiques préférées</p>
-          <div className="flex flex-wrap items-center justify-center gap-8">
-            {logos.map((logo) => (
-              <span key={logo} className="text-xl font-bold text-zinc-300 hover:text-zinc-500 transition-colors cursor-default">
-                {logo}
-              </span>
-            ))}
-          </div>
-        </Reveal>
-      </section>
-
       {/* Comment ça marche */}
-      <section className="py-20 px-6">
+      <section className="pt-20 pb-10 px-6">
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Comment ça marche ?</h2>
@@ -326,7 +310,7 @@ export default function LandingPage() {
       </section>
 
       {/* Bénéfices */}
-      <section className="py-20 px-6">
+      <section className="py-10 px-6">
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Pourquoi TryFit AI ?</h2>
@@ -335,7 +319,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { emoji: '📦', title: 'Fini les retours', desc: 'Vous voyez le rendu sur vous avant de commander — plus de colis à renvoyer parce que "ça ne me va pas".' },
-              { emoji: '⏱️', title: '30 secondes suffisent', desc: 'Contre 30 minutes de cabine d\'essayage. Testez 5 looks pendant votre pause café.' },
+              { emoji: '⏱️', title: '30 secondes suffisent', desc: 'Contre 30 minutes de cabine d\'essayage. Essayez vos pièces où que vous soyez, en un clic.' },
               { emoji: '💶', title: 'Des économies réelles', desc: 'Moins d\'achats impulsifs regrettés : vous n\'achetez que ce qui vous va vraiment.' },
             ].map((b, i) => (
               <Reveal key={b.title} delay={i * 0.18}>
@@ -352,7 +336,7 @@ export default function LandingPage() {
 
 
       {/* Pricing */}
-      <section id="tarifs" className="py-20 px-6" ref={pricingRef}>
+      <section id="tarifs" className="pt-10 pb-20 px-6" ref={pricingRef}>
         <div className="max-w-5xl mx-auto text-center">
           <div style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 1.2s ease, transform 1.2s ease' }}>
             <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
@@ -482,7 +466,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative border-t border-zinc-100 pt-14 pb-8 px-6 bg-white/60">
+      <footer className="relative border-t border-orange-200/40 pt-14 pb-8 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-3 gap-10 mb-10">
             {/* Marque */}
@@ -516,7 +500,7 @@ export default function LandingPage() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-zinc-100 pt-6 text-center text-zinc-400 text-sm">
+          <div className="border-t border-orange-200/40 pt-6 text-center text-zinc-400 text-sm">
             © 2026 TryFit AI · Tous droits réservés
           </div>
         </div>
