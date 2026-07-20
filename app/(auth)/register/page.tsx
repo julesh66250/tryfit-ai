@@ -3,7 +3,7 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -38,7 +38,17 @@ function RegisterForm() {
     })
 
     if (error) {
-      toast.error(error.message)
+      const msg = error.message
+      const messageFr = msg.includes('already registered')
+        ? 'Un compte existe déjà avec cet email'
+        : msg.includes('Password should be')
+          ? 'Le mot de passe doit contenir au moins 8 caractères'
+          : msg.toLowerCase().includes('invalid') && msg.toLowerCase().includes('email')
+            ? 'Adresse email invalide'
+            : msg.toLowerCase().includes('rate limit') || msg.includes('Too many')
+              ? 'Trop de tentatives — réessayez dans quelques minutes'
+              : 'Une erreur est survenue, réessayez'
+      toast.error(messageFr)
       setLoading(false)
       return
     }
@@ -61,9 +71,8 @@ function RegisterForm() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="TryFit AI" className="w-10 h-10 rounded-xl" />
             <span className="font-bold text-xl text-zinc-900">TryFit AI</span>
           </Link>
           <h1 className="text-2xl font-bold text-zinc-900">Créer votre compte</h1>
