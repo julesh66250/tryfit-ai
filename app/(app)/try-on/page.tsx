@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useDropzone } from 'react-dropzone'
 import { Upload, Link as LinkIcon, Sparkles, X, Download, Share2, ChevronDown, Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -22,8 +23,9 @@ type Piece = {
 
 const MAX_PIECES = 6
 
-export default function TryOnPage() {
+function TryOnContent() {
   const supabase = createClient()
+  const searchParams = useSearchParams()
 
   const [step, setStep] = useState<Step>('upload')
   const [personImage, setPersonImage] = useState<File | null>(null)
@@ -44,6 +46,23 @@ export default function TryOnPage() {
       setCredits(data?.credits ?? 0)
     }
     loadCredits()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Pièce pré-remplie depuis la page Découvrir
+  useEffect(() => {
+    const garmentUrl = searchParams.get('garment')
+    const cat = searchParams.get('category') as GarmentCategory | null
+    if (garmentUrl) {
+      const validCat = GARMENT_CATEGORIES.some((c) => c.id === cat) ? (cat as GarmentCategory) : 'tops'
+      setPieces([{
+        id: `${Date.now()}-discover`,
+        file: null,
+        url: garmentUrl,
+        preview: garmentUrl,
+        category: validCat,
+      }])
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -492,5 +511,17 @@ export default function TryOnPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function TryOnPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center py-20">
+        <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <TryOnContent />
+    </Suspense>
   )
 }

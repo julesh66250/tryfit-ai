@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sparkles, Home, Clock, User, Crown } from 'lucide-react'
+import { Sparkles, Home, Clock, User, Crown, Compass } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/dashboard', label: 'Accueil', icon: Home },
   { href: '/try-on', label: 'Essayer', icon: Sparkles },
+  { href: '/discover', label: 'Découvrir', icon: Compass },
   { href: '/history', label: 'Historique', icon: Clock },
   { href: '/profile', label: 'Profil', icon: User },
   { href: '/premium', label: 'Premium', icon: Crown },
