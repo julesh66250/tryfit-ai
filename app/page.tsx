@@ -241,7 +241,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
-              { step: '2', title: 'Choisissez vos pièces', desc: 'Ajoutez 1 vêtement ou un outfit complet — t-shirt, short, chaussures, bijoux, chapeau... chaque pièce utilise 1 crédit.', emoji: '👕' },
+              { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, bijoux, chapeau... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
               { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces. Un outfit de 5 articles = 5 crédits, en un seul clic.", emoji: '✨' },
             ].map((item) => (
               <div key={item.step} className="relative">
