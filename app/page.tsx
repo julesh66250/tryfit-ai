@@ -289,7 +289,7 @@ export default function LandingPage() {
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${billing === 'yearly' ? 'bg-brand-500 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900'}`}
               >
                 Annuel
-                <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${billing === 'yearly' ? 'bg-brand-500 text-white' : 'bg-brand-500/10 text-brand-500'}`}>-35%</span>
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${billing === 'yearly' ? 'bg-brand-500 text-white' : 'bg-brand-500/10 text-brand-500'}`}>-15%</span>
               </button>
             </div>
           </div>
@@ -306,7 +306,7 @@ export default function LandingPage() {
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
-              <Link href="/register" className="btn-secondary w-full mt-8 flex items-center justify-center">Commencer</Link>
+              <Link href="/register" className="btn-primary w-full mt-8 flex items-center justify-center">Commencer</Link>
             </div>
 
             {/* Starter */}
@@ -314,7 +314,7 @@ export default function LandingPage() {
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">
-                {billing === 'monthly' ? '12,99€' : '8,33€'}
+                {billing === 'monthly' ? '12,99€' : '11,04€'}
               </div>
               <div className="text-zinc-400 text-sm mb-6">
                 {billing === 'monthly' ? 'par mois' : 'par mois · facturé 99,99€/an'}
@@ -334,7 +334,7 @@ export default function LandingPage() {
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
               <div className="flex items-center gap-3 mb-1">
                 <span className="text-4xl font-extrabold text-zinc-900">
-                  {billing === 'monthly' ? '19,99€' : '12,49€'}
+                  {billing === 'monthly' ? '19,99€' : '16,99€'}
                 </span>
                 {billing === 'monthly' && <span className="text-xl text-zinc-300 line-through font-medium">25,98€</span>}
               </div>
@@ -346,7 +346,7 @@ export default function LandingPage() {
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
-              <Link href={`/checkout?plan=pro${billing === 'yearly' ? '-yearly' : ''}`} className="btn-secondary w-full mt-8 flex items-center justify-center">
+              <Link href={`/checkout?plan=pro${billing === 'yearly' ? '-yearly' : ''}`} className="btn-primary w-full mt-8 flex items-center justify-center">
                 Commencer
               </Link>
             </div>
