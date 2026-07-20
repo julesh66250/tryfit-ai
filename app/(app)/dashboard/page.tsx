@@ -72,8 +72,8 @@ export default async function DashboardPage() {
           className="block relative overflow-hidden rounded-2xl mb-6 group shadow-lg shadow-brand-500/20"
           style={{ background: 'linear-gradient(135deg, #f97316 0%, #fb923c 60%, #fdba74 100%)' }}
         >
-          <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-white/10 group-hover:scale-125 transition-transform duration-500" />
-          <div className="absolute -bottom-16 -left-8 w-40 h-40 rounded-full bg-white/10 group-hover:scale-110 transition-transform duration-500" />
+          <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-white/10 animate-float-slow" />
+          <div className="absolute -bottom-16 -left-8 w-40 h-40 rounded-full bg-white/10 animate-float-slower" />
           <div className="relative p-6 sm:p-8 flex items-center justify-between gap-4">
             <div className="min-w-0">
               <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-1.5">Créer un nouveau look</h2>

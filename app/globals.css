@@ -55,6 +55,19 @@
   100% { opacity: 1; }
 }
 
+@keyframes floatSlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+.animate-float-slow {
+  animation: floatSlow 2s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: floatSlow 3s ease-in-out infinite;
+}
+
 @keyframes slideUp {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }

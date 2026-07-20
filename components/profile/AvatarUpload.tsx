@@ -17,6 +17,7 @@ export default function AvatarUpload({
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
+  const [imgError, setImgError] = useState(false)
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -35,6 +36,7 @@ export default function AvatarUpload({
       const { data: urlData } = supabase.storage.from('result-images').getPublicUrl(data.path)
       await supabase.from('profiles').update({ avatar_url: urlData.publicUrl }).eq('id', user.id)
       setPreview(URL.createObjectURL(file))
+      setImgError(false)
       router.refresh()
     } catch (err) {
       console.error(err)
@@ -51,11 +53,12 @@ export default function AvatarUpload({
       className="relative inline-block mb-3 group"
       title="Changer ma photo"
     >
-      {src ? (
+      {src && !imgError ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
           alt="Photo de profil"
+          onError={() => setImgError(true)}
           className={`w-20 h-20 rounded-full object-cover mx-auto shadow-md border-2 border-white ${uploading ? 'opacity-50' : ''}`}
         />
       ) : (
