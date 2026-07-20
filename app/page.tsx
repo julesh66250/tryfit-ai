@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, ArrowRight, Star, ChevronDown, ChevronUp, Moon } from 'lucide-react'
+import { Sparkles, ArrowRight, Star, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import TestimonialsColumns from '@/components/TestimonialsColumns'
@@ -260,7 +260,7 @@ export default function LandingPage() {
           {/* Explication crédits */}
           <div className="card p-5 bg-brand-500/5 border-brand-500/20 flex items-center gap-4 mt-2">
             <div className="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center flex-shrink-0">
-              <Moon className="w-5 h-5 text-white" />
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div className="text-left">
               <p className="font-bold text-zinc-900 mb-1">1 crédit = 1 vêtement ou accessoire</p>
