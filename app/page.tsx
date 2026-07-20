@@ -259,7 +259,9 @@ export default function LandingPage() {
 
           {/* Bloc explication crédits */}
           <div className="card p-6 bg-brand-500/5 border-brand-500/20 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-            <div className="text-4xl flex-shrink-0">🪙</div>
+            <div className="w-12 h-12 rounded-xl bg-brand-500 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
             <div>
               <p className="font-semibold text-zinc-900 mb-1">1 crédit = 1 vêtement ou accessoire essayé</p>
               <p className="text-zinc-500 text-sm">Essayez une seule pièce ou créez un outfit complet en un clic. Un t-shirt + un short + des chaussures + une casquette + une bague = <span className="font-semibold text-zinc-700">5 crédits, 1 seule génération</span>.</p>
