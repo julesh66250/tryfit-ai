@@ -313,8 +313,11 @@ export default function LandingPage() {
             <div onClick={() => setSelectedPlan('starter')} className={`relative card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1.2s ease 0.9s, transform 1.2s ease 0.9s' }}>
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
-              <div className="text-4xl font-extrabold mb-1 text-zinc-900">
-                {billing === 'monthly' ? '12,99€' : '11,04€'}
+              <div className="flex items-center gap-3 mb-1">
+                <span className="text-4xl font-extrabold text-zinc-900">
+                  {billing === 'monthly' ? '12,99€' : '11,04€'}
+                </span>
+                {billing === 'yearly' && <span className="text-xl text-zinc-300 line-through font-medium">12,99€</span>}
               </div>
               <div className="text-zinc-400 text-sm mb-6">
                 {billing === 'monthly' ? 'par mois' : 'par mois · facturé 132,48€/an'}
@@ -336,7 +339,7 @@ export default function LandingPage() {
                 <span className="text-4xl font-extrabold text-zinc-900">
                   {billing === 'monthly' ? '19,99€' : '16,99€'}
                 </span>
-                {billing === 'monthly' && <span className="text-xl text-zinc-300 line-through font-medium">25,98€</span>}
+                <span className="text-xl text-zinc-300 line-through font-medium">{billing === 'monthly' ? '25,98€' : '19,99€'}</span>
               </div>
               <div className="text-zinc-400 text-sm mb-6">
                 {billing === 'monthly' ? 'par mois' : 'par mois · facturé 203,88€/an'}

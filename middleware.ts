@@ -31,11 +31,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Rediriger vers dashboard si déjà connecté et sur login/register
-  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
-  }
-
   return supabaseResponse
 }
 

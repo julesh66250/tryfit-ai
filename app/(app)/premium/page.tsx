@@ -63,8 +63,9 @@ export default function PremiumPage() {
 
           <div className="mb-4">
             <h3 className="font-bold text-zinc-900 text-lg">Starter</h3>
-            <div className="flex items-end gap-1 mt-1">
+            <div className="flex items-end gap-2 mt-1">
               <span className="text-3xl font-extrabold text-zinc-900">{billing === 'monthly' ? '12,99€' : '11,04€'}</span>
+              {billing === 'yearly' && <span className="text-lg text-zinc-300 line-through font-medium mb-0.5">12,99€</span>}
               <span className="text-zinc-400 text-sm mb-1">/mois</span>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
@@ -96,8 +97,9 @@ export default function PremiumPage() {
         >
           <div className="mb-4">
             <h3 className="font-bold text-zinc-900 text-lg">Pro</h3>
-            <div className="flex items-end gap-1 mt-1">
+            <div className="flex items-end gap-2 mt-1">
               <span className="text-3xl font-extrabold text-zinc-900">{billing === 'monthly' ? '19,99€' : '16,99€'}</span>
+              <span className="text-lg text-zinc-300 line-through font-medium mb-0.5">{billing === 'monthly' ? '25,98€' : '19,99€'}</span>
               <span className="text-zinc-400 text-sm mb-1">/mois</span>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
