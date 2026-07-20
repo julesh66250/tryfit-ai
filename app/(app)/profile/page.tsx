@@ -1,8 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Crown, Zap, ChevronRight } from 'lucide-react'
+import { Crown, Zap } from 'lucide-react'
 import Link from 'next/link'
 import LogoutButton from '@/components/profile/LogoutButton'
+import AvatarUpload from '@/components/profile/AvatarUpload'
 import { Trash2 } from 'lucide-react'
 
 export default async function ProfilePage() {
@@ -42,16 +43,7 @@ export default async function ProfilePage() {
 
         {/* Carte identité */}
         <div className="card p-6 mb-4 text-center">
-          <div className="relative inline-block mb-3">
-            <div className="w-20 h-20 rounded-full bg-zinc-900 flex items-center justify-center text-2xl font-bold text-white mx-auto shadow-md">
-              {initials}
-            </div>
-            <div className={`absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center border-[3px] border-white ${profile?.is_premium ? 'bg-brand-500' : 'bg-zinc-200'}`}>
-              {profile?.is_premium
-                ? <Crown className="w-3.5 h-3.5 text-white" />
-                : <Zap className="w-3.5 h-3.5 text-zinc-500" />}
-            </div>
-          </div>
+          <AvatarUpload avatarUrl={profile?.avatar_url ?? null} initials={initials} />
           <p className="font-bold text-zinc-900 text-xl">{profile?.full_name ?? 'Utilisateur'}</p>
           <p className="text-zinc-500 text-sm mt-0.5">{user.email}</p>
           <span className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold px-3 py-1 rounded-full bg-zinc-100 text-zinc-500">
@@ -100,15 +92,6 @@ export default async function ProfilePage() {
             )}
           </div>
         </div>
-
-        {/* Lien crédits */}
-        <Link href="/premium" className="card p-4 mb-6 flex items-center justify-between gap-3 hover:border-brand-500/40 transition-colors group">
-          <div className="flex items-center gap-3">
-            <span className="text-xl">🪙</span>
-            <p className="font-medium text-zinc-900 text-sm">Obtenir plus de crédits</p>
-          </div>
-          <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-brand-500 group-hover:translate-x-0.5 transition-all" />
-        </Link>
 
         {/* Actions */}
         <div className="card divide-y divide-zinc-100 overflow-hidden">

@@ -25,14 +25,14 @@ const plans = {
     price: '11,04€',
     period: '/mois',
     credits: 50,
-    billed: 'Facturé 132,48€/an · -15%',
+    billed: 'Facturé 132,48€/an',
   },
   'pro-yearly': {
     name: 'Pro Annuel',
     price: '16,99€',
     period: '/mois',
     credits: 100,
-    billed: 'Facturé 203,88€/an · -15%',
+    billed: 'Facturé 203,88€/an',
   },
 }
 
