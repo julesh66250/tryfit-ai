@@ -257,32 +257,10 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Équation visuelle crédits */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
-            {[
-              { emoji: '👕', label: 'T-shirt' },
-              { emoji: '🩳', label: 'Short' },
-              { emoji: '👟', label: 'Chaussures' },
-              { emoji: '🧢', label: 'Casquette' },
-              { emoji: '💍', label: 'Bague' },
-            ].map((item, i) => (
-              <div key={item.label} className="flex items-center gap-3">
-                <div className="flex flex-col items-center">
-                  <div className="text-2xl mb-1">{item.emoji}</div>
-                  <span className="text-xs text-zinc-400">{item.label}</span>
-                  <span className="text-xs font-semibold text-brand-500">1 crédit</span>
-                </div>
-                {i < 4 && <span className="text-zinc-300 font-light text-xl mb-4">+</span>}
-              </div>
-            ))}
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-zinc-300 font-light text-xl">=</span>
-              <div className="bg-brand-500 text-white rounded-xl px-4 py-2 text-center">
-                <div className="font-extrabold text-lg">5 crédits</div>
-                <div className="text-xs opacity-80">1 seul clic</div>
-              </div>
-            </div>
-          </div>
+          {/* Explication crédits */}
+          <p className="text-center text-zinc-500 mt-2">
+            Chaque vêtement ou accessoire essayé coûte <span className="font-semibold text-zinc-900">1 crédit</span>. Composez un outfit complet et tout se génère <span className="font-semibold text-zinc-900">en un seul clic</span>.
+          </p>
         </div>
       </section>
 
