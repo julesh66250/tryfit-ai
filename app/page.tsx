@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, ArrowRight, Star, ChevronDown, ChevronUp } from 'lucide-react'
+import { Sparkles, ArrowRight, Star, ChevronDown, ChevronUp, Wallet } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import TestimonialsColumns from '@/components/TestimonialsColumns'
@@ -242,7 +242,7 @@ export default function LandingPage() {
             {[
               { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
               { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, bijoux, chapeau... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
-              { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces. Un outfit de 5 articles = 5 crédits, en un seul clic.", emoji: '✨' },
+              { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces.", emoji: '✨' },
             ].map((item) => (
               <div key={item.step} className="relative">
                 <div className="card p-6 text-center h-full">
@@ -260,7 +260,7 @@ export default function LandingPage() {
           {/* Explication crédits */}
           <div className="card p-5 bg-brand-500/5 border-brand-500/20 flex items-center gap-4 mt-2">
             <div className="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center flex-shrink-0">
-              <Sparkles className="w-5 h-5 text-white" />
+              <Wallet className="w-5 h-5 text-white" />
             </div>
             <p className="text-zinc-500 text-sm text-left">
               Chaque vêtement ou accessoire essayé coûte <span className="font-semibold text-zinc-900">1 crédit</span>. Composez un outfit complet et tout se génère <span className="font-semibold text-zinc-900">en un seul clic</span>.
