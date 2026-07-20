@@ -40,6 +40,12 @@ const STEPS = [
   { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces.", emoji: '✨' },
 ]
 
+const BENEFITS = [
+  { emoji: '📦', title: 'Fini les retours', desc: 'Vous voyez le rendu sur vous avant de commander — plus de colis à renvoyer parce que "ça ne me va pas".' },
+  { emoji: '⏱️', title: '30 secondes suffisent', desc: 'Contre 30 minutes de cabine d\'essayage. Essayez vos pièces où que vous soyez, en un clic.' },
+  { emoji: '💶', title: 'Des économies réelles', desc: 'Moins d\'achats impulsifs regrettés : vous n\'achetez que ce qui vous va vraiment.' },
+]
+
 const testimonials = [
   { name: 'Sarah', location: 'Paris', text: 'J\'avais un doute sur une veste Vinted à 60€. Je l\'ai essayée en 30 secondes et j\'ai commandé direct. Aucun regret.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
   { name: 'Inès', location: 'Lyon', text: 'Je fais du shopping en ligne depuis des années et je retournais toujours la moitié. Depuis que j\'utilise ça, zéro retour.', stars: 5, avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
@@ -133,6 +139,7 @@ export default function LandingPage() {
   const [pricingVisible, setPricingVisible] = useState(false)
   const [showSticky, setShowSticky] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
+  const [activeBenefit, setActiveBenefit] = useState(0)
   const pricingRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -155,6 +162,11 @@ export default function LandingPage() {
 
   useEffect(() => {
     const t = setInterval(() => setActiveStep((s) => (s + 1) % STEPS.length), 3000)
+    return () => clearInterval(t)
+  }, [])
+
+  useEffect(() => {
+    const t = setInterval(() => setActiveBenefit((s) => (s + 1) % BENEFITS.length), 3000)
     return () => clearInterval(t)
   }, [])
 
@@ -358,12 +370,39 @@ export default function LandingPage() {
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Pourquoi TryFit AI ?</h2>
             <p className="text-zinc-500 text-center mb-14">Achetez sûr de vous, sans mauvaise surprise</p>
           </Reveal>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { emoji: '📦', title: 'Fini les retours', desc: 'Vous voyez le rendu sur vous avant de commander — plus de colis à renvoyer parce que "ça ne me va pas".' },
-              { emoji: '⏱️', title: '30 secondes suffisent', desc: 'Contre 30 minutes de cabine d\'essayage. Essayez vos pièces où que vous soyez, en un clic.' },
-              { emoji: '💶', title: 'Des économies réelles', desc: 'Moins d\'achats impulsifs regrettés : vous n\'achetez que ce qui vous va vraiment.' },
-            ].map((b, i) => (
+          {/* Carrousel auto sur mobile */}
+          <div className="md:hidden">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${activeBenefit * 100}%)` }}
+              >
+                {BENEFITS.map((b) => (
+                  <div key={b.title} className="w-full flex-shrink-0 px-1">
+                    <div className="card p-8 text-center h-full">
+                      <div className="text-4xl mb-4">{b.emoji}</div>
+                      <h3 className="font-semibold text-lg mb-2 text-zinc-900">{b.title}</h3>
+                      <p className="text-zinc-500 text-sm leading-relaxed">{b.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              {BENEFITS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveBenefit(i)}
+                  aria-label={`Bénéfice ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${activeBenefit === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Grille sur desktop */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6">
+            {BENEFITS.map((b, i) => (
               <Reveal key={b.title} delay={i * 0.12}>
                 <div className="card p-8 text-center h-full">
                   <div className="text-4xl mb-4">{b.emoji}</div>
