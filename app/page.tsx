@@ -336,7 +336,7 @@ export default function LandingPage() {
 
 
       {/* Pricing */}
-      <section id="tarifs" className="pt-10 pb-20 px-6" ref={pricingRef}>
+      <section id="tarifs" className="py-10 px-6" ref={pricingRef}>
         <div className="max-w-5xl mx-auto text-center">
           <div style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 1.2s ease, transform 1.2s ease' }}>
             <h2 className="text-3xl font-bold mb-4 text-zinc-900">Tarifs simples</h2>
@@ -425,7 +425,7 @@ export default function LandingPage() {
       </section>
 
       {/* Témoignages */}
-      <section className="py-20 px-6">
+      <section className="py-10 px-6">
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Ils adorent TryFit AI</h2>
@@ -438,7 +438,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 px-6">
+      <section className="py-10 px-6">
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Questions fréquentes</h2>
@@ -455,7 +455,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA final */}
-      <section className="py-20 px-6 text-center">
+      <section className="pt-10 pb-16 px-6 text-center">
         <Reveal className="max-w-2xl mx-auto">
           <h2 className="text-4xl font-extrabold mb-4 text-zinc-900">Prêt à essayer ?</h2>
           <p className="text-zinc-500 mb-8">1 essayage offert. Aucune carte bancaire.</p>
@@ -466,43 +466,17 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative border-t border-orange-200/40 pt-14 pb-8 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-10 mb-10">
-            {/* Marque */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/tryfit-logo.png" alt="TryFit AI" className="w-8 h-8 rounded-lg" />
-                <span className="font-bold text-lg text-zinc-900">TryFit AI</span>
-              </div>
-              <p className="text-zinc-500 text-sm leading-relaxed">
-                Essayez les vêtements sans les porter. L&apos;IA génère une image réaliste de vous avec vos pièces préférées, en 30 secondes.
-              </p>
-            </div>
-            {/* Produit */}
-            <div>
-              <p className="font-semibold text-zinc-900 text-sm mb-3">Produit</p>
-              <ul className="space-y-2 text-sm text-zinc-500">
-                <li><Link href="/register" className="hover:text-zinc-900 transition-colors">Essayer gratuitement</Link></li>
-                <li><Link href="/login" className="hover:text-zinc-900 transition-colors">Connexion</Link></li>
-                <li><a href="#tarifs" className="hover:text-zinc-900 transition-colors">Tarifs</a></li>
-              </ul>
-            </div>
-            {/* Légal */}
-            <div>
-              <p className="font-semibold text-zinc-900 text-sm mb-3">Légal</p>
-              <ul className="space-y-2 text-sm text-zinc-500">
-                <li><Link href="/legal/mentions-legales" className="hover:text-zinc-900 transition-colors">Mentions légales</Link></li>
-                <li><Link href="/legal/cgu" className="hover:text-zinc-900 transition-colors">Conditions d&apos;utilisation</Link></li>
-                <li><Link href="/legal/confidentialite" className="hover:text-zinc-900 transition-colors">Politique de confidentialité</Link></li>
-                <li><a href="mailto:contact@tryfit.ai" className="hover:text-zinc-900 transition-colors">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-orange-200/40 pt-6 text-center text-zinc-400 text-sm">
-            © 2026 TryFit AI · Tous droits réservés
-          </div>
+      <footer className="relative border-t border-orange-200/40 py-6 px-6">
+        <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-sm text-zinc-400 text-center">
+          <span>© 2026 TryFit AI</span>
+          <span>·</span>
+          <Link href="/legal/mentions-legales" className="hover:text-zinc-700 transition-colors">Mentions légales</Link>
+          <span>·</span>
+          <Link href="/legal/cgu" className="hover:text-zinc-700 transition-colors">CGU</Link>
+          <span>·</span>
+          <Link href="/legal/confidentialite" className="hover:text-zinc-700 transition-colors">Confidentialité</Link>
+          <span>·</span>
+          <a href="mailto:contact@tryfit.ai" className="hover:text-zinc-700 transition-colors">Contact</a>
         </div>
       </footer>
 
