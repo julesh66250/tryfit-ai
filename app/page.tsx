@@ -257,14 +257,30 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Bloc explication crédits */}
-          <div className="card p-6 bg-brand-500/5 border-brand-500/20 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-            <div className="w-12 h-12 rounded-xl bg-brand-500 flex items-center justify-center flex-shrink-0">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="font-semibold text-zinc-900 mb-1">1 crédit = 1 vêtement ou accessoire essayé</p>
-              <p className="text-zinc-500 text-sm">Essayez une seule pièce ou créez un outfit complet en un clic. Un t-shirt + un short + des chaussures + une casquette + une bague = <span className="font-semibold text-zinc-700">5 crédits, 1 seule génération</span>.</p>
+          {/* Équation visuelle crédits */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+            {[
+              { emoji: '👕', label: 'T-shirt' },
+              { emoji: '🩳', label: 'Short' },
+              { emoji: '👟', label: 'Chaussures' },
+              { emoji: '🧢', label: 'Casquette' },
+              { emoji: '💍', label: 'Bague' },
+            ].map((item, i) => (
+              <div key={item.label} className="flex items-center gap-3">
+                <div className="flex flex-col items-center">
+                  <div className="text-2xl mb-1">{item.emoji}</div>
+                  <span className="text-xs text-zinc-400">{item.label}</span>
+                  <span className="text-xs font-semibold text-brand-500">1 crédit</span>
+                </div>
+                {i < 4 && <span className="text-zinc-300 font-light text-xl mb-4">+</span>}
+              </div>
+            ))}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-zinc-300 font-light text-xl">=</span>
+              <div className="bg-brand-500 text-white rounded-xl px-4 py-2 text-center">
+                <div className="font-extrabold text-lg">5 crédits</div>
+                <div className="text-xs opacity-80">1 seul clic</div>
+              </div>
             </div>
           </div>
         </div>
