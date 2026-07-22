@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Crown, Zap, Check, Lock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -10,6 +10,21 @@ export default function PremiumPage() {
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
   const [selectedPlan, setSelectedPlan] = useState<'starter' | 'pro'>('starter')
   const [isPremium, setIsPremium] = useState(false)
+  const [activeSlide, setActiveSlide] = useState(0)
+  const carouselRef = useRef<HTMLDivElement>(null)
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    const index = Math.round(el.scrollLeft / el.offsetWidth)
+    setActiveSlide(index)
+    setSelectedPlan(index === 0 ? 'starter' : 'pro')
+  }
+  const scrollTo = (i: number) => {
+    if (!carouselRef.current) return
+    carouselRef.current.scrollTo({ left: i * carouselRef.current.offsetWidth, behavior: 'smooth' })
+    setActiveSlide(i)
+    setSelectedPlan(i === 0 ? 'starter' : 'pro')
+  }
 
   useEffect(() => {
     const load = async () => {
@@ -51,8 +66,14 @@ export default function PremiumPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
+      <div
+        ref={carouselRef}
+        className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-2 gap-4 mb-8"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+        onScroll={handleScroll}
+      >
         {/* Starter */}
+        <div className="w-full flex-shrink-0 snap-start md:contents">
         <div
           onClick={() => setSelectedPlan('starter')}
           className={`card p-6 relative flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`}
@@ -89,8 +110,10 @@ export default function PremiumPage() {
             Choisir ce plan
           </Link>
         </div>
+        </div>
 
         {/* Pro */}
+        <div className="w-full flex-shrink-0 snap-start md:contents">
         <div
           onClick={() => setSelectedPlan('pro')}
           className={`card p-6 relative flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`}
@@ -123,6 +146,14 @@ export default function PremiumPage() {
             Choisir ce plan
           </Link>
         </div>
+        </div>
+      </div>
+
+      {/* Dots mobile */}
+      <div className="md:hidden flex justify-center gap-2 mb-8 -mt-4">
+        {[0, 1].map((i) => (
+          <button key={i} onClick={() => scrollTo(i)} className={`h-2 rounded-full transition-all duration-300 ${activeSlide === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`} />
+        ))}
       </div>
 
       {/* Rappel crédit */}
