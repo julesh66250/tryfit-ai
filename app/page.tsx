@@ -115,7 +115,10 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className={`border rounded-xl overflow-hidden transition-colors duration-200 ${open ? 'border-brand-500' : 'border-zinc-200'}`}>
+    <div
+      className="rounded-xl overflow-hidden transition-all duration-200"
+      style={{ border: `1px solid ${open ? '#ff5c47' : '#e4e4e7'}` }}
+    >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between p-5 text-left hover:bg-zinc-50 transition-colors"
@@ -202,14 +205,18 @@ export default function LandingPage() {
     benefitCarouselRef.current.scrollTo({ left: i * benefitCarouselRef.current.offsetWidth, behavior: 'smooth' })
     setActiveBenefit(i)
   }
+  const pricingPlans: ('free' | 'starter' | 'pro')[] = ['free', 'starter', 'pro']
   const handlePricingScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget
-    setActivePricingSlide(Math.round(el.scrollLeft / el.offsetWidth))
+    const index = Math.round(el.scrollLeft / el.offsetWidth)
+    setActivePricingSlide(index)
+    setSelectedPlan(pricingPlans[index])
   }
   const scrollToPricing = (i: number) => {
     if (!pricingCarouselRef.current) return
     pricingCarouselRef.current.scrollTo({ left: i * pricingCarouselRef.current.offsetWidth, behavior: 'smooth' })
     setActivePricingSlide(i)
+    setSelectedPlan(pricingPlans[i])
   }
 
   return (
