@@ -115,7 +115,7 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="border border-zinc-200 rounded-xl overflow-hidden">
+    <div className={`border rounded-xl overflow-hidden transition-colors duration-200 ${open ? 'border-brand-500' : 'border-zinc-200'}`}>
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between p-5 text-left hover:bg-zinc-50 transition-colors"
@@ -141,10 +141,12 @@ export default function LandingPage() {
   const [activeStep, setActiveStep] = useState(0)
   const [activeBenefit, setActiveBenefit] = useState(0)
   const [activePhoto, setActivePhoto] = useState(0)
+  const [activePricingSlide, setActivePricingSlide] = useState(1)
   const pricingRef = useRef<HTMLDivElement>(null)
   const photoCarouselRef = useRef<HTMLDivElement>(null)
   const stepCarouselRef = useRef<HTMLDivElement>(null)
   const benefitCarouselRef = useRef<HTMLDivElement>(null)
+  const pricingCarouselRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -153,6 +155,15 @@ export default function LandingPage() {
     )
     if (pricingRef.current) observer.observe(pricingRef.current)
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (pricingCarouselRef.current && window.innerWidth < 768) {
+        pricingCarouselRef.current.scrollLeft = pricingCarouselRef.current.offsetWidth
+      }
+    }, 300)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
@@ -190,6 +201,15 @@ export default function LandingPage() {
     if (!benefitCarouselRef.current) return
     benefitCarouselRef.current.scrollTo({ left: i * benefitCarouselRef.current.offsetWidth, behavior: 'smooth' })
     setActiveBenefit(i)
+  }
+  const handlePricingScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    setActivePricingSlide(Math.round(el.scrollLeft / el.offsetWidth))
+  }
+  const scrollToPricing = (i: number) => {
+    if (!pricingCarouselRef.current) return
+    pricingCarouselRef.current.scrollTo({ left: i * pricingCarouselRef.current.offsetWidth, behavior: 'smooth' })
+    setActivePricingSlide(i)
   }
 
   return (
@@ -499,9 +519,15 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div
+            ref={pricingCarouselRef}
+            className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-6"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+            onScroll={handlePricingScroll}
+          >
 
             {/* Gratuit */}
+            <div className="w-full flex-shrink-0 snap-start md:contents">
             <div onClick={() => setSelectedPlan('free')} className={`card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'free' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s' }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Gratuit</h3>
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
@@ -513,8 +539,10 @@ export default function LandingPage() {
               </ul>
               <Link href="/register" className={`w-full mt-8 flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${selectedPlan === 'free' ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900'}`}>Commencer</Link>
             </div>
+            </div>
 
             {/* Starter */}
+            <div className="w-full flex-shrink-0 snap-start md:contents">
             <div onClick={() => setSelectedPlan('starter')} className={`relative card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s' }}>
               <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
@@ -536,8 +564,10 @@ export default function LandingPage() {
                 Commencer {selectedPlan === 'starter' && <ArrowRight className="w-4 h-4" />}
               </Link>
             </div>
+            </div>
 
             {/* Pro */}
+            <div className="w-full flex-shrink-0 snap-start md:contents">
             <div onClick={() => setSelectedPlan('pro')} className={`card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.45s, transform 0.6s ease 0.45s' }}>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
               <div className="flex items-center gap-3 mb-1">
@@ -558,8 +588,17 @@ export default function LandingPage() {
                 Commencer
               </Link>
             </div>
+            </div>
 
           </div>
+
+          {/* Dots mobile */}
+          <div className="md:hidden flex justify-center gap-2 mt-6">
+            {[0, 1, 2].map((i) => (
+              <button key={i} onClick={() => scrollToPricing(i)} aria-label={`Plan ${i + 1}`} className={`h-2 rounded-full transition-all duration-300 ${activePricingSlide === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`} />
+            ))}
+          </div>
+
         </div>
       </section>
 
