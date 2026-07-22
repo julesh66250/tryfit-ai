@@ -142,6 +142,9 @@ export default function LandingPage() {
   const [activeBenefit, setActiveBenefit] = useState(0)
   const [activePhoto, setActivePhoto] = useState(0)
   const pricingRef = useRef<HTMLDivElement>(null)
+  const photoCarouselRef = useRef<HTMLDivElement>(null)
+  const stepCarouselRef = useRef<HTMLDivElement>(null)
+  const benefitCarouselRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -161,20 +164,33 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => {
-    const t = setInterval(() => setActiveStep((s) => (s + 1) % STEPS.length), 3000)
-    return () => clearInterval(t)
-  }, [])
-
-  useEffect(() => {
-    const t = setInterval(() => setActiveBenefit((s) => (s + 1) % BENEFITS.length), 3000)
-    return () => clearInterval(t)
-  }, [])
-
-  useEffect(() => {
-    const t = setInterval(() => setActivePhoto((s) => (s + 1) % examples.length), 3000)
-    return () => clearInterval(t)
-  }, [])
+  const handlePhotoScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    setActivePhoto(Math.round(el.scrollLeft / el.offsetWidth))
+  }
+  const handleStepScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    setActiveStep(Math.round(el.scrollLeft / el.offsetWidth))
+  }
+  const handleBenefitScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    setActiveBenefit(Math.round(el.scrollLeft / el.offsetWidth))
+  }
+  const scrollToPhoto = (i: number) => {
+    if (!photoCarouselRef.current) return
+    photoCarouselRef.current.scrollTo({ left: i * photoCarouselRef.current.offsetWidth, behavior: 'smooth' })
+    setActivePhoto(i)
+  }
+  const scrollToStep = (i: number) => {
+    if (!stepCarouselRef.current) return
+    stepCarouselRef.current.scrollTo({ left: i * stepCarouselRef.current.offsetWidth, behavior: 'smooth' })
+    setActiveStep(i)
+  }
+  const scrollToBenefit = (i: number) => {
+    if (!benefitCarouselRef.current) return
+    benefitCarouselRef.current.scrollTo({ left: i * benefitCarouselRef.current.offsetWidth, behavior: 'smooth' })
+    setActiveBenefit(i)
+  }
 
   return (
     <div className="min-h-screen text-zinc-900 relative" style={{ background: 'linear-gradient(180deg, #fff5f0 0%, #ffffff 25%, #ffffff 75%, #fff5f0 100%)' }}>
@@ -234,33 +250,33 @@ export default function LandingPage() {
           <p className="text-zinc-400 text-sm">1 essayage offert · Sans carte bancaire</p>
         </div>
 
-        {/* Photos — carrousel auto sur mobile */}
+        {/* Photos — carrousel swipe sur mobile */}
         <div className="md:hidden mt-10 pb-4">
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${activePhoto * 100}%)` }}
-            >
-              {examples.map((ex) => (
-                <div key={ex.label} className="w-full flex-shrink-0 px-1">
-                  <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{ aspectRatio: '4/3' }}>
-                    <Image src={ex.image} alt={ex.label} fill className="object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <div className="absolute bottom-3 left-3">
-                      <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full whitespace-nowrap">
-                        Avant → Après
-                      </span>
-                    </div>
+          <div
+            ref={photoCarouselRef}
+            className="flex overflow-x-auto snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+            onScroll={handlePhotoScroll}
+          >
+            {examples.map((ex) => (
+              <div key={ex.label} className="w-full flex-shrink-0 snap-start px-1">
+                <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{ aspectRatio: '4/3' }}>
+                  <Image src={ex.image} alt={ex.label} fill className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="absolute bottom-3 left-3">
+                    <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full whitespace-nowrap">
+                      Avant → Après
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
           <div className="flex justify-center gap-2 mt-4">
             {examples.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActivePhoto(i)}
+                onClick={() => scrollToPhoto(i)}
                 aria-label={`Photo ${i + 1}`}
                 className={`h-2 rounded-full transition-all duration-300 ${activePhoto === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`}
               />
@@ -323,32 +339,32 @@ export default function LandingPage() {
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Comment ça marche ?</h2>
             <p className="text-zinc-500 text-center mb-14">3 étapes, moins de 30 secondes</p>
           </Reveal>
-          {/* Carrousel auto sur mobile */}
+          {/* Carrousel swipe sur mobile */}
           <div className="md:hidden mb-10">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${activeStep * 100}%)` }}
-              >
-                {STEPS.map((item) => (
-                  <div key={item.step} className="w-full flex-shrink-0 px-1">
-                    <div className="card p-6 text-center h-full">
-                      <div className="text-4xl mb-4">{item.emoji}</div>
-                      <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-500 text-white text-sm font-bold mb-3">
-                        {item.step}
-                      </div>
-                      <h3 className="font-semibold text-lg mb-2 text-zinc-900">{item.title}</h3>
-                      <p className="text-zinc-500 text-sm">{item.desc}</p>
+            <div
+              ref={stepCarouselRef}
+              className="flex overflow-x-auto snap-x snap-mandatory"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+              onScroll={handleStepScroll}
+            >
+              {STEPS.map((item) => (
+                <div key={item.step} className="w-full flex-shrink-0 snap-start px-1">
+                  <div className="card p-6 text-center h-full">
+                    <div className="text-4xl mb-4">{item.emoji}</div>
+                    <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-500 text-white text-sm font-bold mb-3">
+                      {item.step}
                     </div>
+                    <h3 className="font-semibold text-lg mb-2 text-zinc-900">{item.title}</h3>
+                    <p className="text-zinc-500 text-sm">{item.desc}</p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
             <div className="flex justify-center gap-2 mt-4">
               {STEPS.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveStep(i)}
+                  onClick={() => scrollToStep(i)}
                   aria-label={`Étape ${i + 1}`}
                   className={`h-2 rounded-full transition-all duration-300 ${activeStep === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`}
                 />
@@ -412,29 +428,29 @@ export default function LandingPage() {
             <h2 className="text-3xl font-bold text-center mb-4 text-zinc-900">Pourquoi TryFit AI ?</h2>
             <p className="text-zinc-500 text-center mb-14">Achetez sûr de vous, sans mauvaise surprise</p>
           </Reveal>
-          {/* Carrousel auto sur mobile */}
+          {/* Carrousel swipe sur mobile */}
           <div className="md:hidden">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${activeBenefit * 100}%)` }}
-              >
-                {BENEFITS.map((b) => (
-                  <div key={b.title} className="w-full flex-shrink-0 px-1">
-                    <div className="card p-8 text-center h-full">
-                      <div className="text-4xl mb-4">{b.emoji}</div>
-                      <h3 className="font-semibold text-lg mb-2 text-zinc-900">{b.title}</h3>
-                      <p className="text-zinc-500 text-sm leading-relaxed">{b.desc}</p>
-                    </div>
+            <div
+              ref={benefitCarouselRef}
+              className="flex overflow-x-auto snap-x snap-mandatory"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
+              onScroll={handleBenefitScroll}
+            >
+              {BENEFITS.map((b) => (
+                <div key={b.title} className="w-full flex-shrink-0 snap-start px-1">
+                  <div className="card p-8 text-center h-full">
+                    <div className="text-4xl mb-4">{b.emoji}</div>
+                    <h3 className="font-semibold text-lg mb-2 text-zinc-900">{b.title}</h3>
+                    <p className="text-zinc-500 text-sm leading-relaxed">{b.desc}</p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
             <div className="flex justify-center gap-2 mt-4">
               {BENEFITS.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveBenefit(i)}
+                  onClick={() => scrollToBenefit(i)}
                   aria-label={`Bénéfice ${i + 1}`}
                   className={`h-2 rounded-full transition-all duration-300 ${activeBenefit === i ? 'bg-brand-500 w-6' : 'bg-zinc-300 w-2'}`}
                 />
