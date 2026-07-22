@@ -117,7 +117,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   return (
     <div
       className="rounded-xl overflow-hidden transition-all duration-200"
-      style={{ border: `1px solid ${open ? '#ff5c47' : '#e4e4e7'}` }}
+      style={{ border: '1px solid #ff5c47' }}
     >
       <button
         onClick={() => setOpen(!open)}

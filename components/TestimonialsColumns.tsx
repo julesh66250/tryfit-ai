@@ -82,7 +82,7 @@ export default function TestimonialsColumns({ testimonials }: { testimonials: Te
         }
       `}</style>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 overflow-hidden">
-        <TestimonialsColumn testimonials={col1} duration={55} />
+        <TestimonialsColumn testimonials={col1} duration={22} />
         <TestimonialsColumn testimonials={col2} duration={45} reverse className="hidden md:flex" />
         <TestimonialsColumn testimonials={col3} duration={65} className="hidden md:flex" />
       </div>
