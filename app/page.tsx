@@ -15,22 +15,20 @@ const stats = [
 
 const examples = [
   {
-    label: 'Veste tweed',
-    desc: 'T-shirt basique → Veste tweed dorée',
+    label: 'Avant → Après',
     image: '/examples/exemple-1.png',
-    gender: 'Femme',
   },
   {
-    label: 'Blazer casual',
-    desc: 'T-shirt blanc → Blazer beige structuré',
+    label: 'Avant → Après',
     image: '/examples/exemple-2.png',
-    gender: 'Homme',
   },
   {
-    label: 'Tenue streetwear',
-    desc: 'Tenue noire → Cargo blanc + bucket hat',
+    label: 'Avant → Après',
     image: '/examples/exemple-3.png',
-    gender: 'Homme',
+  },
+  {
+    label: 'Avant → Après',
+    image: '/examples/exemple-4.png',
   },
 ]
 
