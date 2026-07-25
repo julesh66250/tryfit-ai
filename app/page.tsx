@@ -16,19 +16,19 @@ const stats = [
 const examples = [
   {
     label: 'Avant → Après',
-    image: '/examples/exemple-2.png',
-  },
-  {
-    label: 'Avant → Après',
     image: '/examples/exemple-1.png',
   },
   {
     label: 'Avant → Après',
-    image: '/examples/exemple-3.png',
+    image: '/examples/exemple-2.png',
   },
   {
     label: 'Avant → Après',
     image: '/examples/exemple-4.png',
+  },
+  {
+    label: 'Avant → Après',
+    image: '/examples/exemple-3.png',
   },
 ]
 
