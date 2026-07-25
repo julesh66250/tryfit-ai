@@ -23,6 +23,8 @@ export default async function ProfilePage() {
     .eq('user_id', user.id)
     .eq('status', 'completed')
 
+  const planLabel = profile?.plan === 'pro' ? 'Pro' : profile?.plan === 'starter' ? 'Starter' : 'Premium'
+
   const initials = (profile?.full_name ?? user.email ?? '?')
     .split(' ')
     .map((w: string) => w[0])
@@ -75,8 +77,14 @@ export default async function ProfilePage() {
                   : <Zap className="w-5 h-5 text-zinc-400" />}
               </div>
               <div className="min-w-0">
-                <p className="font-semibold text-zinc-900">Plan {profile?.is_premium ? 'Premium' : 'Gratuit'}</p>
-                {profile?.is_premium && profile.premium_expires_at ? (
+                <p className="font-semibold text-zinc-900">
+                  Plan {profile?.is_premium ? planLabel : 'Gratuit'}
+                </p>
+                {profile?.is_premium && profile.credits_renew_at ? (
+                  <p className="text-zinc-400 text-xs">
+                    Prochaine recharge le {new Date(profile.credits_renew_at).toLocaleDateString('fr-FR')}
+                  </p>
+                ) : profile?.is_premium && profile.premium_expires_at ? (
                   <p className="text-zinc-400 text-xs">
                     Expire le {new Date(profile.premium_expires_at).toLocaleDateString('fr-FR')}
                   </p>
