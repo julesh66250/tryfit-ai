@@ -245,7 +245,7 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto text-center">
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 border border-brand-500 rounded-full px-4 py-1.5 text-sm text-zinc-500 mb-4 md:mb-8 font-medium">
+          <div className="inline-flex items-center gap-2 border border-brand-500 rounded-full px-3 py-1 text-xs text-zinc-500 mb-4 md:mb-8 font-medium">
             <Sparkles className="w-3.5 h-3.5 text-brand-500" />
             Essayage virtuel par IA · Résultat en 30 secondes
           </div>
