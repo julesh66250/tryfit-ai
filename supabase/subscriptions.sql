@@ -39,16 +39,20 @@ $$ LANGUAGE sql IMMUTABLE;
 --    Appelé par le webhook Stripe à chaque paiement réussi.
 --    Remet le compteur au quota du plan (pas de report — cf. CGU).
 -- -----------------------------------------------
+--   expires_at : fin de la période payée, telle que renvoyée par Stripe
+--                (current_period_end). C'est elle qui autorise les recharges.
 CREATE OR REPLACE FUNCTION public.grant_subscription_credits(
   user_id_input UUID,
   plan_input TEXT,
   period_input TEXT DEFAULT 'monthly',
-  next_renewal TIMESTAMPTZ DEFAULT NULL
+  next_renewal TIMESTAMPTZ DEFAULT NULL,
+  expires_at TIMESTAMPTZ DEFAULT NULL
 )
 RETURNS VOID AS $$
 DECLARE
-  amount INTEGER;
+  amount   INTEGER;
   renew_at TIMESTAMPTZ;
+  paid_until TIMESTAMPTZ;
 BEGIN
   amount := public.plan_credits(plan_input);
 
@@ -59,13 +63,21 @@ BEGIN
   -- Les crédits sont rechargés tous les mois, y compris sur un abonnement annuel
   renew_at := COALESCE(next_renewal, NOW() + INTERVAL '1 month');
 
+  -- Sans info de Stripe, on ne couvre qu'une période : jamais de blanc-seing
+  paid_until := COALESCE(
+    expires_at,
+    CASE period_input WHEN 'yearly' THEN NOW() + INTERVAL '1 year'
+                      ELSE NOW() + INTERVAL '1 month' END
+  );
+
   UPDATE public.profiles
-  SET credits          = amount,
-      is_premium       = TRUE,
-      plan             = plan_input,
-      billing_period   = period_input,
-      credits_renew_at = renew_at,
-      updated_at       = NOW()
+  SET credits            = amount,
+      is_premium         = TRUE,
+      plan               = plan_input,
+      billing_period     = period_input,
+      credits_renew_at   = renew_at,
+      premium_expires_at = paid_until,
+      updated_at         = NOW()
   WHERE id = user_id_input;
 
   INSERT INTO public.credit_transactions (user_id, amount, type, description)
@@ -88,6 +100,7 @@ BEGIN
       plan               = 'free',
       billing_period     = NULL,
       credits_renew_at   = NULL,
+      premium_expires_at = NULL,
       stripe_subscription_id = NULL,
       updated_at         = NOW()
   WHERE id = user_id_input;
@@ -99,9 +112,40 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 -- -----------------------------------------------
--- 5. Filet de sécurité : recharge automatique
---    Si un webhook Stripe se perd, ce job rattrape le coup.
---    Recharge tous les abonnés dont la date de renouvellement est passée.
+-- 5. Expiration des abonnements non renouvelés
+--    Si le webhook d'annulation de Stripe se perd, la date de fin de
+--    période payée finit par tomber et l'abonnement s'éteint tout seul.
+--    3 jours de tolérance : Stripe réessaie les paiements échoués.
+-- -----------------------------------------------
+CREATE OR REPLACE FUNCTION public.expire_lapsed_subscriptions()
+RETURNS INTEGER AS $$
+DECLARE
+  expired INTEGER;
+BEGIN
+  WITH lapsed AS (
+    UPDATE public.profiles
+    SET is_premium         = FALSE,
+        plan               = 'free',
+        billing_period     = NULL,
+        credits_renew_at   = NULL,
+        updated_at         = NOW()
+    WHERE is_premium = TRUE
+      AND premium_expires_at IS NOT NULL
+      AND premium_expires_at < NOW() - INTERVAL '3 days'
+    RETURNING id
+  )
+  SELECT COUNT(*) INTO expired FROM lapsed;
+
+  RETURN expired;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-- -----------------------------------------------
+-- 6. Filet de sécurité : recharge automatique
+--    Si un webhook de paiement Stripe se perd, ce job rattrape le coup.
+--    Ne recharge que les abonnés dont la période payée court toujours :
+--    en cas de doute on ne donne rien, plutôt que de donner à vie.
 -- -----------------------------------------------
 CREATE OR REPLACE FUNCTION public.renew_monthly_credits()
 RETURNS INTEGER AS $$
@@ -110,6 +154,9 @@ DECLARE
   next_date   TIMESTAMPTZ;
   renewed     INTEGER := 0;
 BEGIN
+  -- Éteindre d'abord les abonnements périmés
+  PERFORM public.expire_lapsed_subscriptions();
+
   FOR row_profile IN
     SELECT id, plan, credits_renew_at
     FROM public.profiles
@@ -117,6 +164,9 @@ BEGIN
       AND plan IN ('starter', 'pro')
       AND credits_renew_at IS NOT NULL
       AND credits_renew_at <= NOW()
+      -- Verrou : la période payée doit encore courir
+      AND premium_expires_at IS NOT NULL
+      AND premium_expires_at > NOW() - INTERVAL '3 days'
     FOR UPDATE
   LOOP
     -- Avancer d'un mois autant de fois que nécessaire pour repasser dans le futur
@@ -144,8 +194,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 -- -----------------------------------------------
--- 6. Planification quotidienne (pg_cron)
+-- 7. Planification quotidienne (pg_cron)
 --    Tourne tous les jours à 3h du matin UTC.
+--    renew_monthly_credits() éteint d'abord les abonnements périmés,
+--    puis recharge ceux qui sont toujours payés.
 -- -----------------------------------------------
 CREATE EXTENSION IF NOT EXISTS pg_cron;
 
@@ -161,7 +213,7 @@ SELECT cron.schedule(
 
 
 -- -----------------------------------------------
--- 7. Empêcher un utilisateur de modifier ses propres crédits
+-- 8. Empêcher un utilisateur de modifier ses propres crédits
 --    Sans ça, n'importe qui peut s'accorder 10 000 crédits depuis le navigateur.
 -- -----------------------------------------------
 DROP POLICY IF EXISTS "profiles_update_own" ON public.profiles;
