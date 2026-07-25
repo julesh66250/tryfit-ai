@@ -74,7 +74,7 @@ export default function PremiumPage() {
           </div>
 
           <ul className="space-y-2 mb-6 flex-1">
-            {['50 crédits/mois', 'Outfits complets en 1 clic', 'Qualité supérieure', 'Générations prioritaires', 'Historique illimité'].map((f) => (
+            {['50 crédits/mois', 'Outfits complets en 1 clic', 'Qualité supérieure', 'Générations prioritaires', 'Historique 30 jours'].map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
                 <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
                 {f}

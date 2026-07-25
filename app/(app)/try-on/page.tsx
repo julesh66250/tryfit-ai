@@ -132,29 +132,27 @@ function TryOnContent() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { toast.error('Non connecté'); setStep('upload'); return }
 
-      // Upload photo de la personne
-      let personUrl = ''
-      if (personImage) {
-        const ext = personImage.name.split('.').pop()
-        const path = `${user.id}/${Date.now()}_person.${ext}`
-        const { data, error } = await supabase.storage.from('person-images').upload(path, personImage)
-        if (error) throw error
-        const { data: urlData } = supabase.storage.from('person-images').getPublicUrl(data.path)
-        personUrl = urlData.publicUrl
-      }
+      // Upload photo de la personne (bucket privé — on ne garde que le chemin)
+      if (!personImage) { toast.error('Ajoutez votre photo'); setStep('upload'); return }
+
+      const personExt = personImage.name.split('.').pop()
+      const personPath = `${user.id}/${Date.now()}_person.${personExt}`
+      const { error: personError } = await supabase.storage
+        .from('person-images')
+        .upload(personPath, personImage)
+      if (personError) throw personError
 
       // Upload des pièces
-      const pieceUrls: { url: string; category: GarmentCategory }[] = []
+      const pieceRefs: { path?: string; url?: string; category: GarmentCategory }[] = []
       for (const piece of pieces) {
         if (piece.file) {
           const ext = piece.file.name.split('.').pop()
           const path = `${user.id}/${Date.now()}_garment_${Math.random().toString(36).slice(2, 5)}.${ext}`
-          const { data, error } = await supabase.storage.from('garment-images').upload(path, piece.file)
+          const { error } = await supabase.storage.from('garment-images').upload(path, piece.file)
           if (error) throw error
-          const { data: urlData } = supabase.storage.from('garment-images').getPublicUrl(data.path)
-          pieceUrls.push({ url: urlData.publicUrl, category: piece.category })
+          pieceRefs.push({ path, category: piece.category })
         } else {
-          pieceUrls.push({ url: piece.url, category: piece.category })
+          pieceRefs.push({ url: piece.url, category: piece.category })
         }
       }
 
@@ -163,10 +161,10 @@ function TryOnContent() {
         .from('generations')
         .insert({
           user_id: user.id,
-          person_image_url: personUrl,
-          garment_image_url: pieceUrls[0].url,
-          garment_source_url: null,
-          garment_type: total > 1 ? 'outfit' : pieceUrls[0].category,
+          person_image_url: personPath,
+          garment_image_url: pieceRefs[0].path ?? pieceRefs[0].url ?? '',
+          garment_source_url: pieceRefs[0].url ?? null,
+          garment_type: total > 1 ? 'outfit' : pieceRefs[0].category,
           status: 'pending',
         })
         .select()
@@ -184,8 +182,8 @@ function TryOnContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          personImageUrl: personUrl,
-          pieces: pieceUrls,
+          person: { path: personPath },
+          pieces: pieceRefs,
           generationId: generation.id,
         }),
       })

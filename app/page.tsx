@@ -538,7 +538,7 @@ export default function LandingPage() {
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
               <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['1 essayage offert', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
+                {['1 essayage offert', 'Téléchargement du résultat', 'Historique 7 jours'].map((f) => (
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>
@@ -561,7 +561,7 @@ export default function LandingPage() {
                 {billing === 'monthly' ? 'par mois' : 'par mois · facturé 132,48€/an'}
               </div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['50 crédits par mois', 'Outfits complets en 1 clic', 'Générations prioritaires', "Meilleure qualité d'image", 'Historique illimité'].map((f) => (
+                {['50 crédits par mois', 'Outfits complets en 1 clic', 'Générations prioritaires', "Meilleure qualité d'image", 'Historique 30 jours'].map((f) => (
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>

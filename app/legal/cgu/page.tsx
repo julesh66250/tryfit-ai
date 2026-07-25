@@ -24,6 +24,13 @@ export default function CguPage() {
           sont disponibles via les abonnements Starter et Pro, facturés mensuellement ou annuellement.
           Les crédits mensuels non utilisés ne sont pas reportés au mois suivant.
         </p>
+        <p className="text-zinc-600 text-sm leading-relaxed">
+          Les essayages générés sont conservés dans votre historique 7 jours pour les comptes
+          gratuits et 30 jours pour les abonnés Starter ; ils sont conservés sans limite de durée
+          pour les abonnés Pro. Passé ce délai, ils sont supprimés automatiquement : pensez à
+          télécharger les images que vous souhaitez garder. Les photos que vous importez
+          (votre portrait et les vêtements) sont effacées dans les 24 heures suivant la génération.
+        </p>
       </section>
 
       <section className="space-y-2">

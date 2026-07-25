@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import sharp from 'sharp'
 
 // La génération d'image peut prendre 20-40s
 export const maxDuration = 60
@@ -7,7 +8,13 @@ export const maxDuration = 60
 const GEMINI_MODEL = 'gemini-3.1-flash-image'
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/interactions'
 
-type Piece = { url: string; category: string }
+const PERSON_BUCKET = 'person-images'
+const GARMENT_BUCKET = 'garment-images'
+const RESULT_BUCKET = 'result-images'
+
+/** Une image envoyée par le client : soit un fichier stocké, soit un lien externe */
+type ImageRef = { path?: string; url?: string }
+type PieceRef = ImageRef & { category: string }
 
 const CATEGORY_LABELS: Record<string, string> = {
   tops: 'haut (t-shirt, pull, veste, chemise...)',
@@ -18,29 +25,47 @@ const CATEGORY_LABELS: Record<string, string> = {
   jewelry: 'accessoire (bijou, lunettes, sac, montre...)',
 }
 
-/** Télécharge une image et la convertit en base64 */
-async function fetchImageAsBase64(url: string): Promise<{ data: string; mimeType: string }> {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Impossible de télécharger l'image : ${url}`)
-  const buffer = Buffer.from(await res.arrayBuffer())
-  const mimeType = res.headers.get('content-type')?.split(';')[0] ?? 'image/jpeg'
-  return { data: buffer.toString('base64'), mimeType }
-}
+type LoadedImage = { data: string; mimeType: string }
 
-/** Cherche l'image générée dans la réponse (l'API a plusieurs formes possibles) */
-function extractImage(json: unknown): { data: string; mimeType: string } | null {
-  const obj = json as Record<string, unknown>
+/**
+ * Charge une image en base64.
+ * Les fichiers uploadés sont lus directement depuis le bucket privé
+ * (pas d'URL publique : les photos des utilisateurs ne sortent jamais).
+ */
+async function loadImage(
+  ref: ImageRef,
+  bucket: string,
+  supabase: ReturnType<typeof createClient>
+): Promise<LoadedImage> {
+  if (ref.path) {
+    const { data, error } = await supabase.storage.from(bucket).download(ref.path)
+    if (error || !data) throw new Error(`Lecture impossible : ${bucket}/${ref.path}`)
+    const buffer = Buffer.from(await data.arrayBuffer())
+    return { data: buffer.toString('base64'), mimeType: data.type || 'image/jpeg' }
+  }
 
-  // Forme "interactions" : { output_image: { data, mime_type } }
-  const outputImage = obj?.output_image as Record<string, unknown> | undefined
-  if (outputImage?.data && typeof outputImage.data === 'string') {
+  if (ref.url) {
+    const res = await fetch(ref.url)
+    if (!res.ok) throw new Error(`Téléchargement impossible : ${ref.url}`)
+    const buffer = Buffer.from(await res.arrayBuffer())
     return {
-      data: outputImage.data,
-      mimeType: (outputImage.mime_type as string) ?? 'image/png',
+      data: buffer.toString('base64'),
+      mimeType: res.headers.get('content-type')?.split(';')[0] ?? 'image/jpeg',
     }
   }
 
-  // Forme "generateContent" : { candidates: [{ content: { parts: [{ inlineData }] } }] }
+  throw new Error('Image sans chemin ni URL')
+}
+
+/** Cherche l'image générée dans la réponse (l'API a plusieurs formes possibles) */
+function extractImage(json: unknown): LoadedImage | null {
+  const obj = json as Record<string, unknown>
+
+  const outputImage = obj?.output_image as Record<string, unknown> | undefined
+  if (typeof outputImage?.data === 'string') {
+    return { data: outputImage.data, mimeType: (outputImage.mime_type as string) ?? 'image/png' }
+  }
+
   const candidates = obj?.candidates as Array<Record<string, unknown>> | undefined
   const parts = (candidates?.[0]?.content as Record<string, unknown> | undefined)?.parts as
     | Array<Record<string, unknown>>
@@ -49,7 +74,7 @@ function extractImage(json: unknown): { data: string; mimeType: string } | null 
   if (parts) {
     for (const part of parts) {
       const inline = (part.inlineData ?? part.inline_data) as Record<string, unknown> | undefined
-      if (inline?.data && typeof inline.data === 'string') {
+      if (typeof inline?.data === 'string') {
         return {
           data: inline.data,
           mimeType: (inline.mimeType as string) ?? (inline.mime_type as string) ?? 'image/png',
@@ -85,22 +110,32 @@ export async function POST(req: NextRequest) {
 
   let generationId: string | undefined
 
+  const fail = async (message: string, status: number, logDetail?: unknown) => {
+    if (logDetail) console.error(message, logDetail)
+    if (generationId) {
+      await supabase
+        .from('generations')
+        .update({ status: 'failed', error_message: message })
+        .eq('id', generationId)
+    }
+    return NextResponse.json({ error: message }, { status })
+  }
+
   try {
     const body = await req.json()
-    const { personImageUrl, pieces, generationId: genId } = body as {
-      personImageUrl: string
-      pieces: Piece[]
+    const { person, pieces, generationId: genId } = body as {
+      person: ImageRef
+      pieces: PieceRef[]
       generationId: string
     }
     generationId = genId
 
-    if (!personImageUrl || !Array.isArray(pieces) || pieces.length === 0 || !generationId) {
+    if (!person || !Array.isArray(pieces) || pieces.length === 0 || !generationId) {
       return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
     }
 
     if (!process.env.GEMINI_API_KEY) {
-      console.error('GEMINI_API_KEY manquante')
-      return NextResponse.json({ error: 'Configuration serveur incomplète' }, { status: 500 })
+      return fail('Configuration serveur incomplète', 500, 'GEMINI_API_KEY manquante')
     }
 
     await supabase
@@ -109,13 +144,12 @@ export async function POST(req: NextRequest) {
       .eq('id', generationId)
       .eq('user_id', user.id)
 
-    // Télécharger toutes les images en parallèle
+    // Charger toutes les images en parallèle
     const [personImage, ...garmentImages] = await Promise.all([
-      fetchImageAsBase64(personImageUrl),
-      ...pieces.map((p) => fetchImageAsBase64(p.url)),
+      loadImage(person, PERSON_BUCKET, supabase),
+      ...pieces.map((p) => loadImage(p, GARMENT_BUCKET, supabase)),
     ])
 
-    // Construire le prompt
     const garmentList = pieces
       .map((p, i) => `- Image ${i + 2} : ${CATEGORY_LABELS[p.category] ?? 'vêtement'}`)
       .join('\n')
@@ -163,54 +197,30 @@ Règles strictes :
     })
 
     if (!geminiRes.ok) {
-      const errText = await geminiRes.text()
-      console.error('Erreur Gemini:', geminiRes.status, errText)
-
-      await supabase
-        .from('generations')
-        .update({ status: 'failed', error_message: 'Erreur de génération' })
-        .eq('id', generationId)
-
-      return NextResponse.json({ error: 'Erreur lors de la génération' }, { status: 500 })
+      return fail('Erreur lors de la génération', 500, await geminiRes.text())
     }
 
-    const geminiJson = await geminiRes.json()
-    const image = extractImage(geminiJson)
-
+    const image = extractImage(await geminiRes.json())
     if (!image) {
-      console.error('Aucune image dans la réponse Gemini:', JSON.stringify(geminiJson).slice(0, 500))
-
-      await supabase
-        .from('generations')
-        .update({ status: 'failed', error_message: 'Aucune image générée' })
-        .eq('id', generationId)
-
-      return NextResponse.json({ error: 'Aucune image générée' }, { status: 500 })
+      return fail('Aucune image générée', 500)
     }
 
-    // Sauvegarder l'image dans Supabase Storage (bucket public)
-    const ext = image.mimeType.includes('jpeg') ? 'jpg' : 'png'
-    const path = `${user.id}/result_${Date.now()}.${ext}`
+    // PNG → JPEG : environ 6x plus léger, sans différence visible sur une photo
+    const jpeg = await sharp(Buffer.from(image.data, 'base64'))
+      .jpeg({ quality: 88, mozjpeg: true })
+      .toBuffer()
+
+    const resultPath = `${user.id}/result_${Date.now()}.jpg`
 
     const { data: uploaded, error: uploadError } = await supabase.storage
-      .from('result-images')
-      .upload(path, Buffer.from(image.data, 'base64'), {
-        contentType: image.mimeType,
-        upsert: true,
-      })
+      .from(RESULT_BUCKET)
+      .upload(resultPath, jpeg, { contentType: 'image/jpeg', upsert: true })
 
     if (uploadError || !uploaded) {
-      console.error('Erreur upload résultat:', uploadError)
-
-      await supabase
-        .from('generations')
-        .update({ status: 'failed', error_message: 'Erreur de sauvegarde' })
-        .eq('id', generationId)
-
-      return NextResponse.json({ error: 'Erreur de sauvegarde' }, { status: 500 })
+      return fail('Erreur de sauvegarde', 500, uploadError)
     }
 
-    const { data: urlData } = supabase.storage.from('result-images').getPublicUrl(uploaded.path)
+    const { data: urlData } = supabase.storage.from(RESULT_BUCKET).getPublicUrl(uploaded.path)
     const resultUrl = urlData.publicUrl
 
     await supabase
@@ -221,18 +231,18 @@ Règles strictes :
     // 1 crédit par génération, quel que soit le nombre de pièces
     await supabase.rpc('deduct_credit', { user_id_input: user.id })
 
+    // Les photos sources ne servent plus : on libère le stockage tout de suite
+    const personPaths = person.path ? [person.path] : []
+    const garmentPaths = pieces.map((p) => p.path).filter((p): p is string => Boolean(p))
+
+    await Promise.all([
+      personPaths.length ? supabase.storage.from(PERSON_BUCKET).remove(personPaths) : null,
+      garmentPaths.length ? supabase.storage.from(GARMENT_BUCKET).remove(garmentPaths) : null,
+    ]).catch((err) => console.error('Purge des sources échouée (non bloquant) :', err))
+
     return NextResponse.json({ resultUrl, generationId })
 
   } catch (error) {
-    console.error('Erreur API try-on:', error)
-
-    if (generationId) {
-      await supabase
-        .from('generations')
-        .update({ status: 'failed', error_message: 'Erreur interne' })
-        .eq('id', generationId)
-    }
-
-    return NextResponse.json({ error: 'Erreur interne' }, { status: 500 })
+    return fail('Erreur interne', 500, error)
   }
 }
