@@ -34,7 +34,7 @@ const examples = [
 
 const STEPS = [
   { step: '1', title: 'Ajoutez votre photo', desc: 'Importez une photo entière de vous, debout, en tenue simple.', emoji: '🤳' },
-  { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, sac, lunettes, bijoux... Ajoutez autant de pièces que vous voulez. Chaque pièce utilise 1 crédit.', emoji: '👕' },
+  { step: '2', title: 'Ajoutez un ou plusieurs vêtements', desc: 'T-shirt, short, chaussures, sac, lunettes, bijoux... Ajoutez autant de pièces que vous voulez, tout se génère en une fois.', emoji: '👕' },
   { step: '3', title: 'Voyez le résultat', desc: "L'IA génère en quelques secondes une image réaliste de vous avec toutes vos pièces.", emoji: '✨' },
 ]
 
@@ -78,7 +78,7 @@ const faqs = [
   },
   {
     q: 'C\'est gratuit ?',
-    a: '1 crédit est offert à l\'inscription pour tester. Chaque crédit correspond à 1 vêtement ou accessoire essayé. Pour un outfit complet, chaque pièce utilise 1 crédit — tout se génère en un seul clic.',
+    a: '1 crédit est offert à l\'inscription pour tester. Chaque crédit correspond à 1 essayage complet : que vous essayiez une seule pièce ou un outfit entier, ça ne coûte qu\'un crédit.',
   },
 ]
 
@@ -418,8 +418,8 @@ export default function LandingPage() {
             <div className="card p-5 bg-brand-500/5 border-brand-500/20 flex items-center gap-4 mt-2">
               <div className="text-3xl flex-shrink-0">🪙</div>
               <div className="text-left">
-                <p className="font-bold text-zinc-900 mb-1">1 crédit = 1 vêtement ou accessoire</p>
-                <p className="text-zinc-500 text-sm">Chaque vêtement ou accessoire essayé coûte 1 crédit. Composez un outfit complet et tout se génère en un seul clic.</p>
+                <p className="font-bold text-zinc-900 mb-1">1 crédit = 1 essayage complet</p>
+                <p className="text-zinc-500 text-sm">Un vêtement seul ou un outfit entier : c&apos;est toujours 1 crédit. Ajoutez autant de pièces que vous voulez, tout se génère en un seul clic.</p>
               </div>
             </div>
           </Reveal>
@@ -538,7 +538,7 @@ export default function LandingPage() {
               <div className="text-4xl font-extrabold mb-1 text-zinc-900">0€</div>
               <div className="text-zinc-400 text-sm mb-6">pour toujours</div>
               <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-                {['1 crédit offert (1 pièce)', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
+                {['1 essayage offert', 'Téléchargement du résultat', 'Historique des essayages'].map((f) => (
                   <li key={f} className="flex items-center gap-2"><span className="text-brand-500 font-bold">✓</span> {f}</li>
                 ))}
               </ul>

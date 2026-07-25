@@ -19,7 +19,8 @@ export default function CguPage() {
         <h2 className="text-lg font-bold text-zinc-900">2. Compte et crédits</h2>
         <p className="text-zinc-600 text-sm leading-relaxed">
           La création d&apos;un compte est gratuite et donne droit à 1 crédit offert.
-          1 crédit permet d&apos;essayer 1 vêtement ou accessoire. Des crédits supplémentaires
+          1 crédit permet de réaliser 1 essayage, qu&apos;il porte sur une seule pièce ou sur
+          un ensemble de plusieurs vêtements et accessoires. Des crédits supplémentaires
           sont disponibles via les abonnements Starter et Pro, facturés mensuellement ou annuellement.
           Les crédits mensuels non utilisés ne sont pas reportés au mois suivant.
         </p>

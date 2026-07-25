@@ -33,7 +33,6 @@ function TryOnContent() {
   const [showUrlInput, setShowUrlInput] = useState(false)
   const [resultUrl, setResultUrl] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
-  const [currentPiece, setCurrentPiece] = useState(0)
   const [credits, setCredits] = useState<number | null>(null)
 
   useEffect(() => {
@@ -108,7 +107,7 @@ function TryOnContent() {
     setPieces((prev) => prev.map((p) => (p.id === id ? { ...p, category } : p)))
   }
 
-  const notEnoughCredits = credits !== null && pieces.length > credits
+  const notEnoughCredits = credits !== null && credits < 1
 
   const handleGenerate = async () => {
     if (!personImage && !personPreview) {
@@ -126,7 +125,6 @@ function TryOnContent() {
 
     setStep('generating')
     setProgress(0)
-    setCurrentPiece(0)
 
     const total = pieces.length
 
@@ -176,57 +174,37 @@ function TryOnContent() {
 
       if (genError || !generation) throw genError
 
-      // Génération pièce par pièce (chaque pièce = 1 crédit), tout en 1 clic
-      let currentModel = personUrl
+      // Toutes les pièces en un seul appel — 1 crédit
+      const progressInterval = setInterval(() => {
+        setProgress((p) => Math.min(p + Math.random() * 6, 92))
+      }, 900)
+      setProgress(3)
 
-      for (let i = 0; i < total; i++) {
-        setCurrentPiece(i)
-        const base = (i / total) * 100
-        const target = ((i + 1) / total) * 100 - 5
+      const res = await fetch('/api/try-on', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          personImageUrl: personUrl,
+          pieces: pieceUrls,
+          generationId: generation.id,
+        }),
+      })
 
-        const progressInterval = setInterval(() => {
-          setProgress((p) => Math.min(p + Math.random() * (8 / total), target))
-        }, 800)
-        setProgress(Math.max(base, 2))
+      clearInterval(progressInterval)
 
-        const res = await fetch('/api/try-on', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            personImageUrl: currentModel,
-            garmentImageUrl: pieceUrls[i].url,
-            garmentType: pieceUrls[i].category,
-            generationId: generation.id,
-          }),
-        })
-
-        clearInterval(progressInterval)
-
-        if (!res.ok) {
-          const err = await res.json()
-          if (res.status === 402) {
-            toast.error('Plus de crédits — passez Premium ou achetez un pack')
-          } else if (i > 0) {
-            toast.error(`La pièce ${i + 1} a échoué — les ${i} première${i > 1 ? 's' : ''} ont été appliquées`)
-            setResultUrl(currentModel)
-            setProgress(100)
-            setCredits((c) => (c !== null ? c - i : c))
-            setTimeout(() => setStep('result'), 500)
-            return
-          } else {
-            toast.error(err.error ?? 'Erreur de génération')
-          }
-          setStep('upload')
-          return
-        }
-
-        const { resultUrl: url } = await res.json()
-        currentModel = url
-        setProgress(((i + 1) / total) * 100)
+      if (!res.ok) {
+        const err = await res.json()
+        toast.error(res.status === 402
+          ? 'Plus de crédits — passez Premium ou achetez un pack'
+          : err.error ?? 'Erreur de génération')
+        setStep('upload')
+        return
       }
 
-      setResultUrl(currentModel)
-      setCredits((c) => (c !== null ? c - total : c))
+      const { resultUrl: url } = await res.json()
+
+      setResultUrl(url)
+      setCredits((c) => (c !== null ? c - 1 : c))
       setProgress(100)
       setTimeout(() => setStep('result'), 500)
 
@@ -245,7 +223,6 @@ function TryOnContent() {
     setGarmentUrl('')
     setResultUrl(null)
     setProgress(0)
-    setCurrentPiece(0)
   }
 
   const handleDownload = async () => {
@@ -329,7 +306,7 @@ function TryOnContent() {
               </h2>
               {pieces.length > 0 && (
                 <span className="text-xs font-semibold bg-brand-500/10 text-brand-500 px-2.5 py-1 rounded-full">
-                  {pieces.length} pièce{pieces.length > 1 ? 's' : ''} = {pieces.length} crédit{pieces.length > 1 ? 's' : ''}
+                  {pieces.length} pièce{pieces.length > 1 ? 's' : ''} = 1 crédit
                 </span>
               )}
             </div>
@@ -381,7 +358,7 @@ function TryOnContent() {
                       <Upload className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
                       <p className="text-zinc-700 font-medium">Photos de vos vêtements</p>
                       <p className="text-zinc-400 text-sm mt-1">T-shirt, short, chaussures, bijoux, chapeau...</p>
-                      <p className="text-zinc-300 text-xs mt-3">1 pièce = 1 crédit · Ajoutez-en autant que vous voulez</p>
+                      <p className="text-zinc-300 text-xs mt-3">Autant de pièces que vous voulez · 1 crédit au total</p>
                     </>
                   ) : (
                     <p className="text-zinc-500 text-sm font-medium flex items-center justify-center gap-2">
@@ -423,7 +400,7 @@ function TryOnContent() {
           {notEnoughCredits && (
             <div className="card p-4 border-red-200 bg-red-50 flex items-center justify-between gap-3">
               <p className="text-sm text-red-600">
-                Il vous faut {pieces.length} crédit{pieces.length > 1 ? 's' : ''}, il vous en reste {credits}.
+                Il vous faut 1 crédit, il ne vous en reste plus.
               </p>
               <Link href="/premium" className="btn-primary text-sm py-2 px-4 flex-shrink-0">Recharger</Link>
             </div>
@@ -437,7 +414,7 @@ function TryOnContent() {
           >
             <Sparkles className="w-5 h-5" />
             {pieces.length > 1
-              ? `Générer mon look complet (${pieces.length} crédits)`
+              ? 'Générer mon look complet (1 crédit)'
               : pieces.length === 1
                 ? 'Essayer cette pièce (1 crédit)'
                 : 'Essayer'}
@@ -457,7 +434,7 @@ function TryOnContent() {
           <h2 className="text-xl font-bold text-zinc-900 mb-2">L&apos;IA travaille...</h2>
           <p className="text-zinc-500 text-sm mb-8">
             {pieces.length > 1
-              ? `Pièce ${Math.min(currentPiece + 1, pieces.length)} sur ${pieces.length} — environ ${pieces.length * 30}s au total`
+              ? `Assemblage de vos ${pieces.length} pièces — environ 30 secondes`
               : 'Génération en cours, environ 30 secondes'}
           </p>
           <div className="w-64 bg-zinc-100 rounded-full h-2">

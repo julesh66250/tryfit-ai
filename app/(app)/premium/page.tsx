@@ -129,8 +129,8 @@ export default function PremiumPage() {
       <div className="card p-4 mb-8 bg-brand-500/5 border-brand-500/20 flex items-center gap-3">
         <span className="text-2xl flex-shrink-0">🪙</span>
         <p className="text-sm text-zinc-600">
-          <span className="font-bold text-zinc-900">1 crédit = 1 vêtement ou accessoire.</span>{' '}
-          Un outfit complet se génère en un seul clic, chaque pièce utilise 1 crédit.
+          <span className="font-bold text-zinc-900">1 crédit = 1 essayage complet.</span>{' '}
+          Une pièce seule ou un outfit entier, c&apos;est toujours 1 crédit.
         </p>
       </div>
 
