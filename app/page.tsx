@@ -251,7 +251,7 @@ export default function LandingPage() {
           </div>
 
           {/* Titre */}
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-3 md:mb-6 leading-[1.08] tracking-tight text-zinc-950">
+          <h1 className="text-[3.25rem] md:text-7xl font-extrabold mb-3 md:mb-6 leading-[1.08] tracking-tight text-zinc-950">
             Essayez les vêtements<br />
             <span className="text-brand-500">sans les porter</span>
           </h1>
