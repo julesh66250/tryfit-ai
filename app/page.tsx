@@ -16,7 +16,7 @@ const stats = [
 const examples = [
   {
     label: 'Avant → Après',
-    image: '/examples/exemple-1.png',
+    image: '/examples/exemple-4.png',
   },
   {
     label: 'Avant → Après',
@@ -24,7 +24,7 @@ const examples = [
   },
   {
     label: 'Avant → Après',
-    image: '/examples/exemple-4.png',
+    image: '/examples/exemple-1.png',
   },
   {
     label: 'Avant → Après',
