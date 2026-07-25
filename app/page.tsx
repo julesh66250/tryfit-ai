@@ -245,30 +245,30 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto text-center">
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 border border-zinc-200 rounded-full px-4 py-1.5 text-sm text-zinc-500 mb-8 font-medium">
+          <div className="inline-flex items-center gap-2 border border-brand-500 rounded-full px-4 py-1.5 text-sm text-zinc-500 mb-4 md:mb-8 font-medium">
             <Sparkles className="w-3.5 h-3.5 text-brand-500" />
             Essayage virtuel par IA · Résultat en 30 secondes
           </div>
 
           {/* Titre */}
-          <h1 className="text-6xl md:text-7xl font-extrabold mb-6 leading-[1.08] tracking-tight text-zinc-950">
+          <h1 className="text-4xl md:text-7xl font-extrabold mb-3 md:mb-6 leading-[1.08] tracking-tight text-zinc-950">
             Essayez les vêtements<br />
             <span className="text-brand-500">sans les porter</span>
           </h1>
 
           {/* Sous-titre */}
-          <p className="text-xl text-zinc-600 max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="hidden md:block text-xl text-zinc-600 max-w-xl mx-auto mb-10 leading-relaxed">
             Importez votre photo et celle d&apos;un vêtement — l&apos;IA génère en 30 secondes
             une image réaliste de vous avec ce vêtement.
           </p>
 
           {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
-            <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-3.5 px-7">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-3 md:mb-4 mt-4 md:mt-0">
+            <Link href="/register" className="btn-primary flex items-center justify-center gap-2 text-base py-3 md:py-3.5 px-7">
               Essayer gratuitement
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/login" className="flex items-center justify-center gap-2 text-base py-3.5 px-7 rounded-xl border border-brand-500 text-zinc-700 hover:bg-brand-500/5 hover:text-zinc-900 transition-all font-medium">
+            <Link href="/login" className="flex items-center justify-center gap-2 text-base py-3 md:py-3.5 px-7 rounded-xl border border-brand-500 text-zinc-700 hover:bg-brand-500/5 hover:text-zinc-900 transition-all font-medium">
               J&apos;ai déjà un compte
             </Link>
           </div>
