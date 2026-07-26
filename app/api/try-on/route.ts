@@ -196,6 +196,8 @@ Règles strictes :
 - Le visage, la coiffure, la carnation, la morphologie et la pose de la personne doivent rester rigoureusement identiques à l'image 1.
 - L'arrière-plan, le cadrage et l'éclairage de l'image 1 doivent être conservés.
 - Chaque vêtement doit garder sa couleur, sa texture, son motif et sa coupe exacts tels qu'ils apparaissent sur son image de référence.
+- Reproduis fidèlement la COUPE de chaque pièce : sa longueur, sa largeur, l'ampleur des manches, la position de l'ourlet, le tombé du tissu. N'allonge pas un vêtement, ne l'élargis pas, ne le rends ni plus ample ni plus ajusté que sur l'image de référence. Un sweat qui s'arrête à la taille doit s'arrêter à la taille.
+- Reproduis tous les détails de fabrication visibles : poches, coutures, fermetures, bords-côtes, cordons, étiquettes. N'en invente aucun et n'en supprime aucun.
 - Les vêtements doivent tomber naturellement sur le corps, avec des plis et des ombres réalistes.
 - Remplace les vêtements d'origine de la personne par ceux fournis, sans rien ajouter d'autre.
 - Le résultat doit ressembler à une vraie photographie, pas à un montage ni à une illustration.
