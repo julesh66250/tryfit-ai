@@ -200,12 +200,14 @@ Règles strictes :
 - Remplace les vêtements d'origine de la personne par ceux fournis, sans rien ajouter d'autre.
 - Le résultat doit ressembler à une vraie photographie, pas à un montage ni à une illustration.
 
-Port des vêtements — porte chaque pièce de la façon la plus ordinaire qui soit :
-- Capuche TOUJOURS baissée dans le dos, jamais sur la tête, même si l'image de référence la montre dépliée ou mise en avant.
+Port des vêtements :
+- Capuche à élément distinctif (lunettes intégrées, verres, gros logo, doublure contrastée) : porte-la RELEVÉE sur la tête, bien centrée, l'élément distinctif visible de face sur le front. C'est ainsi que ce type de vêtement se porte.
+- Capuche ordinaire, sans détail particulier : laisse-la baissée dans le dos.
+- EXCEPTION : si une des pièces est un chapeau, une casquette, un bonnet ou tout autre couvre-chef, la capuche reste baissée dans le dos et c'est le couvre-chef qui est porté sur la tête.
+- Ne laisse jamais une capuche flotter à mi-hauteur ni un élément de capuche traîner sur l'épaule : soit elle est franchement relevée sur la tête, soit elle repose à plat dans le dos.
 - Manches déroulées à leur longueur normale, rien de retroussé.
 - Les vestes et sweats à fermeture éclair sont portés fermés jusqu'à mi-poitrine, sauf si l'image de référence montre clairement le contraire.
-- Rien sur le visage ni sur la tête, sauf si la pièce est explicitement un couvre-chef ou une paire de lunettes.
-- Si l'image de référence montre le vêtement à plat, sur cintre ou posé, ignore cette mise en scène : porte-le simplement comme on le porterait dans la rue.`
+- Si l'image de référence montre le vêtement à plat, sur cintre ou posé, ignore cette mise en scène : porte-le comme on le porterait dans la rue.`
 
     const input = [
       { type: 'text', text: prompt },
