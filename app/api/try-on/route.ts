@@ -14,7 +14,12 @@ const RESULT_BUCKET = 'result-images'
 
 /** Une image envoyée par le client : soit un fichier stocké, soit un lien externe */
 type ImageRef = { path?: string; url?: string }
-type PieceRef = ImageRef & { category: string }
+type PieceRef = ImageRef & { category: string; hood?: 'auto' | 'down' | 'up' }
+
+const HOOD_INSTRUCTIONS: Record<string, string> = {
+  down: " — CE VÊTEMENT A UNE CAPUCHE : elle doit rester BAISSÉE dans le dos, à plat sur les épaules, jamais sur la tête",
+  up: " — CE VÊTEMENT A UNE CAPUCHE : elle doit être RELEVÉE sur la tête, bien centrée et enfilée, avec ses éventuels détails (lunettes, logo) visibles de face sur le front",
+}
 
 const CATEGORY_LABELS: Record<string, string> = {
   tops: 'haut (t-shirt, pull, veste, chemise...)',
@@ -182,8 +187,15 @@ export async function POST(req: NextRequest) {
     ])
 
     const garmentList = pieces
-      .map((p, i) => `- Image ${i + 2} : ${CATEGORY_LABELS[p.category] ?? 'vêtement'}`)
+      .map((p, i) => {
+        const label = CATEGORY_LABELS[p.category] ?? 'vêtement'
+        const hood = p.hood && p.hood !== 'auto' ? HOOD_INSTRUCTIONS[p.hood] ?? '' : ''
+        return `- Image ${i + 2} : ${label}${hood}`
+      })
       .join('\n')
+
+    // Le client a explicitement choisi comment porter la capuche : sa consigne prime
+    const hoodChoice = pieces.find((p) => p.hood === 'up' || p.hood === 'down')?.hood
 
     const prompt = `Tu es un moteur d'essayage virtuel photoréaliste.
 
@@ -203,10 +215,14 @@ Règles strictes :
 - Le résultat doit ressembler à une vraie photographie, pas à un montage ni à une illustration.
 
 Port des vêtements :
-- Capuche à élément distinctif (lunettes intégrées, verres, gros logo, doublure contrastée) : porte-la RELEVÉE sur la tête, bien centrée, l'élément distinctif visible de face sur le front. C'est ainsi que ce type de vêtement se porte.
-- Capuche ordinaire, sans détail particulier : laisse-la baissée dans le dos.
-- EXCEPTION : si une des pièces est un chapeau, une casquette, un bonnet ou tout autre couvre-chef, la capuche reste baissée dans le dos et c'est le couvre-chef qui est porté sur la tête.
-- Ne laisse jamais une capuche flotter à mi-hauteur ni un élément de capuche traîner sur l'épaule : soit elle est franchement relevée sur la tête, soit elle repose à plat dans le dos.
+${
+  hoodChoice === 'up'
+    ? "- CAPUCHE : le client demande explicitement qu'elle soit RELEVÉE sur la tête. Enfile-la franchement, bien centrée, avec ses détails éventuels visibles de face. Cette consigne prime sur toute autre considération."
+    : hoodChoice === 'down'
+      ? "- CAPUCHE : le client demande explicitement qu'elle soit BAISSÉE dans le dos. Ne la mets pas sur la tête, quels que soient ses détails."
+      : "- Capuche : laisse-la baissée dans le dos, à plat sur les épaules."
+}
+- Ne laisse jamais une capuche flotter à mi-hauteur ni un élément de capuche traîner sur l'épaule : soit elle est franchement enfilée sur la tête, soit elle repose à plat dans le dos.
 - Manches déroulées à leur longueur normale, rien de retroussé.
 - Les vestes et sweats à fermeture éclair sont portés fermés jusqu'à mi-poitrine, sauf si l'image de référence montre clairement le contraire.
 - Si l'image de référence montre le vêtement à plat, sur cintre ou posé, ignore cette mise en scène : porte-le comme on le porterait dans la rue.`

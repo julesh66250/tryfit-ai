@@ -12,13 +12,22 @@ import Link from 'next/link'
 
 type Step = 'upload' | 'generating' | 'result'
 
+type HoodOption = 'auto' | 'down' | 'up'
+
 type Piece = {
   id: string
   file: File | null
   url: string
   preview: string
   category: GarmentCategory
+  hood: HoodOption
 }
+
+const HOOD_OPTIONS: { id: HoodOption; label: string }[] = [
+  { id: 'auto', label: 'Sans capuche' },
+  { id: 'down', label: 'Capuche baissée' },
+  { id: 'up', label: 'Capuche sur la tête' },
+]
 
 const MAX_PIECES = 6
 
@@ -72,6 +81,7 @@ function TryOnContent() {
         url: '',
         preview: URL.createObjectURL(file),
         category: 'tops' as GarmentCategory,
+        hood: 'auto' as HoodOption,
       }))
       return [...prev, ...newPieces]
     })
@@ -94,6 +104,7 @@ function TryOnContent() {
       url: garmentUrl,
       preview: garmentUrl,
       category: 'tops',
+      hood: 'auto',
     }])
     setGarmentUrl('')
     setShowUrlInput(false)
@@ -105,6 +116,10 @@ function TryOnContent() {
 
   const setPieceCategory = (id: string, category: GarmentCategory) => {
     setPieces((prev) => prev.map((p) => (p.id === id ? { ...p, category } : p)))
+  }
+
+  const setPieceHood = (id: string, hood: HoodOption) => {
+    setPieces((prev) => prev.map((p) => (p.id === id ? { ...p, hood } : p)))
   }
 
   const notEnoughCredits = credits !== null && credits < 1
@@ -143,16 +158,16 @@ function TryOnContent() {
       if (personError) throw personError
 
       // Upload des pièces
-      const pieceRefs: { path?: string; url?: string; category: GarmentCategory }[] = []
+      const pieceRefs: { path?: string; url?: string; category: GarmentCategory; hood: HoodOption }[] = []
       for (const piece of pieces) {
         if (piece.file) {
           const ext = piece.file.name.split('.').pop()
           const path = `${user.id}/${Date.now()}_garment_${Math.random().toString(36).slice(2, 5)}.${ext}`
           const { error } = await supabase.storage.from('garment-images').upload(path, piece.file)
           if (error) throw error
-          pieceRefs.push({ path, category: piece.category })
+          pieceRefs.push({ path, category: piece.category, hood: piece.hood })
         } else {
-          pieceRefs.push({ url: piece.url, category: piece.category })
+          pieceRefs.push({ url: piece.url, category: piece.category, hood: piece.hood })
         }
       }
 
@@ -313,27 +328,52 @@ function TryOnContent() {
             {pieces.length > 0 && (
               <div className="space-y-3 mb-4">
                 {pieces.map((piece, i) => (
-                  <div key={piece.id} className="flex items-center gap-3 bg-zinc-50 border border-zinc-200 rounded-xl p-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={piece.preview} alt={`Pièce ${i + 1}`} className="w-14 h-14 rounded-lg object-cover flex-shrink-0 border border-zinc-200" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-zinc-400 mb-1">Pièce {i + 1}</p>
-                      <select
-                        value={piece.category}
-                        onChange={(e) => setPieceCategory(piece.id, e.target.value as GarmentCategory)}
-                        className="w-full bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-sm text-zinc-900 focus:outline-none focus:border-brand-500"
+                  <div key={piece.id} className="bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+                    <div className="flex items-center gap-3">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={piece.preview} alt={`Pièce ${i + 1}`} className="w-14 h-14 rounded-lg object-cover flex-shrink-0 border border-zinc-200" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-zinc-400 mb-1">Pièce {i + 1}</p>
+                        <select
+                          value={piece.category}
+                          onChange={(e) => setPieceCategory(piece.id, e.target.value as GarmentCategory)}
+                          className="w-full bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-sm text-zinc-900 focus:outline-none focus:border-brand-500"
+                        >
+                          {GARMENT_CATEGORIES.map((cat) => (
+                            <option key={cat.id} value={cat.id}>{cat.emoji} {cat.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <button
+                        onClick={() => removePiece(piece.id)}
+                        className="w-8 h-8 rounded-full bg-zinc-200 hover:bg-red-100 hover:text-red-500 text-zinc-500 flex items-center justify-center flex-shrink-0 transition-colors"
                       >
-                        {GARMENT_CATEGORIES.map((cat) => (
-                          <option key={cat.id} value={cat.id}>{cat.emoji} {cat.label}</option>
-                        ))}
-                      </select>
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => removePiece(piece.id)}
-                      className="w-8 h-8 rounded-full bg-zinc-200 hover:bg-red-100 hover:text-red-500 text-zinc-500 flex items-center justify-center flex-shrink-0 transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+
+                    {/* Capuche — uniquement pour les hauts */}
+                    {piece.category === 'tops' && (
+                      <div className="mt-3 pt-3 border-t border-zinc-200">
+                        <p className="text-xs text-zinc-400 mb-1.5">Capuche</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {HOOD_OPTIONS.map((opt) => (
+                            <button
+                              key={opt.id}
+                              onClick={() => setPieceHood(piece.id, opt.id)}
+                              className={cn(
+                                'text-xs font-medium px-2.5 py-1.5 rounded-lg border transition-colors',
+                                piece.hood === opt.id
+                                  ? 'bg-brand-500 border-brand-500 text-white'
+                                  : 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-300'
+                              )}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
