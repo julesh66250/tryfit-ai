@@ -57,33 +57,64 @@ async function loadImage(
   throw new Error('Image sans chemin ni URL')
 }
 
-/** Cherche l'image générée dans la réponse (l'API a plusieurs formes possibles) */
+/**
+ * Cherche l'image générée n'importe où dans la réponse.
+ * L'API renvoie le base64 sous des formes variables (output_image, inlineData,
+ * inline_data, imageBytes...) : plutôt que de deviner, on parcourt tout l'objet
+ * et on retient la première longue chaîne base64 trouvée.
+ */
 function extractImage(json: unknown): LoadedImage | null {
-  const obj = json as Record<string, unknown>
+  const IMAGE_KEYS = ['data', 'imageBytes', 'image_bytes', 'b64_json', 'bytesBase64Encoded']
+  const MIME_KEYS = ['mimeType', 'mime_type', 'contentType', 'content_type']
+  const seen = new Set<unknown>()
 
-  const outputImage = obj?.output_image as Record<string, unknown> | undefined
-  if (typeof outputImage?.data === 'string') {
-    return { data: outputImage.data, mimeType: (outputImage.mime_type as string) ?? 'image/png' }
-  }
+  const walk = (node: unknown): LoadedImage | null => {
+    if (!node || typeof node !== 'object' || seen.has(node)) return null
+    seen.add(node)
 
-  const candidates = obj?.candidates as Array<Record<string, unknown>> | undefined
-  const parts = (candidates?.[0]?.content as Record<string, unknown> | undefined)?.parts as
-    | Array<Record<string, unknown>>
-    | undefined
+    if (Array.isArray(node)) {
+      for (const item of node) {
+        const found = walk(item)
+        if (found) return found
+      }
+      return null
+    }
 
-  if (parts) {
-    for (const part of parts) {
-      const inline = (part.inlineData ?? part.inline_data) as Record<string, unknown> | undefined
-      if (typeof inline?.data === 'string') {
-        return {
-          data: inline.data,
-          mimeType: (inline.mimeType as string) ?? (inline.mime_type as string) ?? 'image/png',
-        }
+    const obj = node as Record<string, unknown>
+
+    for (const key of IMAGE_KEYS) {
+      const value = obj[key]
+      // Une image fait forcément plusieurs milliers de caractères en base64
+      if (typeof value === 'string' && value.length > 1000 && /^[A-Za-z0-9+/=\s]+$/.test(value.slice(0, 200))) {
+        const mime = MIME_KEYS.map((k) => obj[k]).find((v) => typeof v === 'string')
+        return { data: value.replace(/\s/g, ''), mimeType: (mime as string) ?? 'image/png' }
       }
     }
+
+    for (const value of Object.values(obj)) {
+      const found = walk(value)
+      if (found) return found
+    }
+
+    return null
   }
 
-  return null
+  return walk(json)
+}
+
+/** Remplace les longues chaînes par leur taille, pour des logs lisibles */
+function describeShape(node: unknown, depth = 0): unknown {
+  if (depth > 6) return '…'
+  if (typeof node === 'string') {
+    return node.length > 120 ? `<chaîne de ${node.length} caractères>` : node
+  }
+  if (Array.isArray(node)) return node.map((n) => describeShape(n, depth + 1))
+  if (node && typeof node === 'object') {
+    return Object.fromEntries(
+      Object.entries(node as Record<string, unknown>).map(([k, v]) => [k, describeShape(v, depth + 1)])
+    )
+  }
+  return node
 }
 
 export async function POST(req: NextRequest) {
@@ -167,7 +198,14 @@ Règles strictes :
 - Chaque vêtement doit garder sa couleur, sa texture, son motif et sa coupe exacts tels qu'ils apparaissent sur son image de référence.
 - Les vêtements doivent tomber naturellement sur le corps, avec des plis et des ombres réalistes.
 - Remplace les vêtements d'origine de la personne par ceux fournis, sans rien ajouter d'autre.
-- Le résultat doit ressembler à une vraie photographie, pas à un montage ni à une illustration.`
+- Le résultat doit ressembler à une vraie photographie, pas à un montage ni à une illustration.
+
+Port des vêtements — porte chaque pièce de la façon la plus ordinaire qui soit :
+- Capuche TOUJOURS baissée dans le dos, jamais sur la tête, même si l'image de référence la montre dépliée ou mise en avant.
+- Manches déroulées à leur longueur normale, rien de retroussé.
+- Les vestes et sweats à fermeture éclair sont portés fermés jusqu'à mi-poitrine, sauf si l'image de référence montre clairement le contraire.
+- Rien sur le visage ni sur la tête, sauf si la pièce est explicitement un couvre-chef ou une paire de lunettes.
+- Si l'image de référence montre le vêtement à plat, sur cintre ou posé, ignore cette mise en scène : porte-le simplement comme on le porterait dans la rue.`
 
     const input = [
       { type: 'text', text: prompt },
@@ -200,8 +238,16 @@ Règles strictes :
       return fail('Erreur lors de la génération', 500, await geminiRes.text())
     }
 
-    const image = extractImage(await geminiRes.json())
+    const geminiJson = await geminiRes.json()
+    const image = extractImage(geminiJson)
+
     if (!image) {
+      // Structure seule, sans le contenu : sinon le terminal est noyé sous le base64
+      console.error(
+        '=== Réponse Gemini sans image ===\n' +
+        JSON.stringify(describeShape(geminiJson), null, 2).slice(0, 2000) +
+        '\n================================='
+      )
       return fail('Aucune image générée', 500)
     }
 
