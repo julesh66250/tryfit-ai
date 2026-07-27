@@ -7,10 +7,10 @@ export const maxDuration = 60
 
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/interactions'
 
-// Flash en 1K (~7 centimes). Le modèle Pro (gemini-3-pro-image, ~13 centimes)
-// a été testé : aucun gain visible sur des photos d'essayage. Y revenir consiste
-// à changer cette constante et à repasser image_size sur '2K'.
-const GEMINI_MODEL = 'gemini-3.1-flash-image'
+// Plan Pro : modèle le plus avancé de Google, sortie 2K (~13 centimes)
+// Gratuit et Starter : modèle rapide, sortie 1K (~7 centimes)
+const MODEL_PRO = 'gemini-3-pro-image'
+const MODEL_STANDARD = 'gemini-3.1-flash-image'
 
 const PERSON_BUCKET = 'person-images'
 const GARMENT_BUCKET = 'garment-images'
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('credits, is_premium')
+    .select('credits, is_premium, plan')
     .eq('id', user.id)
     .single()
 
@@ -147,6 +147,9 @@ export async function POST(req: NextRequest) {
   if (profile.credits <= 0) {
     return NextResponse.json({ error: 'Crédits insuffisants' }, { status: 402 })
   }
+
+  // Le plan Pro donne droit au modèle le plus avancé et à la sortie 2K
+  const isProPlan = profile.is_premium && profile.plan === 'pro'
 
   let generationId: string | undefined
 
@@ -248,12 +251,12 @@ ${
         'x-goog-api-key': process.env.GEMINI_API_KEY,
       },
       body: JSON.stringify({
-        model: GEMINI_MODEL,
+        model: isProPlan ? MODEL_PRO : MODEL_STANDARD,
         input,
         response_format: {
           type: 'image',
           aspect_ratio: '3:4',
-          image_size: '1K',
+          image_size: isProPlan ? '2K' : '1K',
         },
       }),
     })
