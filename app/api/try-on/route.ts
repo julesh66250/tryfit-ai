@@ -7,10 +7,10 @@ export const maxDuration = 60
 
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/interactions'
 
-// Modèle Pro pour tout le monde : c'est lui qui reproduit fidèlement les vêtements.
-// L'essai gratuit est la vitrine du service, il mérite la même qualité (~13 centimes).
-// Les abonnés gardent l'avantage de la résolution 2K.
-const GEMINI_MODEL = 'gemini-3-pro-image'
+// Flash en 1K (~7 centimes). Le modèle Pro (gemini-3-pro-image, ~13 centimes)
+// a été testé : aucun gain visible sur des photos d'essayage. Y revenir consiste
+// à changer cette constante et à repasser image_size sur '2K'.
+const GEMINI_MODEL = 'gemini-3.1-flash-image'
 
 const PERSON_BUCKET = 'person-images'
 const GARMENT_BUCKET = 'garment-images'
@@ -250,11 +250,10 @@ ${
       body: JSON.stringify({
         model: GEMINI_MODEL,
         input,
-        // Le Pro facture 1K et 2K au même prix : autant donner le 2K à tout le monde
         response_format: {
           type: 'image',
           aspect_ratio: '3:4',
-          image_size: '2K',
+          image_size: '1K',
         },
       }),
     })
