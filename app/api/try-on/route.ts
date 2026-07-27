@@ -250,10 +250,11 @@ ${
       body: JSON.stringify({
         model: GEMINI_MODEL,
         input,
+        // Le Pro facture 1K et 2K au même prix : autant donner le 2K à tout le monde
         response_format: {
           type: 'image',
           aspect_ratio: '3:4',
-          image_size: profile.is_premium ? '2K' : '1K',
+          image_size: '2K',
         },
       }),
     })
