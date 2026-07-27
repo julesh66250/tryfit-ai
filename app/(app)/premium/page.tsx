@@ -69,12 +69,12 @@ export default function PremiumPage() {
               <span className="text-zinc-400 text-sm mb-1">/mois</span>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
-              {billing === 'monthly' ? '50 crédits par mois' : '50 crédits par mois · facturé 132,48€/an'}
+              {billing === 'monthly' ? '25 générations par mois' : '25 générations par mois · facturé 132,48€/an'}
             </p>
           </div>
 
           <ul className="space-y-2 mb-6 flex-1">
-            {['50 crédits/mois', 'Outfits complets en 1 clic', 'Téléchargement en haute définition', 'Historique 30 jours'].map((f) => (
+            {['25 générations/mois', 'Outfits complets en 1 clic', 'Téléchargement en haute définition', 'Historique 30 jours'].map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
                 <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
                 {f}
@@ -103,12 +103,12 @@ export default function PremiumPage() {
               <span className="text-zinc-400 text-sm mb-1">/mois</span>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
-              {billing === 'monthly' ? '100 crédits par mois' : '100 crédits par mois · facturé 203,88€/an'}
+              {billing === 'monthly' ? '50 générations par mois' : '50 générations par mois · facturé 203,88€/an'}
             </p>
           </div>
 
           <ul className="space-y-2 mb-6 flex-1">
-            {['100 crédits/mois', 'Outfits complets en 1 clic', 'Modèle IA le plus avancé', 'Rendu plus net et plus précis', 'Historique illimité'].map((f) => (
+            {['50 générations/mois', 'Outfits complets en 1 clic', 'Modèle IA le plus avancé', 'Rendu plus net et plus précis', 'Historique illimité'].map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
                 <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
                 {f}

@@ -96,7 +96,7 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="font-semibold text-zinc-900 text-sm">Passez Premium</p>
-                <p className="text-zinc-500 text-xs">Jusqu&apos;à 100 crédits par mois, qualité supérieure</p>
+                <p className="text-zinc-500 text-xs">Jusqu&apos;à 50 générations par mois, rendu plus précis</p>
               </div>
             </div>
             <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-brand-500 group-hover:translate-x-1 transition-all flex-shrink-0" />

@@ -29,4 +29,5 @@ export type GarmentCategory = 'tops' | 'bottoms' | 'one-pieces' | 'shoes' | 'hat
 
 
 export const FREE_CREDITS = 1
-export const PREMIUM_MONTHLY_CREDITS = 100
+export const STARTER_MONTHLY_CREDITS = 25
+export const PRO_MONTHLY_CREDITS = 50

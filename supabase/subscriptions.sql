@@ -27,8 +27,8 @@ CREATE INDEX IF NOT EXISTS profiles_stripe_customer_idx
 CREATE OR REPLACE FUNCTION public.plan_credits(plan_input TEXT)
 RETURNS INTEGER AS $$
   SELECT CASE plan_input
-    WHEN 'starter' THEN 50
-    WHEN 'pro'     THEN 100
+    WHEN 'starter' THEN 25
+    WHEN 'pro'     THEN 50
     ELSE 0
   END;
 $$ LANGUAGE sql IMMUTABLE;

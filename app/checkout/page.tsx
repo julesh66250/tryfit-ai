@@ -10,28 +10,28 @@ const plans = {
     name: 'Starter',
     price: '12,99€',
     period: '/mois',
-    credits: 50,
+    credits: 25,
     billed: null,
   },
   pro: {
     name: 'Pro',
     price: '19,99€',
     period: '/mois',
-    credits: 100,
+    credits: 50,
     billed: null,
   },
   'starter-yearly': {
     name: 'Starter Annuel',
     price: '11,04€',
     period: '/mois',
-    credits: 50,
+    credits: 25,
     billed: 'Facturé 132,48€/an',
   },
   'pro-yearly': {
     name: 'Pro Annuel',
     price: '16,99€',
     period: '/mois',
-    credits: 100,
+    credits: 50,
     billed: 'Facturé 203,88€/an',
   },
 }
@@ -74,7 +74,7 @@ function CheckoutContent() {
               </div>
               <div>
                 <p className="font-bold text-zinc-900">Plan {plan.name}</p>
-                <p className="text-zinc-500 text-sm">{plan.credits} crédits/mois</p>
+                <p className="text-zinc-500 text-sm">{plan.credits} générations/mois</p>
                 {plan.billed && <p className="text-brand-500 text-xs font-medium mt-0.5">{plan.billed}</p>}
               </div>
             </div>
