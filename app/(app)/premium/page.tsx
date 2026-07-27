@@ -108,7 +108,7 @@ export default function PremiumPage() {
           </div>
 
           <ul className="space-y-2 mb-6 flex-1">
-            {['100 crédits/mois', 'Outfits complets en 1 clic', 'Modèle IA le plus avancé', 'Rendu 2K — plus net, plus précis', 'Historique illimité'].map((f) => (
+            {['100 crédits/mois', 'Outfits complets en 1 clic', 'Modèle IA le plus avancé', 'Rendu plus net et plus précis', 'Historique illimité'].map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-zinc-600">
                 <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
                 {f}
