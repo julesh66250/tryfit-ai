@@ -5,8 +5,12 @@ import sharp from 'sharp'
 // La génération d'image peut prendre 20-40s
 export const maxDuration = 60
 
-const GEMINI_MODEL = 'gemini-3.1-flash-image'
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/interactions'
+
+// Abonnés : modèle Pro en 2K — meilleure fidélité aux vêtements (~13 centimes)
+// Gratuits : modèle Flash en 1K — qualité correcte à moindre coût (~7 centimes)
+const MODEL_PREMIUM = 'gemini-3-pro-image'
+const MODEL_FREE = 'gemini-3.1-flash-image'
 
 const PERSON_BUCKET = 'person-images'
 const GARMENT_BUCKET = 'garment-images'
@@ -244,7 +248,7 @@ ${
         'x-goog-api-key': process.env.GEMINI_API_KEY,
       },
       body: JSON.stringify({
-        model: GEMINI_MODEL,
+        model: profile.is_premium ? MODEL_PREMIUM : MODEL_FREE,
         input,
         response_format: {
           type: 'image',
