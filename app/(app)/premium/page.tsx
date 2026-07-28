@@ -57,10 +57,6 @@ export default function PremiumPage() {
           onClick={() => setSelectedPlan('starter')}
           className={`card p-6 relative flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`}
         >
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
-            LE PLUS POPULAIRE
-          </div>
-
           <div className="mb-4">
             <h3 className="font-bold text-zinc-900 text-lg">Starter</h3>
             <div className="flex items-end gap-2 mt-1">
@@ -95,6 +91,10 @@ export default function PremiumPage() {
           onClick={() => setSelectedPlan('pro')}
           className={`card p-6 relative flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/40 bg-gradient-to-b from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`}
         >
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+            LE PLUS POPULAIRE
+          </div>
+
           <div className="mb-4">
             <h3 className="font-bold text-zinc-900 text-lg">Pro</h3>
             <div className="flex items-end gap-2 mt-1">

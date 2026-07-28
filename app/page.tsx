@@ -549,7 +549,6 @@ export default function LandingPage() {
             {/* Starter */}
             <div className="w-full flex-shrink-0 snap-start md:contents">
             <div onClick={() => setSelectedPlan('starter')} className={`relative card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'starter' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s' }}>
-              <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Starter</h3>
               <div className="flex items-center gap-3 mb-1">
                 <span className="text-4xl font-extrabold text-zinc-900">
@@ -573,7 +572,8 @@ export default function LandingPage() {
 
             {/* Pro */}
             <div className="w-full flex-shrink-0 snap-start md:contents">
-            <div onClick={() => setSelectedPlan('pro')} className={`card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.45s, transform 0.6s ease 0.45s' }}>
+            <div onClick={() => setSelectedPlan('pro')} className={`relative card p-8 text-left flex flex-col cursor-pointer transition-all duration-300 ${selectedPlan === 'pro' ? 'border-brand-500/30 bg-gradient-to-br from-brand-500/5 to-orange-500/5 shadow-lg' : ''}`} style={{ opacity: pricingVisible ? 1 : 0, transform: pricingVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.6s ease 0.45s, transform 0.6s ease 0.45s' }}>
+              <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">POPULAIRE</div>
               <h3 className="font-bold text-xl mb-1 text-zinc-900">Pro</h3>
               <div className="flex items-center gap-3 mb-1">
                 <span className="text-4xl font-extrabold text-zinc-900">
